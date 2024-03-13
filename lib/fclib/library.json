@@ -2,8 +2,7 @@
   "name": "fclib",
   "keywords": "esp32, led, smarthome",
   "description": "My utilities for LED and other smarthome controls",
-  "authors":
-  [
+  "authors": [
     {
       "name": "Fred Christianson",
       "email": "fred.christianson@gmail.com",
@@ -14,9 +13,10 @@
   "frameworks": "*",
   "platforms": "*",
   "dependencies": {
-    "fastled/FastLED" : "*",
+    "fastled/FastLED": "*",
     "adafruit/Adafruit NeoPixel": "*",
-    "tzapu/WiFiManager" : "^0.16.0"
-
-  }
+    "tzapu/WiFiManager": "^0.16.0",
+    "littlefs": "*"
+  },
+  "build_flags": "-fpermissive"
 }
