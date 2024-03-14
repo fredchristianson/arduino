@@ -2,16 +2,15 @@
 #define __FCSYSTEM_H__
 
 #include <stddef.h>
-
+#include <WString.h>
 namespace FCLIB
 {
-
 
     class Board
     {
 
     public:
-        static Board* get();
+        static Board *get();
         Board();
         virtual unsigned long getFreeContStack() = 0;
 
@@ -25,12 +24,15 @@ namespace FCLIB
 
         virtual void delayMsecs(size_t msecs) = 0;
 
-    private:
+        virtual const char *getDeviceId() { return deviceId.c_str(); }
+
+    protected:
+        String deviceId;
     };
 
     class EspBoardClass : public Board
     {
-        public:
+    public:
         EspBoardClass();
         virtual unsigned long getFreeContStack();
 
@@ -45,6 +47,6 @@ namespace FCLIB
         virtual void delayMsecs(size_t msecs);
     };
 
-    extern Board* THE_BOARD;
+    extern Board *THE_BOARD;
 };
 #endif // __SYSTEM_H__

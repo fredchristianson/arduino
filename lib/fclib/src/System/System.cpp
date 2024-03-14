@@ -6,6 +6,7 @@
 #include <chrono>
 #include <map>
 #include <stddef.h>
+#include <ESP8266WiFi.h>
 
 using namespace std::chrono;
 auto processStartTime = std::chrono::high_resolution_clock::now();
@@ -17,6 +18,8 @@ namespace FCLIB
 
     EspBoardClass::EspBoardClass()
     {
+        deviceId = WiFi.macAddress();
+        deviceId.replace(":", "");
     }
 
     unsigned long EspBoardClass::getFreeContStack() { return EspClass::getFreeContStack(); }

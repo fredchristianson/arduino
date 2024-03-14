@@ -66,3 +66,27 @@ void FCLIB::Config::addValue(ConfigValue *value)
 	log.debug("Add config value: %s=%s  [%s]", value->name.c_str(), value->value.c_str(), value->section.c_str());
 	this->values.add(value);
 }
+
+void FCLIB::Config::set(const char *name, const char *newValue, const char *section)
+{
+	ConfigValue *value = NULL;
+	log.debug("set value: %s=%s for section %s", name, newValue, section);
+	bool found = false;
+	for (int i = 0; i < this->values.size() && value == NULL; i++)
+	{
+		ConfigValue *val = this->values.get(i);
+		if (val->matchesName(name) && val->matchesSection(section))
+		{
+			if (found)
+			{
+				// only keep the first
+				val->section = "***delete***";
+			}
+			else
+			{
+				val->value = newValue;
+				found = true;
+			}
+		}
+	}
+}

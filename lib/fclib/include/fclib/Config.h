@@ -56,6 +56,8 @@ namespace FCLIB
         String getString(const char *name, const char *defaultValue = NULL);
         String getString(const char *section, const char *name, const char *defaultValue);
 
+        void set(const char *name, const char *value, const char *section = "default");
+
     protected:
         LinkedList<ConfigValue *> values;
         void addValue(ConfigValue *value);
@@ -69,6 +71,7 @@ namespace FCLIB
         virtual ~ConfigFile();
 
         bool load(const char *filePath);
+        bool save(const char *filePath);
     };
 
     namespace TEST

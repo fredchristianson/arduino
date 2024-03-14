@@ -4,6 +4,7 @@
 #include "fclib/File.h"
 #include "fclib/Config.h"
 #include "test/Test.h"
+#include "fclib/System.h"
 
 using namespace FCLIB;
 
@@ -17,6 +18,7 @@ WiFiPortalParameter *mqttParameter;
 ConfigFile config;
 String mqttServer;
 bool testsPass = true;
+Board *board = Board::get();
 
 bool FORCE_WIFI_PORTAL = false;
 
@@ -27,6 +29,8 @@ void setup()
   setModuleLoggerLevel("FileReader", WARN_LEVEL);
 
   logger->always("running");
+  logger->always("mac %s", board->getDeviceId());
+
   testsPass = HALLLIGHTS_TEST::runTests();
   if (!testsPass)
   {
@@ -46,12 +50,15 @@ void setup()
     wifi.startPortal("HallLights");
     logger->always("MQTT IP %s", mqttParameter->getValue());
     mqttServer = mqttParameter->getValue();
+    config.set("mqtt_server", mqttServer.c_str());
+    config.save("/config.ini");
   }
   else
   {
     wifi.connect("HallLights");
   }
   logger->always("connected %s", wifi.getIP());
+  logger->always("mac %s", WiFi.macAddress().c_str());
   logger->always("MQTT IP %s", mqttServer.c_str());
 }
 
