@@ -48,7 +48,7 @@ namespace FCLIB
 			return false;
 		}
 		String line;
-		String section = "default";
+		ConfigSection *section = getSection("default", true);
 		while (reader.readLine(line))
 		{
 			log.debug("\tgot line: %s", line.c_str());
@@ -59,19 +59,42 @@ namespace FCLIB
 			}
 			else if (line.startsWith("["))
 			{
-				section = line.substring(1, line.length() - 1);
-				log.debug("Config Section: %s", section.c_str());
+				String sectionName = line.substring(1, line.length() - 1);
+				section = getSection(sectionName.c_str(), true);
+				log.debug("Config Section: %s", sectionName.c_str());
 			}
 			else
 			{
 				ConfigValue *value = parseLine(line);
 				if (value != NULL)
 				{
-					value->section = section;
-					log.debug("\t\tName: '%s'    Value: '%s'  Section: ['%s']", value->name.c_str(), value->value.c_str(), value->section.c_str());
-					this->addValue(value);
+					log.debug("\t\tName: '%s'    Value: '%s'  Section: ['%s']", value->name.c_str(), value->toString().c_str(), section->name.c_str());
+					section->addValue(value);
 				}
 			}
+		}
+		return true;
+	}
+
+	bool ConfigFile::save(const char *filePath)
+	{
+		FileWriter writer(filePath);
+		for (int i = 0; i < sections.size(); i++)
+		{
+			ConfigSection *section = sections[i];
+			String line = "[";
+			line.concat(section->name);
+			line.concat("]");
+			writer.writeLine(line);
+			for (int j = 0; j < section->values.size(); j++)
+			{
+				ConfigValue *val = section->values[i];
+				line = val->name;
+				line += "=";
+				line += val->toString();
+				writer.writeLine(line);
+			}
+			writer.writeLine("");
 		}
 		return true;
 	}

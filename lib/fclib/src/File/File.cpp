@@ -33,10 +33,12 @@ FCLIB::FileReader::FileReader(const char *path) : FileBase(path)
 
 FCLIB::FileReader::~FileReader()
 {
+    file.close();
 }
 
 bool FCLIB::FileReader::readLine(String &line)
 {
+
     line.clear();
     if (this->bufferPos < this->bufferLen)
     {
@@ -77,6 +79,7 @@ bool FCLIB::FileReader::readLine(String &line)
 
 FCLIB::FileWriter::FileWriter(const char *path, bool append) : FileBase(path)
 {
+    log.setModuleName("FileWriter");
     if (append)
     {
         this->openAppend();
@@ -89,6 +92,23 @@ FCLIB::FileWriter::FileWriter(const char *path, bool append) : FileBase(path)
 
 FCLIB::FileWriter::~FileWriter()
 {
+    file.close();
+}
+
+bool FCLIB::FileWriter::writeLine(String &string)
+{
+    return writeLine(string.c_str());
+}
+bool FCLIB::FileWriter::writeLine(const char *string)
+{
+    if (!file)
+    {
+        return false;
+    }
+
+    file.write(string);
+    file.write("\r\n");
+    return true;
 }
 
 FCLIB::FileSystem *singletonFileSysetem;

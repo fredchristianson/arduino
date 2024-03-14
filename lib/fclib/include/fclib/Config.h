@@ -9,42 +9,87 @@ namespace FCLIB
 {
     class ConfigFile;
 
+    enum ValueType
+    {
+        STRING_TYPE,
+        INT_TYPE,
+        FLOAT_TYPE,
+        BOOL_TYPE
+    };
+
     struct ConfigValue
     {
     public:
-        ConfigValue(const char *name, const char *value, const char *section = NULL);
+        ConfigValue(const char *name, const char *value)
+        {
+            this->name = name;
+            set(value);
+        }
+
+        ConfigValue(const char *name, int value)
+        {
+            this->name = name;
+            set(value);
+        }
+
+        ConfigValue(const char *name, float value)
+        {
+            this->name = name;
+            set(value);
+        }
+
+        ConfigValue(const char *name, bool value)
+        {
+            this->name = name;
+            set(value);
+        }
+
+        void set(const char *value);
+        void set(int value);
+        void set(float value);
+        void set(bool value);
+
+        const String &toString();
+
+        int toInt();
+
+        float toFloat();
+        bool toBool();
 
         String name;
-        String value;
-        String section; // not used
+        ValueType type;
 
-        bool matchesName(const char *name) const
-        {
-            return this->name.equalsIgnoreCase(name);
-        }
+        String stringValue;
+        int intValue;
+        float floatValue;
+        bool boolValue;
+    };
 
-        bool matchesSection(const char *section) const
-        {
-            if (section == NULL)
-            {
-                return this->isDefaultSection();
-            }
-            else
-            {
-                String match(section);
-                match.trim();
-                if (match.length() == 0 || match.equalsIgnoreCase("default"))
-                {
-                    return this->isDefaultSection();
-                }
-                return this->section.equalsIgnoreCase(match);
-            }
-        }
+    struct ConfigSection
+    {
+        ConfigSection(const char *name);
+        ~ConfigSection();
+        void set(const char *name, const char *value);
+        void set(const char *name, int value);
+        void set(const char *name, float value);
+        void set(const char *name, bool value);
 
-        bool isDefaultSection() const
-        {
-            return section.length() == 0 || section.equalsIgnoreCase("default");
-        }
+        ConfigValue *getValue(const char *name);
+        void deleteValue(const char *name);
+
+        const char *get(const char *name, const char *defaultValue);
+        int get(const char *name, int defaultValue);
+        float get(const char *name, float defaultValue);
+        bool get(const char *name, bool defaultValue);
+
+        void addValue(ConfigValue *value);
+
+        String name;
+        LinkedList<ConfigValue *> values;
+        Logger log;
+
+    private:
+        void removeValue(ConfigValue *val);
     };
 
     class Config
@@ -53,14 +98,31 @@ namespace FCLIB
         Config();
         virtual ~Config();
 
-        String getString(const char *name, const char *defaultValue = NULL);
-        String getString(const char *section, const char *name, const char *defaultValue);
+        ConfigSection *getSection(const char *name, bool createIfNeeded = false);
+
+        String get(const char *name, const char *defaultValue = NULL);
+        String get(const char *section, const char *name, const char *defaultValue);
+
+        int get(const char *name, int defaultValue = 0);
+        int get(const char *section, const char *name, int defaultValue);
+
+        float get(const char *name, float defaultValue = 0);
+        float get(const char *section, const char *name, float defaultValue);
+
+        bool get(const char *name, bool defaultValue = false);
+        bool get(const char *section, const char *name, bool defaultValue);
+
+        template <typename T>
+        T get(const char *name, const char *section = "default");
 
         void set(const char *name, const char *value, const char *section = "default");
+        void set(const char *name, int value, const char *section = "default");
+        void set(const char *name, float value, const char *section = "default");
+        void set(const char *name, bool value, const char *section = "default");
 
     protected:
-        LinkedList<ConfigValue *> values;
-        void addValue(ConfigValue *value);
+        LinkedList<ConfigSection *> sections;
+        ConfigSection *createSection(const char *name);
         Logger log;
     };
 

@@ -34,19 +34,21 @@ namespace FCLIB
         FileBase(const char *path);
         virtual ~FileBase();
 
-        bool open(const char* mode) { 
-            this->file = LittleFS.open(this->path,mode);
+        bool open(const char *mode)
+        {
+            this->file = LittleFS.open(this->path, mode);
             return this->file;
         }
 
-        bool openRead() { return this->open("r");}
-       bool openWrite() { return this->open("w");}
-       bool openAppend() { return this->open("a");}
+        bool openRead() { return this->open("r"); }
+        bool openWrite() { return this->open("w"); }
+        bool openAppend() { return this->open("a"); }
 
-        bool exists() const { return LittleFS.exists(this->path);}
+        bool exists() const { return LittleFS.exists(this->path); }
 
         void close();
-        bool isOpen() { return this->file;}
+        bool isOpen() { return this->file; }
+
     protected:
         File file;
         String path;
@@ -60,10 +62,10 @@ namespace FCLIB
         FileReader(const char *path);
         virtual ~FileReader();
 
-        bool readLine(String& line);
-    private:
+        bool readLine(String &line);
 
-        char* buffer;
+    private:
+        char *buffer;
         int bufferPos;
         int bufferLen;
     };
@@ -71,11 +73,13 @@ namespace FCLIB
     class FileWriter : public FileBase
     {
     public:
-        FileWriter(const char *path,bool append = false);
+        FileWriter(const char *path, bool append = false);
         virtual ~FileWriter();
 
-    private:
+        bool writeLine(String &line);
+        bool writeLine(const char *line);
 
+    private:
     };
 }
 #endif

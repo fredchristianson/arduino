@@ -4,89 +4,146 @@
 
 using namespace FCLIB;
 
-FCLIB::ConfigValue::ConfigValue(const char *name, const char *value, const char *section)
+namespace FCLIB
 {
-	this->name = name;
-	this->value = value;
-	this->section = section;
-}
-
-FCLIB::Config::Config() : log("Config")
-{
-}
-
-FCLIB::Config::~Config()
-{
-	for (int i = 0; i < this->values.size(); i++)
+	Config::Config() : log("Config")
 	{
-		ConfigValue *val = this->values.get(i);
-		delete val;
 	}
-}
 
-String FCLIB::Config::getString(const char *name, const char *defaultValue)
-{
-	return this->getString("default", name, defaultValue);
-}
-
-String FCLIB::Config::getString(const char *section, const char *name, const char *defaultValue)
-{
-	ConfigValue *value = NULL;
-	ConfigValue *defaultSectionValue = NULL;
-	log.debug("Get value as string: %s for section %s", name, section);
-	for (int i = 0; i < this->values.size() && value == NULL; i++)
+	Config::~Config()
 	{
-		ConfigValue *val = this->values.get(i);
-		if (val->matchesName(name))
+		for (int i = 0; i < this->sections.size(); i++)
 		{
-			if (val->matchesSection(section))
+			ConfigSection *val = this->sections.get(i);
+			delete val;
+		}
+	}
+
+	ConfigSection *Config::getSection(const char *name, bool createIfNeeded)
+	{
+		for (int i = 0; i < sections.size(); i++)
+		{
+			if (sections[i]->name.equalsIgnoreCase(name))
 			{
-				value = val;
-			}
-			else if (val->isDefaultSection())
-			{
-				defaultSectionValue = val;
+				return sections[i];
 			}
 		}
-		log.debug("\tcheck value: %s [%s]", val->name.c_str(), val->section.c_str());
+		ConfigSection *section = createSection(name);
+		return section;
 	}
-	if (value != NULL)
-	{
-		return value->value;
-	}
-	else if (defaultSectionValue != NULL)
-	{
-		return defaultSectionValue->value;
-	}
-	return defaultValue;
-}
 
-void FCLIB::Config::addValue(ConfigValue *value)
-{
-	log.debug("Add config value: %s=%s  [%s]", value->name.c_str(), value->value.c_str(), value->section.c_str());
-	this->values.add(value);
-}
-
-void FCLIB::Config::set(const char *name, const char *newValue, const char *section)
-{
-	ConfigValue *value = NULL;
-	log.debug("set value: %s=%s for section %s", name, newValue, section);
-	bool found = false;
-	for (int i = 0; i < this->values.size() && value == NULL; i++)
+	ConfigSection *Config::createSection(const char *name)
 	{
-		ConfigValue *val = this->values.get(i);
-		if (val->matchesName(name) && val->matchesSection(section))
+		ConfigSection *section = new ConfigSection(name);
+		sections.add(section);
+		return section;
+	}
+
+	String Config::get(const char *name, const char *defaultValue)
+	{
+		return get("default", name, defaultValue);
+	}
+
+	String Config::get(const char *sectionName, const char *name, const char *defaultValue)
+	{
+		ConfigSection *section = getSection(sectionName);
+		ConfigValue *value = NULL;
+		if (section != NULL)
 		{
-			if (found)
-			{
-				// only keep the first
-				val->section = "***delete***";
-			}
-			else
-			{
-				val->value = newValue;
-				found = true;
-			}
+			value = section->getValue(name);
 		}
+		if (value == NULL)
+		{
+			section = getSection("default");
+			value = section->getValue(name);
+		}
+		return value == NULL ? defaultValue : value->toString();
+	}
+
+	int Config::get(const char *name, int defaultValue)
+	{
+		return get("default", name, defaultValue);
+	}
+
+	int Config::get(const char *sectionName, const char *name, int defaultValue)
+	{
+		ConfigSection *section = getSection(sectionName);
+		ConfigValue *value = NULL;
+		if (section != NULL)
+		{
+			value = section->getValue(name);
+		}
+		if (value == NULL)
+		{
+			section = getSection("default");
+			value = section->getValue(name);
+		}
+		return value == NULL ? defaultValue : value->toInt();
+	}
+
+	float Config::get(const char *name, float defaultValue)
+	{
+		return get("default", name, defaultValue);
+	}
+
+	float Config::get(const char *sectionName, const char *name, float defaultValue)
+	{
+		ConfigSection *section = getSection(sectionName);
+		ConfigValue *value = NULL;
+		if (section != NULL)
+		{
+			value = section->getValue(name);
+		}
+		if (value == NULL)
+		{
+			section = getSection("default");
+			value = section->getValue(name);
+		}
+		return value == NULL ? defaultValue : value->toFloat();
+	}
+
+	bool Config::get(const char *name, bool defaultValue)
+	{
+		return get("default", name, defaultValue);
+	}
+
+	bool Config::get(const char *sectionName, const char *name, bool defaultValue)
+	{
+		ConfigSection *section = getSection(sectionName);
+		ConfigValue *value = NULL;
+		if (section != NULL)
+		{
+			value = section->getValue(name);
+		}
+		if (value == NULL)
+		{
+			section = getSection("default");
+			value = section->getValue(name);
+		}
+		return value == NULL ? defaultValue : value->toBool();
+	}
+
+	void Config::set(const char *name, const char *newValue, const char *sectionName)
+	{
+		ConfigSection *section = getSection(sectionName, true);
+		section->set(name, newValue);
+	}
+
+	void Config::set(const char *name, int newValue, const char *sectionName)
+	{
+		ConfigSection *section = getSection(sectionName, true);
+		section->set(name, newValue);
+	}
+
+	void Config::set(const char *name, float newValue, const char *sectionName)
+	{
+		ConfigSection *section = getSection(sectionName, true);
+		section->set(name, newValue);
+	}
+
+	void Config::set(const char *name, bool newValue, const char *sectionName)
+	{
+		ConfigSection *section = getSection(sectionName, true);
+		section->set(name, newValue);
 	}
 }

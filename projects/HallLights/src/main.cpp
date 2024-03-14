@@ -42,7 +42,7 @@ void setup()
 
   logger->debug("Load config");
   config.load("/config.ini");
-  mqttServer = config.getString("mqtt_server", "def-value here");
+  mqttServer = config.get("mqtt_server", "<need-mqtt-server>");
   mqttParameter = new WiFiPortalParameter("mqtt_erver", "MQTT IP address", mqttServer.c_str(), 40);
   wifi.addParameter(*mqttParameter);
   if (FORCE_WIFI_PORTAL)
