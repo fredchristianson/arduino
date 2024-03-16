@@ -10,13 +10,12 @@ using namespace FCLIB;
 
 FCLIB::Logger *logger = new FCLIB::Logger("main");
 
-const int pin = 4;
-const int pir = 5;
-int state = -1;
 WiFiSetup wifi;
-WiFiPortalParameter *mqttParameter;
 ConfigFile config;
 String mqttServer;
+String mqttUser;
+String mqttPassword;
+String deviceName;
 bool testsPass = true;
 Board *board = Board::get();
 
@@ -24,61 +23,69 @@ bool FORCE_WIFI_PORTAL = false;
 
 void setup()
 {
-  setDefaultLoggerLevel(DEBUG_LEVEL);
-  setModuleLoggerLevel("ConfigFile", WARN_LEVEL);
-  setModuleLoggerLevel("FileReader", WARN_LEVEL);
+    setDefaultLoggerLevel(DEBUG_LEVEL);
+    setModuleLoggerLevel("ConfigFile", WARN_LEVEL);
+    setModuleLoggerLevel("FileReader", WARN_LEVEL);
 
-  logger->always("running");
-  logger->always("mac %s", board->getDeviceId());
+    logger->always("running");
 
-  testsPass = HALLLIGHTS_TEST::runTests();
-  if (!testsPass)
-  {
-    logger->error("tests failed");
-    return;
-  }
-  pinMode(pin, OUTPUT);
-  pinMode(pir, INPUT);
+    testsPass = HALLLIGHTS_TEST::runTests();
+    if (!testsPass)
+    {
+        logger->error("tests failed");
+        return;
+    }
 
-  logger->debug("Load config");
-  config.load("/config.ini");
-  mqttServer = config.get("mqtt_server", "<need-mqtt-server>");
-  mqttParameter = new WiFiPortalParameter("mqtt_erver", "MQTT IP address", mqttServer.c_str(), 40);
-  wifi.addParameter(*mqttParameter);
-  if (FORCE_WIFI_PORTAL)
-  {
-    wifi.startPortal("HallLights");
-    logger->always("MQTT IP %s", mqttParameter->getValue());
-    mqttServer = mqttParameter->getValue();
-    config.set("mqtt_server", mqttServer.c_str());
-    config.save("/config.ini");
-  }
-  else
-  {
-    wifi.connect("HallLights");
-  }
-  logger->always("connected %s", wifi.getIP());
-  logger->always("mac %s", WiFi.macAddress().c_str());
-  logger->always("MQTT IP %s", mqttServer.c_str());
+    logger->debug("Load config");
+    config.load("/config.ini");
+    mqttServer = config.get("mqtt_server", "");
+    mqttPassword = config.get("mqtt_password", "");
+    mqttUser = config.get("mqtt_user", "");
+    deviceName = config.get("device_name", "HallLights");
+    WiFiPortalParameter mqttServerParam("mqtt_server", "MQTT IP address", mqttServer.c_str(), 40);
+    WiFiPortalParameter mqttUserParam("mqtt_user", "MQTT user", mqttUser.c_str(), 40);
+    WiFiPortalParameter mqttPasswordParam("mqtt_password", "MQTT password", mqttPassword.c_str(), 40);
+    wifi.addParameter(mqttServerParam);
+    wifi.addParameter(mqttUserParam);
+    wifi.addParameter(mqttPasswordParam);
+    if (FORCE_WIFI_PORTAL)
+    {
+        wifi.startPortal("HallLights");
+    }
+    else
+    {
+        wifi.connect("HallLights");
+    }
+    logger->always("connected %s", wifi.getIP());
+    logger->always("mac %s", WiFi.macAddress().c_str());
+    logger->always("MQTT IP %s", mqttServer.c_str());
+    config.set("mqtt_server", mqttServerParam.getValue());
+    config.set("mqtt_user", mqttUserParam.getValue());
+    config.set("mqtt_password", mqttPasswordParam.getValue());
+
+    if (config.isChanged())
+    {
+        config.save("/config.ini");
+    }
 }
 
 void loop()
 {
-  if (!testsPass)
-  {
-    return;
-  }
-  int pirState = digitalRead(pir);
-  if (pirState == HIGH && state != 0)
-  {
-    digitalWrite(pin, HIGH);
-    state = 0;
-    logger->always("On");
-  }
-  else if (pirState == LOW && state != 1)
-  {
-    digitalWrite(pin, LOW);
-    state = 1;
-    logger->always("Off");
-  }
+    if (!testsPass)
+    {
+        return;
+    }
+    // int pirState = digitalRead(pir);
+    // if (pirState == HIGH && state != 0)
+    // {
+    //     digitalWrite(pin, HIGH);
+    //     state = 0;
+    //     logger->always("On");
+    // }
+    // else if (pirState == LOW && state != 1)
+    // {
+    //     digitalWrite(pin, LOW);
+    //     state = 1;
+    //     logger->always("Off");
+    // }
 }

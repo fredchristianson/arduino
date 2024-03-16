@@ -3,6 +3,7 @@
 #include "fclib/Logging.h"
 #include "fclib/LinkedList.h"
 #include <WiFiManager.h>
+#include <PubSubClient.h>
 
 namespace FCLIB
 {

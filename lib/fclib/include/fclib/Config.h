@@ -50,11 +50,10 @@ namespace FCLIB
         void set(bool value);
 
         const String &toString();
-
         int toInt();
-
         float toFloat();
         bool toBool();
+        bool isChanged() const { return changed; }
 
         String name;
         ValueType type;
@@ -63,6 +62,7 @@ namespace FCLIB
         int intValue;
         float floatValue;
         bool boolValue;
+        bool changed;
     };
 
     struct ConfigSection
@@ -83,7 +83,7 @@ namespace FCLIB
         bool get(const char *name, bool defaultValue);
 
         void addValue(ConfigValue *value);
-
+        bool isChanged();
         String name;
         LinkedList<ConfigValue *> values;
         Logger log;
@@ -119,6 +119,7 @@ namespace FCLIB
         void set(const char *name, int value, const char *section = "default");
         void set(const char *name, float value, const char *section = "default");
         void set(const char *name, bool value, const char *section = "default");
+        bool isChanged();
 
     protected:
         LinkedList<ConfigSection *> sections;
