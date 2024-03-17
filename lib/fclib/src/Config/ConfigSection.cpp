@@ -80,7 +80,7 @@ namespace FCLIB
         {
             removeValue(val);
         }
-        log.debug("Add config value: %s=%s  [%s]", value->name.c_str(), value->toString().c_str(), this->name.c_str());
+        log.always("Add config value: %s=%s  [%s]", value->name.c_str(), value->toString().c_str(), this->name.c_str());
         this->values.add(value);
     }
 
@@ -115,11 +115,13 @@ namespace FCLIB
         ConfigValue *val = this->getValue(name);
         if (val == NULL)
         {
+            log.always("add conf value: [%s] %s=%s", this->name.c_str(), name, newValue);
             val = new ConfigValue(name, newValue);
             addValue(val);
         }
         else
         {
+            log.always("replace conf value: [%s] %s=%s", this->name.c_str(), name, newValue);
             val->set(newValue);
         }
     }
@@ -129,11 +131,13 @@ namespace FCLIB
         ConfigValue *val = this->getValue(name);
         if (val == NULL)
         {
+            log.always("add conf value: [%s] %s=%s", this->name.c_str(), name, newValue ? "true" : "false");
             val = new ConfigValue(name, newValue);
             addValue(val);
         }
         else
         {
+            log.always("replace conf value: [%s] %s=%s", this->name.c_str(), name, newValue ? "true" : "false");
             val->set(newValue);
         }
     }
@@ -143,11 +147,13 @@ namespace FCLIB
         ConfigValue *val = this->getValue(name);
         if (val == NULL)
         {
+            log.always("add conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
             val = new ConfigValue(name, newValue);
             addValue(val);
         }
         else
         {
+            log.always("replace conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
             val->set(newValue);
         }
     }
@@ -157,11 +163,13 @@ namespace FCLIB
         ConfigValue *val = this->getValue(name);
         if (val == NULL)
         {
+            log.always("add conf value: [%s] %s=%f", this->name.c_str(), name, newValue);
             val = new ConfigValue(name, newValue);
             addValue(val);
         }
         else
         {
+            log.always("replace conf value: [%s] %s=%f", this->name.c_str(), name, newValue);
             val->set(newValue);
         }
     }

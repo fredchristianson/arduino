@@ -28,7 +28,16 @@ namespace FCLIB
 
         unsigned long startTimeMsecs;
         unsigned long durationMsecs;
-        Logger LOG;
+        Logger log;
+    };
+
+    /* InstantTime is complete right away*/
+    class InstantTimer : public Timer
+    {
+    public:
+        InstantTimer();
+        bool isComplete() override;
+        bool reset() override { return true; }
     };
 
     class IntervalTimer : public Timer

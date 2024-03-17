@@ -5,10 +5,12 @@
 #include "fclib/Config.h"
 #include "test/Test.h"
 #include "fclib/System.h"
+#include "./HallApp.h"
 
 using namespace FCLIB;
 
 FCLIB::Logger *logger = new FCLIB::Logger("main");
+HallApp hallApp;
 
 WiFiSetup wifi;
 ConfigFile config;
@@ -26,8 +28,7 @@ void setup()
     setDefaultLoggerLevel(DEBUG_LEVEL);
     setModuleLoggerLevel("ConfigFile", WARN_LEVEL);
     setModuleLoggerLevel("FileReader", WARN_LEVEL);
-
-    logger->always("running");
+    hallApp.runTests(HALLLIGHTS_TEST::runTests, true);
 
     testsPass = HALLLIGHTS_TEST::runTests();
     if (!testsPass)
@@ -58,34 +59,19 @@ void setup()
     }
     logger->always("connected %s", wifi.getIP());
     logger->always("mac %s", WiFi.macAddress().c_str());
-    logger->always("MQTT IP %s", mqttServer.c_str());
-    config.set("mqtt_server", mqttServerParam.getValue());
-    config.set("mqtt_user", mqttUserParam.getValue());
-    config.set("mqtt_password", mqttPasswordParam.getValue());
+    // logger->always("MQTT IP %s", mqttServer.c_str());
+    //  config.set("mqtt_server", mqttServerParam.getValue());
+    //  config.set("mqtt_user", mqttUserParam.getValue());
+    //  config.set("mqtt_password", mqttPasswordParam.getValue());
 
-    if (config.isChanged())
-    {
-        config.save("/config.ini");
-    }
+    // if (config.isChanged())
+    // {
+    //     config.save("/config.ini");
+    // }
+    hallApp.setup(&config);
 }
 
 void loop()
 {
-    if (!testsPass)
-    {
-        return;
-    }
-    // int pirState = digitalRead(pir);
-    // if (pirState == HIGH && state != 0)
-    // {
-    //     digitalWrite(pin, HIGH);
-    //     state = 0;
-    //     logger->always("On");
-    // }
-    // else if (pirState == LOW && state != 1)
-    // {
-    //     digitalWrite(pin, LOW);
-    //     state = 1;
-    //     logger->always("Off");
-    // }
+    hallApp.loop();
 }

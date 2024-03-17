@@ -9,9 +9,9 @@ using namespace FCLIB;
 namespace FCLIB
 {
 
-    Timer::Timer(size_t durationMsecs) : LOG("Timer")
+    Timer::Timer(size_t durationMsecs) : log("Timer", WARN_LEVEL)
     {
-        LOG.debug("Timer::Timer");
+        log.debug("Timer::Timer");
         this->durationMsecs = durationMsecs;
         this->startTimeMsecs = this->currentTimeMsecs();
     }
@@ -23,7 +23,7 @@ namespace FCLIB
     bool Timer::isComplete()
     {
         bool expires = this->startTimeMsecs + this->durationMsecs > this->currentTimeMsecs();
-        LOG.debug("expire test %ld %ld %ld", this->startTimeMsecs, this->durationMsecs, this->currentTimeMsecs());
+        log.debug("expire test %ld %ld %ld", this->startTimeMsecs, this->durationMsecs, this->currentTimeMsecs());
         return expires;
     }
 
@@ -43,7 +43,8 @@ namespace FCLIB
 
     IntervalTimer::IntervalTimer(size_t msecs) : Timer(msecs)
     {
-        LOG.setModuleName("IntervalTimer");
+        log.setModuleName("IntervalTimer");
+        log.debug("timer msecs: %d", msecs);
     }
 
     IntervalTimer::~IntervalTimer()
@@ -54,13 +55,13 @@ namespace FCLIB
     {
         long over = this->startTimeMsecs + this->durationMsecs;
         long now = this->currentTimeMsecs();
-        LOG.never("isComplete %ld %ld", over, now);
+        log.always("isComplete %ld %ld %ld %ld", over, now, this->startTimeMsecs, this->durationMsecs);
         Timer::isComplete();
         if (now > over)
         {
             long excess = now - over;
             this->startTimeMsecs = now - excess;
-            LOG.debug("complete");
+            log.debug("complete");
             return true;
         }
         return false;
@@ -68,9 +69,18 @@ namespace FCLIB
 
     IntervalTimer *IntervalTimer::create(size_t tics, size_t durationMsecs)
     {
-        Logger log("IntervalTimer::create", WARN_LEVEL);
-        log.debug("create IntervalTimer %ld %ld", tics, durationMsecs);
+        Logger log("IntervalTimer::create", DEBUG_LEVEL);
+        log.always("create IntervalTimer %ld %ld", tics, durationMsecs);
         return new IntervalTimer(durationMsecs / tics);
     }
 
+    InstantTimer::InstantTimer() : Timer(0)
+    {
+        log.setModuleName("InstantTimer");
+    }
+    bool InstantTimer::isComplete()
+    {
+        log.always("complete");
+        return true;
+    }
 } // namespace FCLIB

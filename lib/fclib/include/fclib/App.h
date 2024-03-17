@@ -1,9 +1,14 @@
-#ifndef APP_H
-#define APP_H
+#ifndef _FCLIB_APP_H
+#define _FCLIB_APP_H
 #include <c_types.h>
 #include <stdlib.h>
 #include "./System.h"
 #include "./Timer.h"
+#include "./Config.h"
+#include "./Event.h"
+#include "./LinkedList.h"
+#include "./Net.h"
+#include "./Logging.h"
 
 namespace FCLIB
 {
@@ -17,21 +22,38 @@ namespace FCLIB
 
         virtual ~App();
 
-        virtual void beginLoop();
-        virtual void doLoop();
-        virtual void endLoop();
+        void loop();
         void setSpeed(uint16 framesPerSecond);
 
+        bool setup(Config *appConfig);
+
+        bool runTests(bool (*runFunc)(), bool stopIfFail = true);
+
     protected:
-        virtual void beforeLoop() {}
-        virtual void loopExecute() {}
-        virtual void afterLoop() {}
+        virtual bool beginSetup();
+        virtual bool endSetup();
+        virtual bool setupNetwork();
+        virtual bool setupDevices();
+        virtual bool setupLogging();
+        virtual bool connectNetwork();
+
+        virtual bool beforeLoop() { return true; }
+        virtual bool loopExecute() { return true; }
+        virtual bool afterLoop() { return true; }
 
         void setLoopTimer(Timer *timer);
 
+    protected:
+        Config *config;
+        Logger log;
+
+        bool useNtp;
+        bool useMqtt;
+
     private:
+        LinkedList<Event *> events;
         Timer *loopTimer;
-        Logger LOG;
+        bool stopped;
     };
 }
 #endif

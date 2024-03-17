@@ -107,6 +107,7 @@ bool FCLIB::FileWriter::writeLine(const char *string)
     }
 
     file.write(string);
+    log.always("Write: '%s'", string);
     file.write("\r\n");
     return true;
 }

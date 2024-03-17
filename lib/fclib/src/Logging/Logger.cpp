@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include "fclib/System.h"
 #include "fclib/Logging.h"
+#include "fclib/Config.h"
 #include "./Formatter.h"
 #include "./Destination.h"
 
@@ -168,15 +169,36 @@ namespace FCLIB
         LogLevelListItem(const char *name, LogLevel level)
         {
             // Serial.printf("LogLevel %s ==> %d", name, level);
-            this->name = Util::allocText(name);
+            this->name = name;
+            this->name.toUpperCase();
             this->level = level;
             this->next = NULL;
         }
 
-        ~LogLevelListItem() { Util::freeText(this->name); }
+        bool isExactMatch(const char *module)
+        {
+            return this->name.equalsIgnoreCase(module);
+        }
+
+        bool isBetterMatch(const char *module, LogLevelListItem *other)
+        {
+            if (other == NULL)
+            {
+                return true;
+            }
+            String ucmod = String(module);
+            ucmod.toUpperCase();
+            if (this->name.indexOf(module) >= 0)
+            {
+                return this->name.length() > other->name.length();
+            }
+            return false;
+        }
+
+        ~LogLevelListItem() { delete next; }
 
         LogLevelListItem *next;
-        const char *name;
+        String name;
         LogLevel level;
     };
 
@@ -191,7 +213,7 @@ namespace FCLIB
         {
             // Serial.printf("test module name %s %s", moduleName, search->name);
 
-            if (Util::equal(moduleName, search->name))
+            if (search->name.equalsIgnoreCase(moduleName))
             {
                 search->level = level;
                 // Serial.printf("update log level %s to %d", moduleName, level);
@@ -230,18 +252,81 @@ LogLevel Logger::getModuleLoggerLevel() const
     }
 
     LogLevelListItem *search = moduleLevelList;
+    LogLevelListItem *bestMatch = NULL;
     LogLevel level = DEFAULT_LEVEL;
     // Serial.printf("search %d", search);
     while (search != NULL && level == DEFAULT_LEVEL)
     {
         // Serial.printf("Compare: %s == %s", this->moduleName, search->name);
-        if (Util::equal(this->moduleName, search->name))
+        if (search->isExactMatch(this->moduleName))
         {
             level = search->level;
+            return level;
+        }
+        else if (search->isBetterMatch(this->moduleName, bestMatch))
+        {
+            bestMatch = search;
         }
         search = search->next;
     }
-    LogLevel l = (level == DEFAULT_LEVEL) ? defaultLogLevel : level;
-    // Serial.printf("got level %d", l);
-    return l;
+    if (bestMatch == NULL || bestMatch->level == DEFAULT_LEVEL)
+    {
+        return defaultLogLevel;
+    }
+    return bestMatch->level;
+}
+
+LogLevel getLogLevel(const String &text)
+{
+    String upper(text);
+    upper.toUpperCase();
+    if (text.indexOf("DEBUG") >= 0)
+    {
+        return DEBUG_LEVEL;
+    }
+    else if (text.indexOf("INFO") >= 0)
+    {
+        return INFO_LEVEL;
+    }
+    else if (text.indexOf("WARN") >= 0)
+    {
+        return WARN_LEVEL;
+    }
+    else if (text.indexOf("ERROR") >= 0)
+    {
+        return ERROR_LEVEL;
+    }
+    else if (text.indexOf("ALWAYS") >= 0)
+    {
+        return ALWAYS_LEVEL;
+    }
+    else if (text.indexOf("NEVER") >= 0)
+    {
+        return NEVER_LEVEL;
+    }
+    else if (text.indexOf("TEST") >= 0)
+    {
+        return TEST_LEVEL;
+    }
+    return DEFAULT_LEVEL;
+}
+void FCLIB::configureLogging(ConfigSection *config)
+{
+    Logger log("Logger Conf");
+    for (int i = 0; i < config->values.size(); i++)
+    {
+        ConfigValue *value = config->values[i];
+        LogLevel level = getLogLevel(value->toString());
+        if (value->name.equalsIgnoreCase("default"))
+        {
+            log.always("default: %s", value->toString().c_str());
+            setDefaultLoggerLevel(level);
+        }
+        else
+            log.always("default: %s", value->toString().c_str());
+        {
+            log.always("%s: %s", value->name.c_str(), value->toString().c_str());
+            setModuleLoggerLevel(value->name.c_str(), level);
+        }
+    }
 }

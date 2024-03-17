@@ -11,14 +11,14 @@ using namespace FCLIB::TEST;
 namespace HALLLIGHTS_TEST
 {
 
-	bool runTests()
-	{
-		Logger log("Test");
-		TestRunner runner("Hall Lights Tests", log);
-		CONFIG::ConfigTestSuite config;
-		runner.run(config);
-		return runner.isSuccess();
-	}
+    bool runTests()
+    {
+        Logger log("Hall Lights Test");
+        TestRunner runner("Hall Lights Tests", log);
+        CONFIG::ConfigTestSuite config;
+        runner.run(config);
+        return runner.isSuccess();
+    }
 }
 
 #endif

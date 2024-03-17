@@ -4,6 +4,8 @@
 
 namespace FCLIB
 {
+    class ConfigSection;
+
     enum LogLevel
     {
         DEBUG_LEVEL = 100,
@@ -19,6 +21,7 @@ namespace FCLIB
 
     void setModuleLoggerLevel(const char *moduleName, LogLevel level);
     void setDefaultLoggerLevel(LogLevel level);
+    void configureLogging(ConfigSection *config);
 
     class Logger
     {

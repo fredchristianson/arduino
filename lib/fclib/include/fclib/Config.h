@@ -112,14 +112,16 @@ namespace FCLIB
         bool get(const char *name, bool defaultValue = false);
         bool get(const char *section, const char *name, bool defaultValue);
 
-        template <typename T>
-        T get(const char *name, const char *section = "default");
-
         void set(const char *name, const char *value, const char *section = "default");
         void set(const char *name, int value, const char *section = "default");
         void set(const char *name, float value, const char *section = "default");
         void set(const char *name, bool value, const char *section = "default");
         bool isChanged();
+
+        ConfigValue *getConfigValue(const char *name, const char *section = "default")
+        {
+            return this->getSection(section, true)->getValue(name);
+        }
 
     protected:
         LinkedList<ConfigSection *> sections;
