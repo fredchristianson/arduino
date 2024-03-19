@@ -123,6 +123,7 @@ namespace FCLIB
             return this->getSection(section, true)->getValue(name);
         }
 
+        virtual bool save() { return true; } // derived classes may save
     protected:
         LinkedList<ConfigSection *> sections;
         ConfigSection *createSection(const char *name);
@@ -137,6 +138,10 @@ namespace FCLIB
 
         bool load(const char *filePath);
         bool save(const char *filePath);
+        bool save() override;
+
+    private:
+        String filePath;
     };
 
     namespace TEST

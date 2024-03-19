@@ -43,3 +43,8 @@ void FCLIB::WiFiSetup::addParameter(WiFiPortalParameter &param)
     params.add(&param);
     wifiManager.addParameter(&param);
 }
+
+void FCLIB::WiFiSetup::setSaveConfigCallback(void (*callback)(WiFiSetup *callback))
+{
+    callback(this);
+}

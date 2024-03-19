@@ -32,6 +32,7 @@ namespace FCLIB
         const char *getIP();
 
         void addParameter(WiFiPortalParameter &param);
+        void setSaveConfigCallback(void (*callback)(WiFiSetup *));
 
     private:
         Logger log;

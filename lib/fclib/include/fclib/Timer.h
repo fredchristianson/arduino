@@ -34,7 +34,9 @@ namespace FCLIB
     /* InstantTime is complete right away*/
     class InstantTimer : public Timer
     {
+
     public:
+        static InstantTimer *create() { return new InstantTimer(); }
         InstantTimer();
         bool isComplete() override;
         bool reset() override { return true; }

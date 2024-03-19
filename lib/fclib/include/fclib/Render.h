@@ -87,8 +87,8 @@ namespace FCLIB
     public:
         PatternElement(uint count, PositionUnit unit);
         virtual ~PatternElement();
-        virtual uint count();
-        virtual Color &color() = 0;
+        virtual uint count() const;
+        virtual const Color &color() const = 0;
         virtual PositionUnit unit();
 
     protected:
@@ -101,7 +101,7 @@ namespace FCLIB
     public:
         PatternElementRGB(ColorRGB &color, uint count, PositionUnit unit);
         virtual ~PatternElementRGB();
-        virtual Color &color();
+        virtual const Color &color() const;
 
     protected:
         ColorRGB elementColor;
@@ -112,7 +112,7 @@ namespace FCLIB
     public:
         PatternElementHSV(ColorHSV &color, uint count, PositionUnit unit);
         virtual ~PatternElementHSV();
-        virtual Color &color();
+        virtual const Color &color() const;
 
     protected:
         ColorHSV elementColor;

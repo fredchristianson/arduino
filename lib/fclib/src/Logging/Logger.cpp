@@ -319,13 +319,13 @@ void FCLIB::configureLogging(ConfigSection *config)
         LogLevel level = getLogLevel(value->toString());
         if (value->name.equalsIgnoreCase("default"))
         {
-            log.always("default: %s", value->toString().c_str());
+            log.debug("default: %s", value->toString().c_str());
             setDefaultLoggerLevel(level);
         }
         else
-            log.always("default: %s", value->toString().c_str());
+            log.debug("default: %s", value->toString().c_str());
         {
-            log.always("%s: %s", value->name.c_str(), value->toString().c_str());
+            log.debug("%s: %s", value->name.c_str(), value->toString().c_str());
             setModuleLoggerLevel(value->name.c_str(), level);
         }
     }

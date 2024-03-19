@@ -9,7 +9,7 @@ using namespace FCLIB;
 namespace FCLIB
 {
 
-    Timer::Timer(size_t durationMsecs) : log("Timer", WARN_LEVEL)
+    Timer::Timer(size_t durationMsecs) : log("Timer")
     {
         log.debug("Timer::Timer");
         this->durationMsecs = durationMsecs;
@@ -55,7 +55,7 @@ namespace FCLIB
     {
         long over = this->startTimeMsecs + this->durationMsecs;
         long now = this->currentTimeMsecs();
-        log.always("isComplete %ld %ld %ld %ld", over, now, this->startTimeMsecs, this->durationMsecs);
+        log.debug("isComplete %ld %ld %ld %ld", over, now, this->startTimeMsecs, this->durationMsecs);
         Timer::isComplete();
         if (now > over)
         {
@@ -70,7 +70,7 @@ namespace FCLIB
     IntervalTimer *IntervalTimer::create(size_t tics, size_t durationMsecs)
     {
         Logger log("IntervalTimer::create", DEBUG_LEVEL);
-        log.always("create IntervalTimer %ld %ld", tics, durationMsecs);
+        log.debug("create IntervalTimer %ld %ld", tics, durationMsecs);
         return new IntervalTimer(durationMsecs / tics);
     }
 
@@ -80,7 +80,7 @@ namespace FCLIB
     }
     bool InstantTimer::isComplete()
     {
-        log.always("complete");
+        log.debug("complete");
         return true;
     }
 } // namespace FCLIB

@@ -5,6 +5,21 @@
 
 using namespace FCLIB;
 
+class HallAppSetup : public AppSetup
+{
+public:
+    bool beginSetup();
+};
+
+class HallAppLoop : public AppLoop
+{
+public:
+    bool beginSetup();
+
+protected:
+    bool loopExecute() override;
+};
+
 class HallApp : public App
 {
 public:
@@ -12,11 +27,8 @@ public:
     virtual ~HallApp();
 
 protected:
-    virtual bool beginSetup();
-    virtual bool endSetup();
-    virtual bool setupNetwork();
-    virtual bool setupDevices();
-    virtual bool loopExecute();
+    AppLoop *createLoop() override;
+    AppSetup *createSetup() override;
 };
 
 #endif

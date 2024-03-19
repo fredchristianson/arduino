@@ -5,17 +5,14 @@
 
 namespace FCLIB
 {
+
     // todo: setup watchdog timer
     App::App() : log("App")
     {
         wdt_enable(WDTO_4S); // enable watchdog timer
         THE_APP = this;
         this->THE_BOARD = THE_BOARD;
-        this->loopTimer = NULL;
-        this->useNtp = false;
-        this->useMqtt = false;
-        this->stopped = false;
-        this->loopTimer = new InstantTimer();
+        this->running = false;
     }
 
     App::~App()
@@ -23,124 +20,112 @@ namespace FCLIB
         THE_APP = NULL;
     }
 
-    void App::setSpeed(uint16 framesPerSecond)
-    {
-        log.always("FramesPerSecond %d", framesPerSecond);
-        if (this->loopTimer != NULL)
-        {
-            this->loopTimer->destroy();
-        }
-        if (framesPerSecond > 0)
-        {
-            this->loopTimer = IntervalTimer::createByRate(framesPerSecond);
-        }
-    }
     void App::loop()
     {
-        if (this->stopped)
+        if (running)
         {
-            log.debug("app is stopped");
-        }
-        if (this->loopTimer->isComplete())
-        {
-            if (this->beforeLoop())
-            {
-                if (this->loopExecute())
-                {
-                    this->afterLoop();
-                }
-            }
+            getLoop()->runOnce();
         }
     }
 
-    void App::setLoopTimer(Timer *timer)
+    bool App::setup(Config *config)
     {
-        if (this->loopTimer)
+        this->config = config;
+        log.debug("App::setup");
+        bool success = getSetup()->setup(config) &&
+                       getNetwork()->setup(config) &&
+                       getDevices()->setup(config) &&
+                       getLoop()->setup(config) &&
+                       getNetwork()->connect();
+        running = success;
+        log.debug("App::setup result: %s", success ? "success" : "fail");
+        if (config->isChanged())
         {
-            this->loopTimer->destroy();
-        }
-        if (loopTimer == NULL)
-        {
-            this->loopTimer = new InstantTimer();
-        }
-        else
-        {
-            this->loopTimer = timer;
-        }
-    }
-
-    bool App::setup(Config *appConfig)
-    {
-        this->config = appConfig;
-
-        if (this->stopped)
-        {
-            return false;
-        }
-        bool success = this->beginSetup() && this->setupLogging() &&
-                       this->setupNetwork() && this->connectNetwork() &&
-                       this->setupDevices() && this->endSetup();
-        if (this->loopTimer == NULL)
-        {
-            this->loopTimer = new InstantTimer();
-        }
-        this->stopped = !success;
-        return success;
-    }
-    bool App::setupLogging()
-    {
-        configureLogging(this->config->getSection("Logging"));
-        return true;
-    }
-
-    bool App::beginSetup()
-    {
-        log.debug("begin setup");
-        return true;
-    }
-    bool App::endSetup()
-    {
-        log.debug("end setup");
-        return true;
-    }
-    bool App::setupNetwork()
-    {
-        log.debug("networkd setup");
-        ConfigSection *section = this->config->getSection("ntp", true);
-        ConfigValue *value = section->getValue("connect");
-        this->useNtp = (value == NULL || value->toBool());
-        return true;
-    }
-    bool App::setupDevices()
-    {
-        log.debug("device setup");
-
-        return true;
-    }
-
-    bool App::connectNetwork()
-    {
-        log.info("Connect Network");
-        if (this->useNtp)
-        {
-            int tz_offset = this->config->get("ntp", "tz_offset_minutes", 0);
-            log.debug("tz_offset: %d", tz_offset);
-            TimeClient::run();
-            TimeClient::setTimezoneOffsetMinutes(tz_offset);
-        }
-        return true;
-    }
-
-    bool App::runTests(bool (*runFunc)(), bool stopIfFail)
-    {
-        bool success = runFunc();
-        if (!success && stopIfFail)
-        {
-            stopped = true;
+            config->save();
         }
         return success;
     }
 
+    Config *App::getConfig()
+    {
+
+        return config;
+    }
+    AppSetup *App::getSetup()
+    {
+        if (appSetup == NULL)
+        {
+            appSetup = createSetup();
+            appSetup->app = this;
+        }
+        return appSetup;
+    }
+    AppDevices *App::getDevices()
+    {
+        if (appDevices == NULL)
+        {
+            appDevices = createDevices();
+            appDevices->app = this;
+        }
+        return appDevices;
+    }
+
+    AppNetwork *App::getNetwork()
+    {
+        if (appNetwork == NULL)
+        {
+            appNetwork = createNetwork();
+            appNetwork->app = this;
+        }
+        return appNetwork;
+    }
+    AppLoop *App::getLoop()
+    {
+        if (appLoop == NULL)
+        {
+            appLoop = createLoop();
+            appLoop->app = this;
+        }
+        return appLoop;
+    }
+
+    AppSetup *App::createSetup()
+    {
+        AppSetup *setup = new AppSetup();
+        setup->app = this;
+        return setup;
+    }
+    AppDevices *App::createDevices()
+    {
+        AppDevices *devices = new AppDevices();
+        devices->app = this;
+        return devices;
+    }
+    AppNetwork *App::createNetwork()
+    {
+        AppNetwork *network = new AppNetwork();
+        network->app = this;
+        return network;
+    }
+    AppLoop *App::createLoop()
+    {
+        AppLoop *loop = new AppLoop();
+        loop->app = this;
+        return loop;
+    }
+
+    AppComponent::AppComponent() {}
+    AppComponent::~AppComponent() {}
+    App *AppComponent::getApp() { return app; }
+
+    Config *AppComponent::getConfig() { return app->getConfig(); }
+    AppSetup *AppComponent::getSetup() { return app->getSetup(); }
+    AppDevices *AppComponent::getDevices()
+    {
+        return app->getDevices();
+    }
+    AppNetwork *AppComponent::getNetwork() { return app->getNetwork(); }
+    AppLoop *AppComponent::getLoop() { return app->getLoop(); }
     App *App::THE_APP;
     Board *App::THE_BOARD;
 }
