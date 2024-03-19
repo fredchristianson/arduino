@@ -14,7 +14,7 @@ namespace FCLIB
     class EpochTime
     {
     public:
-        static EpochTime Instance;
+        static EpochTime &getInstance();
         EpochTime()
         {
             m_secondsAtMillis = 0;
@@ -67,6 +67,5 @@ namespace FCLIB
         unsigned long m_millis;
     };
 
-    EpochTime EpochTime::Instance;
 }
 #endif
