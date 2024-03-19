@@ -2,6 +2,7 @@
 #include <WiFiUdp.h>
 #include "fclib/Net.h"
 #include "fclib/Logging.h"
+#include "fclib/EpochTime.h"
 
 using namespace FCLIB;
 
@@ -16,6 +17,18 @@ namespace FCLIB
         singletonTimeClient->setTimezoneOffset(timezoneOffsetMinutes);
         singletonTimeClient->start();
     }
+
+    void TimeClient::setTimezoneOffsetMinutes(long minutes)
+    {
+        singletonTimeClient->setTimezoneOffset(minutes);
+        singletonTimeClient->start();
+    }
+
+    long TimeClient::getTimezoneOffsetMinutes()
+    {
+        return singletonTimeClient->getTimezoneOffset();
+    }
+
     TimeClient::TimeClient() : log("TimeClient")
     {
         this->ntp = NULL;
@@ -49,13 +62,14 @@ namespace FCLIB
     {
         if (this->ntp == NULL)
         {
-            log.info("Start NTTPClient");
+            log.info("Start NTTPClient tzoffset: %d", this->timezoneOffsetMinutes);
             this->ntp = new NTPClient(timeClientUdp);
-            this->ntp->setTimeOffset(this->timezoneOffsetMinutes);
             this->ntp->begin();
             log.info("NTTPClient started");
         }
+        this->ntp->setTimeOffset(this->timezoneOffsetMinutes * 60);
         this->ntp->update();
+        EpochTime::getInstance().setSecondsNow(this->ntp->getEpochTime());
     }
 
     const char *TimeClient::getDisplayTime()
@@ -70,19 +84,6 @@ namespace FCLIB
     void TimeClient::setTimezoneOffset(long minutes)
     {
         this->timezoneOffsetMinutes = minutes;
-        this->start();
-        this->ntp->setTimeOffset(minutes);
-        this->ntp->update();
     }
 
-    void TimeClient::setTimezoneOffsetMinutes(long minutes)
-    {
-        singletonTimeClient->start();
-        singletonTimeClient->setTimezoneOffset(minutes);
-    }
-
-    long TimeClient::getTimezoneOffsetMinutes()
-    {
-        return singletonTimeClient->getTimezoneOffset();
-    }
 }

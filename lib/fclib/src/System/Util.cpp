@@ -120,6 +120,15 @@ namespace FCLIB
             return isalnum(c) || strchr(NAME_CHARS, c) != NULL;
         }
 
+        void toUpperCase(char *text)
+        {
+            while (*text != 0)
+            {
+                *text = toupper(*text);
+                text++;
+            }
+        }
+
         char *allocText(const char *from)
         {
             int len = 0;
@@ -165,7 +174,6 @@ namespace FCLIB
             }
             return pos;
         }
-
 
     }
 }

@@ -32,7 +32,7 @@ namespace FCLIB
 
         char *allocText(size_t length);
         void freeText(const char *text);
-
+        void toUpperCase(char *text);
         const char *next(const char *text, const char *substr);
 
         template <typename T, typename T1, typename T2>

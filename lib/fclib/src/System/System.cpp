@@ -32,7 +32,6 @@ namespace FCLIB
 
     void EspBoardClass::delayMsecs(size_t msecs) { return delay(msecs); }
 
-    uint m = 0;
     unsigned long EspBoardClass::currentMsecs()
     {
         return millis();

@@ -64,10 +64,10 @@ namespace FCLIB
             // now = now % 3600;
             // int minutes = now/60;
             // int seconds = now % 60;
-            EpochTime &time = EpochTime::Instance;
+            EpochTime &time = EpochTime::getInstance();
 
             const char *tabs = m_indentTabCount <= 0 ? "" : (m_tabs + m_maxTabs - m_indentTabCount);
-            int len = snprintf(m_outputBuffer, m_maxOutputSize, "%6s-%ld:%02ld:%02ld - %15.15s: %s",
+            int len = snprintf(m_outputBuffer, m_maxOutputSize, "%6s-%02ld:%02ld:%02ld - %15.15s: %s",
                                getLevelName(level),
                                time.getHour(), time.getMinute(), time.getSecond(),
                                moduleName, tabs);

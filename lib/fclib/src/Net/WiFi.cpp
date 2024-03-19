@@ -10,6 +10,7 @@ String ipAddress;
 
 FCLIB::WiFiSetup::WiFiSetup() : log("WiFiSetup", DEBUG_LEVEL)
 {
+    wifiManager.setDebugOutput(false);
 }
 
 FCLIB::WiFiSetup::~WiFiSetup()
@@ -21,6 +22,7 @@ bool FCLIB::WiFiSetup::connect(const char *name)
     log.debug("Connect");
     WiFi.setHostname(name);
     wifiManager.autoConnect(name);
+    log.debug("\tconnected %s", WiFi.isConnected() ? "success" : "failed");
     return WiFi.isConnected();
 }
 

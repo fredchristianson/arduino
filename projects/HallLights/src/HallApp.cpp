@@ -1,7 +1,8 @@
 
 #include "./HallApp.h"
+#include "fclib/EpochTime.h"
 
-using namespace FCLIB;
+    using namespace FCLIB;
 
 bool HallAppSetup::beginSetup()
 {
@@ -13,14 +14,16 @@ bool HallAppSetup::beginSetup()
 
 bool HallAppLoop::loopExecute()
 {
-    log.debug("hall app loop");
+    EpochTime &et = EpochTime::getInstance();
+    log.debug("hall app loop %ld", et.getEpochSeconds());
+    delay(500);
     return true;
 }
 
 HallApp::HallApp()
 {
     log.setModuleName("HallApp");
-    
+
     log.info("Created");
 }
 
@@ -28,10 +31,11 @@ HallApp::~HallApp()
 {
 }
 
-
-AppLoop* HallApp::createLoop(){
+AppLoop *HallApp::createLoop()
+{
     return new HallAppLoop();
 }
-AppSetup* HallApp::createSetup(){
+AppSetup *HallApp::createSetup()
+{
     return new HallAppSetup();
 }

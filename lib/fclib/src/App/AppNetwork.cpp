@@ -10,7 +10,7 @@ namespace FCLIB
     bool savePortalParameters = false;
     void saveWifiConfig(WiFiSetup *setup)
     {
-        savePortalParameters = false;
+        savePortalParameters = true; // params changed so need to save;
     }
 
     AppNetwork::AppNetwork() : AppComponent(), log("AppNetwork")
@@ -43,7 +43,7 @@ namespace FCLIB
         if (ntp != NULL)
         {
             this->useNtp = ntp->get("connect", true);
-            this->useNtp = ntp->get("tz_offset_minutes", 0);
+            this->ntpOffsetMinutes = ntp->get("tz_offset_minutes", 0);
             log.debug("use ntp %d", useNtp);
         }
         ConfigSection *mqtt = config->getSection("mqtt");
@@ -125,10 +125,9 @@ namespace FCLIB
 
     bool AppNetwork::connectNtp()
     {
-        int tz_offset = this->getConfig()->get("ntp", "tz_offset_minutes", 0);
+        int tz_offset = this->ntpOffsetMinutes;
         log.debug("tz_offset: %d", tz_offset);
-        TimeClient::run();
-        TimeClient::setTimezoneOffsetMinutes(tz_offset);
+        TimeClient::run(tz_offset);
         return true;
     }
 

@@ -1,6 +1,7 @@
 #include <cstdarg>
 #ifndef LOGGER_H
 #define LOGGER_H
+#include <WString.h>
 
 namespace FCLIB
 {
@@ -50,15 +51,16 @@ namespace FCLIB
         virtual LogLevel getLevel() const;
         virtual void setLevel(LogLevel level);
 
-        virtual bool shouldLog(int level, const char *m_name, const char *message) const;
+        virtual bool shouldLog(int level, const char *message) const;
 
         Logger *setModuleName(const char *name);
 
     private:
         LogLevel getModuleLoggerLevel() const;
 
-        const char *moduleName;
-        const char *lastError;
+        String moduleName;
+        String ucModuleName;
+        String lastError;
         LogLevel level;
     };
 
