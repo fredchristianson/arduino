@@ -158,4 +158,12 @@ namespace FCLIB
         }
         return false;
     }
+
+    void Config::clearChanged()
+    {
+        for (int i = 0; i < sections.size(); i++)
+        {
+            sections[i]->clearChanged();
+        }
+    }
 }

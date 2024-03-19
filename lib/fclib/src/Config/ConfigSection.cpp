@@ -8,6 +8,7 @@ namespace FCLIB
 {
     ConfigSection::ConfigSection(const char *name) : log("ConfigSection")
     {
+        log.debug("Config section %s", name);
         this->name = name;
     }
 
@@ -17,6 +18,15 @@ namespace FCLIB
         {
             ConfigValue *val = this->values.get(i);
             delete val;
+        }
+    }
+
+    void ConfigSection::clearChanged()
+    {
+        for (int i = 0; i < this->values.size(); i++)
+        {
+            ConfigValue *val = this->values.get(i);
+            val->changed = false;
         }
     }
 

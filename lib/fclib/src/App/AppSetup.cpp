@@ -17,6 +17,7 @@ namespace FCLIB
 
     bool AppSetup::setup(Config *config)
     {
+        log.always("AppSetup::setup");
         this->config = config;
         return this->setupLogging() &&
                this->beginSetup() &&
@@ -39,7 +40,8 @@ namespace FCLIB
 
     bool AppSetup::setupLogging()
     {
-        configureLogging(this->config->getSection("Logging"));
+        log.always("AppSetup::setupLogging");
+        configureLogging(this->config->getSection("logging"));
         return true;
     }
 

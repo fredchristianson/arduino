@@ -74,6 +74,7 @@ namespace FCLIB
                 }
             }
         }
+        clearChanged();
         return true;
     }
 
@@ -89,7 +90,7 @@ namespace FCLIB
             writer.writeLine(line);
             for (int j = 0; j < section->values.size(); j++)
             {
-                ConfigValue *val = section->values[i];
+                ConfigValue *val = section->values[j];
                 line = val->name;
                 line += "=";
                 line += val->toString();
@@ -97,11 +98,14 @@ namespace FCLIB
             }
             writer.writeLine("");
         }
+        clearChanged();
+
         return true;
     }
 
     bool ConfigFile::save()
     {
+        log.always("Save config: %s", this->filePath.c_str());
         return this->save(this->filePath.c_str());
     }
 }

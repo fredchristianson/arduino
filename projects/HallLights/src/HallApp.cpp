@@ -14,9 +14,7 @@ bool HallAppSetup::beginSetup()
 
 bool HallAppLoop::loopExecute()
 {
-    EpochTime &et = EpochTime::getInstance();
-    log.debug("hall app loop %ld", et.getEpochSeconds());
-    delay(500);
+log.debug("loop");
     return true;
 }
 

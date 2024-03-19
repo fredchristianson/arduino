@@ -136,7 +136,6 @@ LogLevel Logger::getLevel() const
 
 void Logger::setLevel(LogLevel level)
 {
-    Serial.printf("Set level %s: %d\n", this->moduleName, level);
     this->level = level;
 }
 
@@ -160,6 +159,7 @@ bool Logger::shouldLog(int level, const char *message) const
         return true;
     }
     LogLevel moduleLevel = this->getModuleLoggerLevel();
+    // Serial.printf("should log: %s %d > %d\n", moduleName.c_str(), moduleLevel, level);
     return (moduleLevel == ALWAYS_LEVEL) || (moduleLevel >= level);
 }
 
@@ -239,6 +239,7 @@ namespace FCLIB
     }
     void setDefaultLoggerLevel(LogLevel level)
     {
+        // Serial.printf("Default log level %d\n", level);
         defaultLogLevel = level;
     }
 }
@@ -265,6 +266,8 @@ LogLevel Logger::getModuleLoggerLevel() const
         else if (search->isBetterMatch(this->ucModuleName, bestMatch))
         {
             bestMatch = search;
+            // Logger log("dbg");
+            // log.always("Best Match: %s for %s", search->name.c_str(), this->ucModuleName.c_str());
         }
         search = search->next;
     }
@@ -313,19 +316,19 @@ LogLevel getLogLevel(const String &text)
 }
 void FCLIB::configureLogging(ConfigSection *config)
 {
-    Logger log("Logger Conf", DEBUG_LEVEL);
+    Logger log("Logger Conf", WARN_LEVEL);
     for (int i = 0; i < config->values.size(); i++)
     {
         ConfigValue *value = config->values[i];
         LogLevel level = getLogLevel(value->toString());
         if (value->name.equalsIgnoreCase("default"))
         {
-            log.always("default: %s", value->toString().c_str());
+            log.debug("default: %s", value->toString().c_str());
             setDefaultLoggerLevel(level);
         }
         else
         {
-            log.always("%s: %s", value->name.c_str(), value->toString().c_str());
+            log.debug("%s: %s", value->name.c_str(), value->toString().c_str());
             setModuleLoggerLevel(value->name.c_str(), level);
         }
     }

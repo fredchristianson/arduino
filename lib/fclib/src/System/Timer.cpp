@@ -69,7 +69,7 @@ namespace FCLIB
 
     IntervalTimer *IntervalTimer::create(size_t tics, size_t durationMsecs)
     {
-        Logger log("IntervalTimer::create", DEBUG_LEVEL);
+        Logger log("IntervalTimer");
         log.debug("create IntervalTimer %ld %ld", tics, durationMsecs);
         return new IntervalTimer(durationMsecs / tics);
     }

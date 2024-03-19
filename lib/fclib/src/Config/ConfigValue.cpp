@@ -13,28 +13,24 @@ namespace FCLIB
         this->stringValue = value;
         this->stringValue.trim();
         this->type = STRING_TYPE;
-        changed = false;
     }
     void ConfigValue::set(int value)
     {
         changed = changed || value != intValue;
         this->intValue = value;
         this->type = INT_TYPE;
-        changed = false;
     }
     void ConfigValue::set(float value)
     {
         changed = changed || value != floatValue;
         this->floatValue = value;
         this->type = FLOAT_TYPE;
-        changed = false;
     }
     void ConfigValue::set(bool value)
     {
         changed = changed || value != boolValue;
         this->boolValue = value;
         this->type = BOOL_TYPE;
-        changed = false;
     }
 
     const String &ConfigValue::toString()

@@ -41,7 +41,12 @@ namespace FCLIB
         log.debug("App::setup result: %s", success ? "success" : "fail");
         if (config->isChanged())
         {
+            log.always("config changed");
             config->save();
+        }
+        else
+        {
+            log.always("config did not change");
         }
         return success;
     }

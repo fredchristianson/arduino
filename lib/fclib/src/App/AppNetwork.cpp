@@ -10,12 +10,13 @@ namespace FCLIB
     bool savePortalParameters = false;
     void saveWifiConfig(WiFiSetup *setup)
     {
+        Logger log("AppNetwork");
+        log.debug("params changed");
         savePortalParameters = true; // params changed so need to save;
     }
 
     AppNetwork::AppNetwork() : AppComponent(), log("AppNetwork")
     {
-        log.setModuleName("AppNetwork");
 
         this->useWifi = true;
         this->useNtp = true;
@@ -74,6 +75,7 @@ namespace FCLIB
                 delay(10000);
                 log.info("retrying wifi connection");
             }
+            // getConfig()->set("reset", false, "wifi");
         }
 
         if (this->useMqtt)
@@ -89,6 +91,7 @@ namespace FCLIB
 
     bool AppNetwork::connectWifi()
     {
+        savePortalParameters = false;
         log.info("Connecting wifi");
         WiFiSetup wifi;
         WiFiPortalParameter mqttServerParam("mqttserver", "MQTT IP address", mqttServer.c_str(), 40);
@@ -98,17 +101,19 @@ namespace FCLIB
         wifi.addParameter(mqttUserParam);
         wifi.addParameter(mqttPasswordParam);
         wifi.setSaveConfigCallback(saveWifiConfig);
-        savePortalParameters = false;
         bool connected = false;
         if (this->resetWifi)
         {
             log.info("Reseting wifi");
 
             connected = wifi.startPortal(deviceName.c_str());
+            log.info("portal done");
         }
         else
         {
+            log.info("start wifi connect");
             connected = wifi.connect(deviceName.c_str());
+            log.info("wifi connect done %d", connected);
         }
         if (savePortalParameters)
         {
@@ -119,6 +124,10 @@ namespace FCLIB
             config->set("mqtt_password", mqttPasswordParam.getValue(), "mqtt");
             config->set("mqtt_server", mqttServerParam.getValue(), "mqtt");
             config->set("reset", false, "wifi");
+        }
+        else
+        {
+            log.debug("savePortalParameters %d", savePortalParameters);
         }
         return connected;
     }

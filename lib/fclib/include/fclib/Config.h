@@ -24,24 +24,28 @@ namespace FCLIB
         {
             this->name = name;
             set(value);
+            this->changed = false;
         }
 
         ConfigValue(const char *name, int value)
         {
             this->name = name;
             set(value);
+            this->changed = false;
         }
 
         ConfigValue(const char *name, float value)
         {
             this->name = name;
             set(value);
+            this->changed = false;
         }
 
         ConfigValue(const char *name, bool value)
         {
             this->name = name;
             set(value);
+            this->changed = false;
         }
 
         void set(const char *value);
@@ -87,6 +91,7 @@ namespace FCLIB
         String name;
         LinkedList<ConfigValue *> values;
         Logger log;
+        void clearChanged();
 
     private:
         void removeValue(ConfigValue *val);
@@ -123,7 +128,14 @@ namespace FCLIB
             return this->getSection(section, true)->getValue(name);
         }
 
-        virtual bool save() { return true; } // derived classes may save
+        virtual bool save()
+        {
+            log.always("Derivfed class did not implement save()");
+            return true;
+        } // derived classes may save
+
+        void clearChanged();
+
     protected:
         LinkedList<ConfigSection *> sections;
         ConfigSection *createSection(const char *name);

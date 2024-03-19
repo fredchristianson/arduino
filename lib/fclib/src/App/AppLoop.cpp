@@ -74,8 +74,11 @@ namespace FCLIB
 
     bool AppLoop::setup(Config *config)
     {
-        long framesPerSecond = config->get("frames_per_second", 0);
-        setSpeed(framesPerSecond);
+        long framesPerSecond = config->get("frames_per_second", -1);
+        if (framesPerSecond >= 0)
+        {
+            setSpeed(framesPerSecond);
+        }
         return true;
     }
 }
