@@ -62,6 +62,20 @@ namespace FCLIB
         Logger log;
         long timezoneOffsetMinutes;
     };
+
+    class Mqtt
+    {
+    public:
+        Mqtt();
+        virtual ~Mqtt();
+
+        bool connect(const char *deviceName, const char *mqttServer, const char *user, const char *password, int mqttPort = 1883);
+
+    protected:
+        WiFiClient wifiClient;
+        PubSubClient pubSubClient;
+        Logger log;
+    };
 }
 
 #endif

@@ -9,10 +9,33 @@ using namespace FCLIB;
 namespace FCLIB
 {
 
-    Timer::Timer(size_t durationMsecs) : log("Timer")
+    long Timer::toMsecs(size_t duration, TimerUnit unit)
+    {
+        size_t msecs = 0;
+        switch (unit)
+        {
+        case TIME_MSECS:
+            msecs = duration;
+            break;
+        case TIME_SECONDS:
+            msecs = duration * 1000;
+            break;
+        case TIME_MINUTES:
+            msecs = duration * 1000 * 60;
+            break;
+        default:
+            Logger log("Timer");
+            log.error("Unknown TimerUnit %d", unit);
+        }
+        return msecs;
+    }
+
+    Timer::Timer(size_t duration, TimerUnit unit) : log("Timer")
     {
         log.debug("Timer::Timer");
-        this->durationMsecs = durationMsecs;
+
+        this->durationMsecs = Timer::toMsecs(duration, unit);
+
         this->startTimeMsecs = this->currentTimeMsecs();
     }
 
@@ -22,9 +45,9 @@ namespace FCLIB
 
     bool Timer::isComplete()
     {
-        bool expires = this->startTimeMsecs + this->durationMsecs > this->currentTimeMsecs();
+        bool expired = this->startTimeMsecs + this->durationMsecs < this->currentTimeMsecs();
         log.debug("expire test %ld %ld %ld", this->startTimeMsecs, this->durationMsecs, this->currentTimeMsecs());
-        return expires;
+        return expired;
     }
 
     bool Timer::reset()
@@ -41,14 +64,33 @@ namespace FCLIB
         // return THE_BOARD->currentMsecs();
     }
 
-    IntervalTimer::IntervalTimer(size_t msecs) : Timer(msecs)
+    IntervalTimer::IntervalTimer(size_t duration, TimerUnit unit) : Timer(duration, unit)
     {
         log.setModuleName("IntervalTimer");
-        log.debug("timer msecs: %d", msecs);
+        log.debug("timer: %d %d", duration, unit);
     }
 
     IntervalTimer::~IntervalTimer()
     {
+    }
+
+    Timer &Timer::seconds(int addSeconds)
+    {
+        this->durationMsecs += addSeconds * 1000;
+        this->startTimeMsecs = this->currentTimeMsecs();
+        return *this;
+    }
+    Timer &Timer::msecs(int addMsecs)
+    {
+        this->durationMsecs += addMsecs;
+        this->startTimeMsecs = this->currentTimeMsecs();
+        return *this;
+    }
+    Timer &Timer::minutes(int addMinutess)
+    {
+        this->durationMsecs += addMinutess * 60 * 1000;
+        this->startTimeMsecs = this->currentTimeMsecs();
+        return *this;
     }
 
     bool IntervalTimer::isComplete()
@@ -59,7 +101,8 @@ namespace FCLIB
         Timer::isComplete();
         if (now > over)
         {
-            long excess = now - over;
+            // excess can be (now-over) to "catch up" if last interval took too long.  seems better not to
+            long excess = 0; // now - over;
             this->startTimeMsecs = now - excess;
             log.debug("complete");
             return true;
@@ -67,14 +110,14 @@ namespace FCLIB
         return false;
     }
 
-    IntervalTimer *IntervalTimer::create(size_t tics, size_t durationMsecs)
+    IntervalTimer *IntervalTimer::create(size_t tics, size_t duration, TimerUnit unit)
     {
         Logger log("IntervalTimer");
-        log.debug("create IntervalTimer %ld %ld", tics, durationMsecs);
-        return new IntervalTimer(durationMsecs / tics);
+        log.debug("create IntervalTimer %ld %ld %d", tics, duration, unit);
+        return new IntervalTimer(Timer::toMsecs(duration, unit) / tics);
     }
 
-    InstantTimer::InstantTimer() : Timer(0)
+    InstantTimer::InstantTimer() : Timer(0, TIME_MSECS)
     {
         log.setModuleName("InstantTimer");
     }

@@ -6,91 +6,94 @@
 namespace FCLIB
 {
 
-	namespace TEST
-	{
-		class TestSuite;
-		class TestRunner;
+    namespace TEST
+    {
+        class TestSuite;
+        class TestRunner;
 
-		enum ResultType
-		{
-			SUCCESS = 1,
-			FAIL = 0,
-			WARN = -1
-		};
+        enum ResultType
+        {
+            SUCCESS = 1,
+            FAIL = 0,
+            WARN = -1
+        };
 
-		class TestResult
-		{
-		public:
-			TestResult(const char *message, TestSuite *suite, Logger *testLogger);
-			virtual ~TestResult();
-			void fail(const char *message);
-			void equal(int val, int expect, const char *testMessage, ResultType errorType = FAIL);
-			void notEqual(int val, int expect, const char *testMessage, ResultType errorType = FAIL);
+        class TestResult
+        {
+        public:
+            TestResult(const char *message, TestSuite *suite, Logger *testLogger);
+            virtual ~TestResult();
+            bool fail(const char *message);
+            bool equal(int val, int expect, const char *testMessage, ResultType errorType = FAIL);
+            bool equal(void *val, void *expect, const char *testMessage, ResultType errorType = FAIL);
+            bool notEqual(int val, int expect, const char *testMessage, ResultType errorType = FAIL);
+            bool notNull(void *val, const char *testMessage, ResultType errorType = FAIL);
+            bool null(void *val, const char *testMessage, ResultType errorType = FAIL);
 
-			bool isSuccess() const { return type == SUCCESS; }
-			bool isFail() const { return type == FAIL; }
-			bool isWarn() const { return type == WARN; }
+            bool isSuccess() const { return type == SUCCESS; }
+            bool isFail() const { return type == FAIL; }
+            bool isWarn() const { return type == WARN; }
 
-			void success(const char *message);
-			void failure(const char *message, ResultType err = FAIL);
-			void warning(const char *message);
+            void success(const char *message);
+            void failure(const char *message, ResultType err = FAIL);
+            void warning(const char *message);
 
-		protected:
-			String message;
-			ResultType type;
+        protected:
+            String message;
+            ResultType type;
 
-			friend TestSuite;
-			friend TestRunner;
-			TestResult *nextResult;
-			TestSuite *testSuite;
-			Logger *log;
-		};
+            friend TestSuite;
+            friend TestRunner;
+            TestResult *nextResult;
+            TestSuite *testSuite;
+            Logger *log;
+        };
 
-		class TestSuite
-		{
-		public:
-			TestSuite(const char *name);
-			virtual ~TestSuite();
+        class TestSuite
+        {
+        public:
+            TestSuite(const char *name);
+            virtual ~TestSuite();
 
-			bool run();
+            bool run();
 
-			bool isSuccess() const;
-			int successCount() const;
-			int failCount() const;
-			int warnCount() const;
+            bool isSuccess() const;
+            int successCount() const;
+            int failCount() const;
+            int warnCount() const;
 
-		protected:
-			virtual void runTests() = 0;
-			bool test(const char *name, void (*func)(TestResult &result));
+        protected:
+            virtual void runTests() = 0;
+            bool test(const char *name, void (*func)(TestResult &result));
 
-			TestResult *firstResult;
-			TestSuite *nextSuite;
-			Logger *log;
-			String name;
+            TestResult *firstResult;
+            TestSuite *nextSuite;
+            Logger *log;
+            String name;
 
-			friend TestRunner;
-		};
+            friend TestRunner;
+        };
 
-		class TestRunner
-		{
-		public:
-			TestRunner(const char *name, Logger &logger);
-			virtual ~TestRunner();
+        class TestRunner
+        {
+        public:
+            TestRunner(const char *name, Logger &logger);
+            virtual ~TestRunner();
 
-			bool run(TestSuite &suite);
+            bool run(TestSuite &suite);
 
-			bool isSuccess() const;
-			int successCount() const;
-			int failCount() const;
-			int warnCount() const;
+            bool isSuccess() const;
+            int successCount() const;
+            int failCount() const;
+            int warnCount() const;
 
-		protected:
-			String name;
-			TestSuite *firstSuite;
-			Logger &log;
-			long startMemory;
-		};
-	};
+        protected:
+            String name;
+            TestSuite *firstSuite;
+            Logger &log;
+            long startMemory;
+        };
+    };
 
 } // namespace FCLIB
 

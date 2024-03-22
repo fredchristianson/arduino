@@ -9,6 +9,7 @@
 #include "./LinkedList.h"
 #include "./Net.h"
 #include "./Logging.h"
+#include "./Task.h"
 
 namespace FCLIB
 {
@@ -17,6 +18,8 @@ namespace FCLIB
     class AppLoop;
     class AppDevices;
     class AppNetwork;
+    class TaskQueue;
+    class AppEventManager;
 
     class AppComponent
     {
@@ -32,6 +35,7 @@ namespace FCLIB
         AppNetwork *getNetwork();
         AppLoop *getLoop();
         Config *getConfig();
+        AppEventManager *getEventManager();
 
     protected:
         friend App;
@@ -72,22 +76,41 @@ namespace FCLIB
     class AppLoop : public AppComponent
     {
     public:
+        static void addTask(LoopTask *task);
+        static void removeTask(LoopTask *task);
+
         AppLoop();
         virtual ~AppLoop();
-        void setSpeed(uint16 framesPerSecond);
-        void runOnce();
+        void run();
         bool setup(Config *appConfig);
 
     protected:
-        virtual bool beforeLoop() { return true; }
-        virtual bool loopExecute() { return true; }
-        virtual bool afterLoop() { return true; }
-        void setLoopTimer(Timer *timer);
+        virtual void beforeLoop();
+        virtual void runTasks();
+        virtual void afterLoop();
         Logger log;
+
+        TaskQueue beforeTasks;
+        TaskQueue loopTasks;
+        TaskQueue afterTasks;
 
     private:
         Timer *loopTimer;
         bool running;
+    };
+
+    class AppEventManager : public AppComponent
+    {
+    public:
+        AppEventManager();
+        virtual ~AppEventManager();
+
+        void processEvents();
+        bool setup(Config *appConfig);
+
+    protected:
+        EventManager eventManager;
+        Logger log;
     };
 
     class AppNetwork : public AppComponent
@@ -112,11 +135,13 @@ namespace FCLIB
         String mqttUser;
         String mqttPassword;
         String mqttServer;
+        String mqttDeviceName;
 
         int ntpOffsetMinutes;
         String deviceName;
 
     private:
+        Mqtt *mqtt;
         Logger log;
     };
 
@@ -136,14 +161,17 @@ namespace FCLIB
         AppDevices *getDevices();
         AppNetwork *getNetwork();
         AppLoop *getLoop();
+        AppEventManager *getEventManager();
 
     protected:
         Logger log;
 
+        virtual void setupComplete(); // called after successful setup
         virtual AppSetup *createSetup();
         virtual AppDevices *createDevices();
         virtual AppNetwork *createNetwork();
         virtual AppLoop *createLoop();
+        virtual AppEventManager *createEventManager();
 
     private:
         LinkedList<Event *> events;
@@ -152,6 +180,7 @@ namespace FCLIB
         AppLoop *appLoop;
         AppDevices *appDevices;
         AppNetwork *appNetwork;
+        AppEventManager *appEventManager;
         Config *config;
     };
 }

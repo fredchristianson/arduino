@@ -22,16 +22,19 @@ namespace FCLIB
         this->useNtp = true;
         this->useMqtt = true;
         this->ntpOffsetMinutes = 0;
+        this->mqtt = NULL;
     }
 
     AppNetwork::~AppNetwork()
     {
+        delete mqtt;
     }
 
     bool AppNetwork::setup(Config *config)
     {
         log.debug("network setup");
-        deviceName = config->get("device_name", "FCLIB_DEVICE");
+        deviceName = config->get("device_name", "FCLIB_DEVICE") + ":" + THE_BOARD->getDeviceId();
+        log.always("deviceName: %s", deviceName.c_str());
         ConfigSection *wifi = config->getSection("wifi");
         useWifi = (wifi != NULL);
         if (useWifi)
@@ -54,7 +57,8 @@ namespace FCLIB
             this->mqttPassword = mqtt->get("mqtt_password", "");
             this->mqttUser = mqtt->get("mqtt_user", "");
             this->mqttServer = mqtt->get("mqtt_server", "");
-            log.debug("use mqtt %s %s %s", mqttServer.c_str(), mqttUser.c_str(), mqttPassword.c_str());
+            this->mqttDeviceName = mqtt->get("mqtt_device_name", deviceName.c_str());
+            log.debug("use mqtt %s %s %s %s", mqttServer.c_str(), mqttDeviceName.c_str(), mqttUser.c_str(), mqttPassword.c_str());
         }
         return true;
     }
@@ -78,13 +82,15 @@ namespace FCLIB
             // getConfig()->set("reset", false, "wifi");
         }
 
-        if (this->useMqtt)
-        {
-            this->connectMqtt();
-        }
+        bool success = true;
+
         if (this->useNtp)
         {
-            this->connectNtp();
+            success &= this->connectNtp();
+        }
+        if (this->useMqtt)
+        {
+            success &= this->connectMqtt();
         }
         return true;
     }
@@ -117,7 +123,7 @@ namespace FCLIB
         }
         if (savePortalParameters)
         {
-            log.always("Update mqtt params: %s %s %s", mqttUserParam.getValue(), mqttUserParam.getValue(), mqttServerParam.getValue());
+            log.debug("Update mqtt params: %s %s %s", mqttUserParam.getValue(), mqttUserParam.getValue(), mqttServerParam.getValue());
 
             Config *config = getConfig();
             config->set("mqtt_user", mqttUserParam.getValue(), "mqtt");
@@ -142,6 +148,11 @@ namespace FCLIB
 
     bool AppNetwork::connectMqtt()
     {
-        return true;
+        if (mqtt != NULL)
+        {
+            delete mqtt;
+        }
+        mqtt = new Mqtt();
+        return mqtt->connect(mqttServer.c_str(), mqttDeviceName.c_str(), mqttUser.c_str(), mqttPassword.c_str());
     }
 }

@@ -2,6 +2,7 @@
 #define HALLLIGHTS_TEST
 
 #include "fclib/Config.h"
+#include "fclib/Task.h"
 #include "fclib/Test.h"
 #include "fclib/Logging.h"
 
@@ -17,6 +18,8 @@ namespace HALLLIGHTS_TEST
         TestRunner runner("Hall Lights Tests", log);
         CONFIG::ConfigTestSuite config;
         runner.run(config);
+        TASK::TaskTestSuite task;
+        runner.run(task);
         return runner.isSuccess();
     }
 }

@@ -20,11 +20,16 @@ namespace FCLIB
         THE_APP = NULL;
     }
 
+    void App::setupComplete()
+    {
+        // derived class can override
+    }
+
     void App::loop()
     {
         if (running)
         {
-            getLoop()->runOnce();
+            getLoop()->run();
         }
     }
 
@@ -36,6 +41,7 @@ namespace FCLIB
                        getNetwork()->setup(config) &&
                        getDevices()->setup(config) &&
                        getLoop()->setup(config) &&
+                       getEventManager()->setup(config) &&
                        getNetwork()->connect();
         running = success;
         log.debug("App::setup result: %s", success ? "success" : "fail");
@@ -47,6 +53,10 @@ namespace FCLIB
         else
         {
             log.always("config did not change");
+        }
+        if (success)
+        {
+            setupComplete();
         }
         return success;
     }
@@ -61,7 +71,6 @@ namespace FCLIB
         if (appSetup == NULL)
         {
             appSetup = createSetup();
-            appSetup->app = this;
         }
         return appSetup;
     }
@@ -70,7 +79,6 @@ namespace FCLIB
         if (appDevices == NULL)
         {
             appDevices = createDevices();
-            appDevices->app = this;
         }
         return appDevices;
     }
@@ -80,7 +88,6 @@ namespace FCLIB
         if (appNetwork == NULL)
         {
             appNetwork = createNetwork();
-            appNetwork->app = this;
         }
         return appNetwork;
     }
@@ -89,9 +96,17 @@ namespace FCLIB
         if (appLoop == NULL)
         {
             appLoop = createLoop();
-            appLoop->app = this;
         }
         return appLoop;
+    }
+
+    AppEventManager *App::getEventManager()
+    {
+        if (appEventManager == NULL)
+        {
+            appEventManager = createEventManager();
+        }
+        return appEventManager;
     }
 
     AppSetup *App::createSetup()
@@ -119,6 +134,12 @@ namespace FCLIB
         return loop;
     }
 
+    AppEventManager *App::createEventManager()
+    {
+        AppEventManager *eventManager = new AppEventManager();
+        eventManager->app = this;
+        return eventManager;
+    }
     AppComponent::AppComponent() {}
     AppComponent::~AppComponent() {}
     App *AppComponent::getApp() { return app; }
@@ -131,6 +152,7 @@ namespace FCLIB
     }
     AppNetwork *AppComponent::getNetwork() { return app->getNetwork(); }
     AppLoop *AppComponent::getLoop() { return app->getLoop(); }
+    AppEventManager *AppComponent::getEventManager() { return app->getEventManager(); }
     App *App::THE_APP;
     Board *App::THE_BOARD;
 }

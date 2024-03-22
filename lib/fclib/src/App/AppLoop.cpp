@@ -6,79 +6,86 @@
 namespace FCLIB
 {
 
+    AppLoop *singletonAppLoop = NULL;
+
+    void AppLoop::addTask(LoopTask *task)
+    {
+        Logger log("AppLoop");
+        switch (task->getStage())
+        {
+        case LOOP_BEGIN:
+            singletonAppLoop->beforeTasks.add(task);
+            break;
+        case LOOP_NORMAL:
+            log.never("Add LoopTask 0x%lx", task);
+            singletonAppLoop->loopTasks.add(task);
+            break;
+        case LOOP_END:
+            singletonAppLoop->afterTasks.add(task);
+            break;
+        }
+    }
+
+    void AppLoop::removeTask(LoopTask *task)
+    {
+        Logger log("AppLoop");
+        log.never("remove loop task 0x%lx", task);
+        switch (task->getStage())
+        {
+        case LOOP_BEGIN:
+            singletonAppLoop->beforeTasks.remove(task);
+            break;
+        case LOOP_NORMAL:
+            singletonAppLoop->loopTasks.remove(task);
+            break;
+        case LOOP_END:
+            singletonAppLoop->afterTasks.remove(task);
+            break;
+        }
+    }
     // todo: setup watchdog timer
     AppLoop::AppLoop() : AppComponent(), log("AppLoop")
     {
         running = true;
-        this->loopTimer = new InstantTimer();
+        singletonAppLoop = this;
     }
 
     AppLoop::~AppLoop()
     {
-        if (loopTimer != NULL)
-        {
-            loopTimer->destroy();
-        }
     }
 
-    void AppLoop::runOnce()
+    void AppLoop::run()
     {
         if (!this->running)
         {
             log.debug("app is stopped");
+            return;
         }
-        if (this->loopTimer->isComplete())
-        {
-            if (this->beforeLoop())
-            {
-                if (this->loopExecute())
-                {
-                    this->afterLoop();
-                }
-            }
-        }
+        this->beforeLoop();
+        getEventManager()->processEvents();
+        this->runTasks();
+        this->afterLoop();
     }
 
-    void AppLoop::setLoopTimer(Timer *timer)
+    void AppLoop::beforeLoop()
     {
-        if (this->loopTimer)
-        {
-            this->loopTimer->destroy();
-        }
-        if (loopTimer == NULL)
-        {
-            this->loopTimer = new InstantTimer();
-        }
-        else
-        {
-            this->loopTimer = timer;
-        }
+        beforeTasks.updateTaskStatus();
+        beforeTasks.runTasks();
     }
-
-    void AppLoop::setSpeed(uint16 framesPerSecond)
+    void AppLoop::runTasks()
     {
-        log.debug("FramesPerSecond %d", framesPerSecond);
-        if (this->loopTimer != NULL)
-        {
-            this->loopTimer->destroy();
-        }
-        if (framesPerSecond > 0)
-        {
-            this->loopTimer = IntervalTimer::createByRate(framesPerSecond);
-        }
-        else
-        {
-            this->loopTimer = InstantTimer::create();
-        }
+        loopTasks.updateTaskStatus();
+        loopTasks.runTasks();
+    }
+    void AppLoop::afterLoop()
+    {
+        afterTasks.updateTaskStatus();
+        afterTasks.runTasks();
     }
 
     bool AppLoop::setup(Config *config)
     {
-        long framesPerSecond = config->get("frames_per_second", -1);
-        if (framesPerSecond >= 0)
-        {
-            setSpeed(framesPerSecond);
-        }
+
         return true;
     }
 }
