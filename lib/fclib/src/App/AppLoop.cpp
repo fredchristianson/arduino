@@ -62,7 +62,7 @@ namespace FCLIB
             return;
         }
         this->beforeLoop();
-        getEventManager()->processEvents();
+        EventManager::processEvents();
         this->runTasks();
         this->afterLoop();
     }

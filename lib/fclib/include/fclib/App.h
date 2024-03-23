@@ -19,7 +19,6 @@ namespace FCLIB
     class AppDevices;
     class AppNetwork;
     class TaskQueue;
-    class AppEventManager;
 
     class AppComponent
     {
@@ -35,7 +34,6 @@ namespace FCLIB
         AppNetwork *getNetwork();
         AppLoop *getLoop();
         Config *getConfig();
-        AppEventManager *getEventManager();
 
     protected:
         friend App;
@@ -99,20 +97,6 @@ namespace FCLIB
         bool running;
     };
 
-    class AppEventManager : public AppComponent
-    {
-    public:
-        AppEventManager();
-        virtual ~AppEventManager();
-
-        void processEvents();
-        bool setup(Config *appConfig);
-
-    protected:
-        EventManager eventManager;
-        Logger log;
-    };
-
     class AppNetwork : public AppComponent
     {
     public:
@@ -121,6 +105,7 @@ namespace FCLIB
 
         virtual bool setup(Config *config);
         virtual bool connect();
+        Mqtt *getMqtt() { return mqtt; }
 
     protected:
         bool connectWifi();
@@ -161,7 +146,6 @@ namespace FCLIB
         AppDevices *getDevices();
         AppNetwork *getNetwork();
         AppLoop *getLoop();
-        AppEventManager *getEventManager();
 
     protected:
         Logger log;
@@ -171,7 +155,6 @@ namespace FCLIB
         virtual AppDevices *createDevices();
         virtual AppNetwork *createNetwork();
         virtual AppLoop *createLoop();
-        virtual AppEventManager *createEventManager();
 
     private:
         LinkedList<Event *> events;
@@ -180,7 +163,6 @@ namespace FCLIB
         AppLoop *appLoop;
         AppDevices *appDevices;
         AppNetwork *appNetwork;
-        AppEventManager *appEventManager;
         Config *config;
     };
 }

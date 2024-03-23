@@ -1,6 +1,7 @@
 #ifndef _FCLIB_TASK_H_
 #define _FCLIB_TASK_H_
 #include <c_types.h>
+#include <functional>
 #include "fclib/Logging.h"
 #include "fclib/Timer.h"
 #include "fclib/Test.h"
@@ -9,6 +10,7 @@
 namespace FCLIB
 {
     class TaskQueue;
+    using TaskCallback = std::function<void()>;
 
     enum LoopStage
     {
@@ -38,6 +40,16 @@ namespace FCLIB
         TaskAction() {}
         virtual ~TaskAction() {}
         virtual void doTask() = 0;
+    };
+
+    class TaskCallbackAction : public TaskAction
+    {
+    public:
+        TaskCallbackAction(TaskCallback callback) { this->callback = callback; }
+        virtual void doTask() override { (this->callback)(); }
+
+    private:
+        TaskCallback callback;
     };
 
     class TaskBase
@@ -72,6 +84,7 @@ namespace FCLIB
     class LoopTask : public TaskBase
     {
     public:
+        static LoopTask *create(TaskCallback callback, LoopStage stage = LOOP_NORMAL, uint8 priority = 50);
         static LoopTask *create(TaskAction *action, LoopStage stage = LOOP_NORMAL, uint8 priority = 50);
         LoopStage getStage() { return this->stage; }
         virtual TaskStatus updateStatus() { return TASK_READY; }
@@ -83,6 +96,7 @@ namespace FCLIB
 
     protected:
         LoopStage stage;
+        bool ownAction; // action created/owned by this object (e.g. delete )
     };
 
     /* NullTasks are used as placeholders so queues are never empty.*/
@@ -95,10 +109,10 @@ namespace FCLIB
         virtual void doTask() {}
     };
 
-    class TimerTask : public LoopTask
+    class TimerTask : public LoopTask, public TaskAction
     {
     public:
-        TimerTask(TaskAction *action, long repeatCount);
+        TimerTask(TaskCallback callback, long repeatCount);
         virtual ~TimerTask();
         virtual TaskStatus updateStatus() override;
 
@@ -113,19 +127,20 @@ namespace FCLIB
     protected:
         Timer timer;
         long repeatCount; // -1 means forever
+        TaskCallback callback;
     };
 
     class OneTimeTask : public TimerTask
     {
     public:
-        OneTimeTask(TaskAction &action);
+        OneTimeTask(TaskCallback callback);
         virtual ~OneTimeTask();
     };
 
     class RepeatingTask : public TimerTask
     {
     public:
-        RepeatingTask(TaskAction &action, long repeatCount = FCLIB_REPEAT_FOREVER);
+        RepeatingTask(TaskCallback callback, long repeatCount = FCLIB_REPEAT_FOREVER);
         virtual ~RepeatingTask();
     };
 
@@ -134,6 +149,9 @@ namespace FCLIB
     public:
         static TimerTask *once(TaskAction &action);
         static TimerTask *repeat(TaskAction &action, long repeatCount = FCLIB_REPEAT_FOREVER);
+
+        static TimerTask *once(TaskCallback callback);
+        static TimerTask *repeat(TaskCallback callback, long repeatCount = FCLIB_REPEAT_FOREVER);
     };
 
     class TaskQueue

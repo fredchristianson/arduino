@@ -1,10 +1,10 @@
 #include <Arduino.h>
-#include "fclib/Component.h"
+#include "fclib/Hardware.h"
 #include "fclib/Timer.h"
 
 using namespace FCLIB;
 
-namespace FCLIB::COMPONENT
+namespace FCLIB::HW
 {
     Led::Led() : OutputPinComponent()
     {

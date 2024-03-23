@@ -1,9 +1,9 @@
 #include <Arduino.h>
-#include "fclib/Component.h"
+#include "fclib/Hardware.h"
 
 using namespace FCLIB;
 
-namespace FCLIB::COMPONENT
+namespace FCLIB::HW
 {
     OutputPinComponent::OutputPinComponent() : PinComponent()
     {

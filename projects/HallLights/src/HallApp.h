@@ -3,36 +3,31 @@
 #include "fclib/App.h"
 #include "fclib/Config.h"
 #include "fclib/Event.h"
-#include "fclib/Component.h"
+#include "fclib/Hardware.h"
+#include "fclib/HomeAssistant.h"
 
 using namespace FCLIB;
-using namespace FCLIB::COMPONENT;
 
-class HallApp : public App, TaskAction
+class HallApp : public App
 {
 public:
     HallApp();
     virtual ~HallApp();
 
-    void doTask() override; // run every loop
+    void doTask(); // run every loop
 
 protected:
-    void onButtonChange(EventSender *sender, EventBooleanData *data);
+    void onButtonChange(Event *event);
     virtual void setupComplete();
     IntervalTimer halfMinute;
-    Button button;
-    Led led;
+    HW::Button button;
+    HW::Led led;
 
-    struct Listener : public EventListener
-    {
-        HallApp *parent;
-        Logger &log;
-        Listener(HallApp *p) : parent(p), log(p->log) {}
-        virtual bool match(EventType type, EventSender *sender) override;
-        virtual void handle(Event *event) override;
-    };
-    friend Listener;
-    Listener listener;
+    HA::HomeAssistant *ha;
+    HA::Device *haDevice;
+    HA::BinarySensor *haButton;
+    HA::Led *haLed;
+    EventListener listener;
 };
 
 #endif

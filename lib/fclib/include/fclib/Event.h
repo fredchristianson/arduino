@@ -1,7 +1,7 @@
 #ifndef _FCLIB_EVENT_H_
 #define _FCLIB_EVENT_H_
-
-#include "fclib/DoubleLinkedList.h"
+#include <functional>
+#include "fclib/LinkedList.h"
 #include "fclib/Logging.h"
 
 namespace FCLIB
@@ -9,76 +9,81 @@ namespace FCLIB
     class Event;
     class Config;
     class EventManager;
+    class EventListener;
 
-    enum EventType
+    using EventHandlerCallback = std::function<void(Event *)>;
+    enum class EventType
     {
         CHANGE_EVENT = 100,
         ON_EVENT = 101,
         OFF_EVENT = 102,
         PRESS_EVENT = 103,
-        LONGPRESS_EVENT = 104
+        LONGPRESS_EVENT = 104,
+
+        CONNECTED = 200,
+        DISCONNECTED = 201,
+
+        ANY = 0xFFFF
     };
 
-    class EventData
+    class EventHandler
     {
-    };
-
-    class EventBooleanData : EventData
-    {
-    public:
-        EventBooleanData() { this->state = false; }
-        bool isTrue() { return state; }
-        bool isFalse() { return !state; }
-
-        void setState(bool state) { this->state = state; }
 
     private:
-        bool state;
+        EventHandler(EventType type, void *sender, EventHandlerCallback handler);
+        virtual ~EventHandler();
+
+    protected:
+        friend EventManager;
+        friend EventListener;
+
+        virtual bool match(EventType type, void *sender);
+        virtual void handle(Event *);
+
+        EventType type;
+        void *sender;
+        EventHandlerCallback handler;
     };
 
-    class EventSender
-    {
-    public:
-        EventSender() {}
-    };
-
-    class EventListener : public DoubleLinkedListNode<EventListener>
+    class EventListener
     {
     public:
         EventListener();
-        virtual ~EventListener();
+        ~EventListener();
 
-        void start();
-        void stop();
+        EventHandler *handle(EventType type, void *sender, EventHandlerCallback callback);
+        EventHandler *handle(EventType type, EventHandlerCallback callback);
 
-    protected:
+    private:
         friend EventManager;
         void processEvent(Event *event);
-
-        virtual bool match(EventType type, EventSender *sender) { return true; }
-        virtual void handle(Event *) = 0;
+        LinkedList<EventHandler *> handlers;
     };
 
-    class Event : public DoubleLinkedListNode<Event>
+    union EventData_t
+    {
+        EventData_t() { memset(this, 0, sizeof(EventData_t)); }
+        bool boolValue;
+        void *custom;
+    };
+
+    class Event
     {
     public:
-        static void trigger(EventSender *sender, EventType type, bool boolState);
+        static void trigger(EventType type, void *sender);
+        static void trigger(EventType type, void *sender, bool boolState);
 
         EventType getType() { return this->type; }
-        EventSender *getSender() { return this->sender; }
+        void *getSender() { return this->sender; }
 
     protected:
         friend EventManager;
-        Event(EventType type, EventSender *sender);
+        Event(EventType type, void *sender);
         virtual ~Event();
 
         EventType type;
-        EventSender *sender;
-        union
-        {
-            EventBooleanData boolData;
-            void *customData;
-        };
+        void *sender;
+        EventData_t data;
     };
 
     class EventManager
@@ -88,14 +93,15 @@ namespace FCLIB
         static void removeListener(EventListener *listener);
         static void addEvent(Event *event);
         static void removeEvent(Event *event);
+        static void processEvents();
+
+        static EventManager *get();
+
+    private:
         EventManager();
         virtual ~EventManager();
-
-        void processEvents();
-
-    protected:
-        DoubleLinkedList<Event> events;
-        DoubleLinkedList<EventListener> listeners;
+        LinkedList<Event *> events;
+        LinkedList<EventListener *> listeners;
         Logger log;
     };
 }

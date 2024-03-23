@@ -5,9 +5,11 @@
 #include <WiFiManager.h>
 #include <PubSubClient.h>
 #include <NTPClient.h>
+#include "fclib/Task.h"
 
 namespace FCLIB
 {
+
     class WiFiPortalParameter : public WiFiManagerParameter
     {
     public:
@@ -69,12 +71,22 @@ namespace FCLIB
         Mqtt();
         virtual ~Mqtt();
 
-        bool connect(const char *deviceName, const char *mqttServer, const char *user, const char *password, int mqttPort = 1883);
+        bool configure(const char *deviceName, const char *mqttServer, const char *user, const char *password, int mqttPort = 1883);
+
+        bool reconnect();
 
     protected:
+        void checkConnection();
+        void handleMessage(String &topic, String &message);
         WiFiClient wifiClient;
         PubSubClient pubSubClient;
         Logger log;
+        String mqttServer;
+        String deviceName; // primary device if multiple presented to HA
+        String deviceId;
+        String user;
+        String password;
+        int port;
     };
 }
 

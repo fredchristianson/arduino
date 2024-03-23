@@ -5,59 +5,78 @@ using namespace FCLIB;
 namespace FCLIB
 {
 
-    EventManager *singletonEventManager = NULL;
+    EventManager *singletonEventManager;
 
+    EventManager *EventManager::get()
+    {
+        if (singletonEventManager == NULL)
+        {
+            singletonEventManager = new EventManager();
+        }
+        return singletonEventManager;
+    }
     void EventManager::addListener(EventListener *listener)
     {
-        singletonEventManager->listeners.add(listener);
+        EventManager::get()->listeners.add(listener);
     }
     void EventManager::removeListener(EventListener *listener)
     {
-        singletonEventManager->listeners.remove(listener);
+        EventManager *em = get();
+        for (int i = 0; i < em->listeners.size(); i++)
+        {
+            EventListener *l = em->listeners[i];
+            if (l == listener)
+            {
+                em->listeners.remove(i);
+                return;
+            }
+        }
     }
 
     void EventManager::addEvent(Event *event)
     {
-        singletonEventManager->events.add(event);
+        get()->events.add(event);
     }
     void EventManager::removeEvent(Event *event)
     {
-        singletonEventManager->events.remove(event);
+        EventManager *em = get();
+        for (int i = 0; i < em->events.size(); i++)
+        {
+            Event *e = em->events[i];
+            if (e == event)
+            {
+                em->events.remove(i);
+                return;
+            }
+        }
     }
 
     EventManager::EventManager() : log("EventManager")
     {
-        singletonEventManager = this;
     }
     EventManager::~EventManager()
     {
-        singletonEventManager = NULL;
     }
 
     void EventManager::processEvents()
     {
-        Event *event = events.getFirst();
-        while (event != NULL)
-        {
-            log.debug("process event 0x%lx", event);
-            EventListener *listener = listeners.getFirst();
-            while (listener != NULL)
-            {
-                log.debug("check listener 0x%lx", listener);
+        EventManager *em = get();
 
-                if (listener->match(event->getType(), event->getSender()))
-                {
-                    listener->handle(event);
-                }
-                listener = listener->getNext();
+        if (em->events.size() == 0)
+        {
+            return;
+        }
+        LinkedList<Event *> todo(em->events.size(), NULL);
+        Event *event;
+        while ((event = todo.pop()) != NULL)
+        {
+            em->log.debug("process event 0x%lx", event);
+            for (int i = 0; i < em->listeners.size(); i++)
+            {
+                EventListener *listener = em->listeners[i];
+                listener->processEvent(event);
+                delete event;
             }
-            Event *next = event->getNext();
-            log.debug("remove event %lx", event);
-            events.remove(event);
-            log.debug("delete event");
-            delete event;
-            log.debug("process next");
-            event = next;
         }
     }
 }

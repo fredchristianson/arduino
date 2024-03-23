@@ -1,10 +1,10 @@
 #include <Arduino.h>
-#include "fclib/Component.h"
+#include "fclib/Hardware.h"
 #include "fclib/System.h"
 
 using namespace FCLIB;
 
-namespace FCLIB::COMPONENT
+namespace FCLIB::HW
 {
     InputPinComponent::InputPinComponent() : PinComponent()
     {
@@ -33,7 +33,9 @@ namespace FCLIB::COMPONENT
         currentState = digitalRead(pin);
         debounceState = currentState;
         lastStateChangeMsecs = THE_BOARD->currentMsecs();
-        Task::repeat(*this)->delayMsecs(5);
+        Task::repeat([this]()
+                     { this->doTask(); })
+            ->delayMsecs(5);
         return true;
     }
     int InputPinComponent::getState()
@@ -66,11 +68,11 @@ namespace FCLIB::COMPONENT
 
             currentState = state;
             log.debug("trigger CHANGE_EVENT");
-            Event::trigger(this, CHANGE_EVENT, currentState != 0);
+            Event::trigger(EventType::CHANGE_EVENT, this, currentState != 0);
             if (state == 0)
             { // released
                 log.debug("trigger PRESS_EVENT");
-                Event::trigger(this, PRESS_EVENT, currentState != 0);
+                Event::trigger(EventType::PRESS_EVENT, this, currentState != 0);
             }
         }
     }

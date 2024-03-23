@@ -1,8 +1,8 @@
-#include "fclib/Component.h"
+#include "fclib/Hardware.h"
 
 using namespace FCLIB;
 
-namespace FCLIB::COMPONENT
+namespace FCLIB::HW
 {
     ComponentBase::ComponentBase() : log("ComponentBase")
     {

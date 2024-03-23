@@ -33,7 +33,7 @@ namespace FCLIB
     bool AppNetwork::setup(Config *config)
     {
         log.debug("network setup");
-        deviceName = config->get("device_name", "FCLIB_DEVICE") + ":" + THE_BOARD->getDeviceId();
+        deviceName = config->get("device_name", "FCLIB_DEVICE");
         log.always("deviceName: %s", deviceName.c_str());
         ConfigSection *wifi = config->getSection("wifi");
         useWifi = (wifi != NULL);
@@ -153,6 +153,6 @@ namespace FCLIB
             delete mqtt;
         }
         mqtt = new Mqtt();
-        return mqtt->connect(mqttServer.c_str(), mqttDeviceName.c_str(), mqttUser.c_str(), mqttPassword.c_str());
+        return mqtt->configure(mqttServer.c_str(), mqttDeviceName.c_str(), mqttUser.c_str(), mqttPassword.c_str());
     }
 }
