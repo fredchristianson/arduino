@@ -11,22 +11,6 @@ namespace FCLIB
 #define DEBOUNCE_MSECS 50
     namespace HW // Hardware
     {
-        /* Interfaces */
-        class BinaryReadComponent
-        {
-        public:
-            virtual bool isOn() = 0;
-        };
-
-        class BinaryWriteComponent
-        {
-        public:
-            virtual void setOn(bool onState = true) = 0;
-        };
-
-        class BinaryRWComponent : public BinaryReadComponent, public BinaryWriteComponent
-        {
-        };
 
         /* Implementations */
         class ComponentBase
@@ -71,7 +55,7 @@ namespace FCLIB
             IntervalTimer logTimer;
         };
 
-        class OutputPinComponent : public PinComponent, public BinaryWriteComponent
+        class OutputPinComponent : public PinComponent
         {
         public:
             OutputPinComponent();
@@ -90,7 +74,7 @@ namespace FCLIB
             bool state;
         };
 
-        class Button : public InputPinComponent, public BinaryReadComponent
+        class Button : public InputPinComponent
         {
         public:
             Button();
@@ -98,7 +82,7 @@ namespace FCLIB
 
             bool isPressed();
 
-            bool isOn() override { return isPressed(); }
+            bool isOn() { return isPressed(); }
 
         protected:
         };

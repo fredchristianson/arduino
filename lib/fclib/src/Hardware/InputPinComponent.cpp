@@ -6,9 +6,11 @@ using namespace FCLIB;
 
 namespace FCLIB::HW
 {
+
     InputPinComponent::InputPinComponent() : PinComponent()
     {
         log.setModuleName("InputPinComponent");
+        log.always("----- InputPinComponent 0x%lx", this);
         currentState = 0;
         lastStateChangeMsecs = 0;
         debounceMsecs = DEBOUNCE_MSECS;
@@ -22,7 +24,7 @@ namespace FCLIB::HW
 
     bool InputPinComponent::setupPin()
     {
-        log.always("setup pin %d", pin);
+        log.always("setup pin %d  0x%lx", pin, this);
         if (pin < 0)
         {
             return false;
@@ -51,27 +53,28 @@ namespace FCLIB::HW
             return;
         }
         int state = digitalRead(pin);
-        log.conditional(logTimer.isComplete(), DEBUG_LEVEL, "debounce state %d %d %d %d", currentState, state, debounceState, lastStateChangeMsecs);
+        log.conditional(logTimer.isComplete(), NEVER_LEVEL, "debounce state %d %d %d %d", currentState, state, debounceState, lastStateChangeMsecs);
         if (state == currentState)
         {
             return;
         }
         if (state != debounceState)
         {
-            log.debug("debounce state change %d %d %d %d", currentState, state, debounceState, lastStateChangeMsecs);
+            log.never("debounce state change %d %d %d %d", currentState, state, debounceState, lastStateChangeMsecs);
             debounceState = state;
             lastStateChangeMsecs = THE_BOARD->currentMsecs();
         }
         else if (lastStateChangeMsecs + debounceMsecs < THE_BOARD->currentMsecs())
         {
-            log.debug("debounce time expired %d %d %d %d", currentState, state, debounceState, lastStateChangeMsecs);
+            log.never("debounce time expired %d %d %d %d", currentState, state, debounceState, lastStateChangeMsecs);
 
             currentState = state;
-            log.debug("trigger CHANGE_EVENT");
+            log.never("trigger CHANGE_EVENT");
+            log.always("trigger CHANGE_EVENT 0x%lx", this);
             Event::trigger(EventType::CHANGE_EVENT, this, currentState != 0);
             if (state == 0)
             { // released
-                log.debug("trigger PRESS_EVENT");
+                log.never("trigger PRESS_EVENT");
                 Event::trigger(EventType::PRESS_EVENT, this, currentState != 0);
             }
         }

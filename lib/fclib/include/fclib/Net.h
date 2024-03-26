@@ -1,5 +1,6 @@
 #ifndef __FCNET_H_
 #define __FCNET_H_
+#include <ArduinoJson.h>
 #include "fclib/Logging.h"
 #include "fclib/LinkedList.h"
 #include <WiFiManager.h>
@@ -74,6 +75,9 @@ namespace FCLIB
         bool configure(const char *deviceName, const char *mqttServer, const char *user, const char *password, int mqttPort = 1883);
 
         bool reconnect();
+
+        void send(String topic, JsonDocument &doc);
+        void send(String topic, const char *);
 
     protected:
         void checkConnection();

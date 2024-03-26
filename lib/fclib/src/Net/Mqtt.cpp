@@ -72,6 +72,21 @@ namespace FCLIB
         return true;
     }
 
+    void Mqtt::send(String topic, JsonDocument &doc)
+    {
+        checkConnection();
+        int len = measureJson(doc);
+        pubSubClient.beginPublish(topic.c_str(), len, false);
+        serializeJson(doc, pubSubClient);
+        pubSubClient.endPublish();
+    }
+
+    void Mqtt::send(String topic, const char *payload)
+    {
+        checkConnection();
+        pubSubClient.publish(topic.c_str(), payload);
+    }
+
     void Mqtt::checkConnection()
     {
         if (!pubSubClient.connected())
@@ -81,8 +96,9 @@ namespace FCLIB
         pubSubClient.loop();
     }
 
-    void handleMessage(String &topic, String &message)
+    void Mqtt::handleMessage(String &topic, String &message)
     {
+        log.debug("handle message");
     }
 
 }

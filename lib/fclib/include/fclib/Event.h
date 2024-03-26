@@ -70,11 +70,13 @@ namespace FCLIB
     class Event
     {
     public:
+        static int nextId;
         static void trigger(EventType type, void *sender);
         static void trigger(EventType type, void *sender, bool boolState);
 
         EventType getType() { return this->type; }
         void *getSender() { return this->sender; }
+        int getId();
 
     protected:
         friend EventManager;
@@ -84,6 +86,7 @@ namespace FCLIB
         EventType type;
         void *sender;
         EventData_t data;
+        long id;
     };
 
     class EventManager
@@ -92,15 +95,17 @@ namespace FCLIB
         static void addListener(EventListener *listener);
         static void removeListener(EventListener *listener);
         static void addEvent(Event *event);
-        static void removeEvent(Event *event);
         static void processEvents();
 
         static EventManager *get();
 
     private:
+        bool hasListener(EventListener *listener);
+        void add(Event *event);
         EventManager();
         virtual ~EventManager();
-        LinkedList<Event *> events;
+        LinkedList<Event *> events[2];
+        int currentEventList;
         LinkedList<EventListener *> listeners;
         Logger log;
     };

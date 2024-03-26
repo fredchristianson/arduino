@@ -5,6 +5,8 @@ using namespace FCLIB;
 
 namespace FCLIB
 {
+    int Event::nextId = 1;
+
     void Event::trigger(EventType type, void *sender)
     {
         Logger log("Event::trigger");
@@ -29,10 +31,12 @@ namespace FCLIB
     {
         this->type = type;
         this->sender = sender;
+        this->id = nextId++;
     }
 
     Event::~Event()
     {
     }
 
+    int Event::getId() { return id; }
 }

@@ -102,7 +102,7 @@ void Logger::conditional(bool test, int level, const char *message, ...) const
     {
         va_list args;
         va_start(args, message);
-        write(DEBUG_LEVEL, message, args);
+        write(level, message, args);
     }
 }
 
@@ -184,7 +184,7 @@ namespace FCLIB
 
         bool isBetterMatch(const String &ucModule, LogLevelListItem *other)
         {
-            int otherLen = 0;
+            unsigned int otherLen = 0;
             if (other != NULL)
             {
                 otherLen = other->name.length();

@@ -19,13 +19,12 @@ public:
 protected:
     void onButtonChange(Event *event);
     virtual void setupComplete();
-    IntervalTimer halfMinute;
     HW::Button button;
     HW::Led led;
 
     HA::HomeAssistant *ha;
     HA::Device *haDevice;
-    HA::BinarySensor *haButton;
+    HA::Entity *haButton;
     HA::Led *haLed;
     EventListener listener;
 };
