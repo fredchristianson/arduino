@@ -20,4 +20,9 @@ namespace FCLIB::HA
     }
 
     HomeAssistant *Entity::ha() { return device->ha; }
+
+    void Entity::updateState(const char *payload)
+    {
+        log.always("Update State: %s", payload);
+    }
 }

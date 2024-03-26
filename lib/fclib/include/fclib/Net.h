@@ -69,6 +69,7 @@ namespace FCLIB
     class Mqtt
     {
     public:
+        using MqttCallback = std::function<void(const char *)>;
         Mqtt();
         virtual ~Mqtt();
 
@@ -78,6 +79,8 @@ namespace FCLIB
 
         void send(String topic, JsonDocument &doc);
         void send(String topic, const char *);
+
+        void subscribe(const char *topic, MqttCallback callback);
 
     protected:
         void checkConnection();
@@ -91,6 +94,23 @@ namespace FCLIB
         String user;
         String password;
         int port;
+
+        class Subscriber
+        {
+        public:
+            Subscriber(const char *stopic, MqttCallback callback)
+            {
+                Logger log("Subscriber");
+                log.debug("topic: %s", stopic);
+                this->topic = stopic;
+                this->callback = callback;
+                log.debug("this->topic: %s", this->topic.c_str());
+            }
+            String topic;
+            MqttCallback callback;
+        };
+
+        LinkedList<Subscriber *> subscribers;
     };
 }
 

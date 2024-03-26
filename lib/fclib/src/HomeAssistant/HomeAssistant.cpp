@@ -99,6 +99,10 @@ namespace FCLIB::HA
         JsonObject devObject = doc["device"].to<JsonObject>();
         entity->device->getJson(devObject);
         mqtt->send(topic, doc);
+
+        String setTopic = entity->baseTopic + "/state";
+        mqtt->subscribe(setTopic.c_str(), [this, entity](const char *payload)
+                        { entity->updateState(payload); });
     }
 
     void HomeAssistant::publishState(Entity *entity, JsonDocument &payload)

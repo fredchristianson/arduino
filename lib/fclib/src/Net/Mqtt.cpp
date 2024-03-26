@@ -41,9 +41,9 @@ namespace FCLIB
         {
             String messageTopic(topic);
             String message;
+            this->log.never("in calback %s %s %d", topic, message.c_str(), len);
             message.concat((const char *)msg, len);
             handleMessage(messageTopic, message);
-            this->log.debug("in callback %s %s %d", topic, message.c_str(), len);
         };
 
         pubSubClient.setCallback(callback);
@@ -98,7 +98,25 @@ namespace FCLIB
 
     void Mqtt::handleMessage(String &topic, String &message)
     {
-        log.debug("handle message");
+        log.never("handle message: %s", topic.c_str());
+        for (int i = 0; i < subscribers.size(); i++)
+        {
+            Subscriber *sub = subscribers[i];
+            log.never("\tcheck subscriber: %lx %s ", sub, sub->topic.c_str());
+            if (topic.equals(subscribers[i]->topic))
+            {
+                log.never("\t\tcallback");
+                subscribers[i]->callback(message.c_str());
+            }
+        }
     }
 
+    void Mqtt::subscribe(const char *topic, MqttCallback callback)
+    {
+        log.never("subscribe to: %s", topic);
+        Subscriber *sub = new Subscriber(topic, callback);
+        subscribers.add(sub);
+        pubSubClient.subscribe(topic);
+        log.never("subscriber topic: %lx %s", sub, sub->topic.c_str());
+    }
 }

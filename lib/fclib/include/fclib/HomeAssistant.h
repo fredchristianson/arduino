@@ -35,6 +35,8 @@ namespace FCLIB::HA
         virtual const char *getDeviceClass() { return deviceClass.c_str(); }
         virtual const char *getUniqueName() { return uniqueName.c_str(); }
 
+        virtual void updateState(const char *payload);
+
     protected:
         friend HomeAssistant;
         friend Device;
@@ -95,6 +97,7 @@ namespace FCLIB::HA
         Led(Device *device, HW::OutputPinComponent *led, const char *name = "LED");
         virtual ~Led();
         const char *getComponentName() override { return "light"; }
+        virtual void updateState(const char *payload);
 
     protected:
         HW::OutputPinComponent *hardware;

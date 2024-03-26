@@ -50,7 +50,7 @@ void HallApp::onButtonChange(Event *event)
 
     if (event->getSender() == &(button))
     {
-        led.toggle();
+        // led.toggle();
         log.debug("got button event");
     }
 }
