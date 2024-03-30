@@ -108,7 +108,7 @@ namespace FCLIB
         }
     }
 
-    void TaskQueue::remove(TaskBase *task)
+    void TaskQueue::removeTask(TaskBase *task)
     {
         log.never("remove task 0x%lx", task);
         TaskBase *pos = first->next;
@@ -130,6 +130,10 @@ namespace FCLIB
         }
     }
 
+    void TaskQueue::remove(TaskBase *task)
+    {
+        task->setStatus(TASK_COMPLETE);
+    }
     void TaskQueue::updateTaskStatus()
     {
         TaskBase *task = first->next;
@@ -141,7 +145,7 @@ namespace FCLIB
             if (status == TASK_COMPLETE)
             {
                 log.info("Task complete.  Remove 0x%lx", task);
-                remove(task);
+                removeTask(task);
                 delete task;
             }
             task = next;
@@ -160,6 +164,7 @@ namespace FCLIB
                 log.never("Run task 0x%lx", task);
                 task->doTask();
             }
+
             task = next;
         }
     }

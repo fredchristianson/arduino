@@ -15,6 +15,7 @@ namespace FCLIB::HW
         lastStateChangeMsecs = 0;
         debounceMsecs = DEBOUNCE_MSECS;
         debounceState = 0;
+        debounceMsecs = 50;
         logTimer.seconds(5);
     }
 
@@ -69,14 +70,28 @@ namespace FCLIB::HW
             log.never("debounce time expired %d %d %d %d", currentState, state, debounceState, lastStateChangeMsecs);
 
             currentState = state;
-            log.never("trigger CHANGE_EVENT");
-            log.always("trigger CHANGE_EVENT 0x%lx", this);
-            Event::trigger(EventType::CHANGE_EVENT, this, currentState != 0);
+            onChange();
             if (state == 0)
-            { // released
-                log.never("trigger PRESS_EVENT");
-                Event::trigger(EventType::PRESS_EVENT, this, currentState != 0);
+            {
+                onLow();
+            }
+            else
+            {
+                onHigh();
             }
         }
+    }
+
+    void InputPinComponent::onChange()
+    {
+        Event::trigger(EventType::CHANGE_EVENT, this, currentState != 0);
+    }
+    void InputPinComponent::onHigh()
+    {
+        Event::trigger(EventType::ON_EVENT, this, currentState != 0);
+    }
+    void InputPinComponent::onLow()
+    {
+        Event::trigger(EventType::OFF_EVENT, this, currentState != 0);
     }
 }

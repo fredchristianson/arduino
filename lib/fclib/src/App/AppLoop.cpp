@@ -30,18 +30,7 @@ namespace FCLIB
     {
         Logger log("AppLoop");
         log.never("remove loop task 0x%lx", task);
-        switch (task->getStage())
-        {
-        case LOOP_BEGIN:
-            singletonAppLoop->beforeTasks.remove(task);
-            break;
-        case LOOP_NORMAL:
-            singletonAppLoop->loopTasks.remove(task);
-            break;
-        case LOOP_END:
-            singletonAppLoop->afterTasks.remove(task);
-            break;
-        }
+        task->setStatus(TASK_COMPLETE);
     }
     // todo: setup watchdog timer
     AppLoop::AppLoop() : AppComponent(), log("AppLoop")

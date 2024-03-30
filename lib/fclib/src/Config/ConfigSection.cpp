@@ -6,10 +6,11 @@ using namespace FCLIB;
 
 namespace FCLIB
 {
-    ConfigSection::ConfigSection(const char *name) : log("ConfigSection")
+    ConfigSection::ConfigSection(Config *config, const char *name) : log("ConfigSection")
     {
         log.debug("Config section %s", name);
         this->name = name;
+        this->config = config;
     }
 
     ConfigSection::~ConfigSection()
@@ -85,6 +86,7 @@ namespace FCLIB
 
     void ConfigSection::addValue(ConfigValue *value)
     {
+        value->section = this;
         ConfigValue *val = this->getValue(value->name.c_str());
         if (val != NULL)
         {
@@ -126,12 +128,13 @@ namespace FCLIB
         if (val == NULL)
         {
             log.debug("add conf value: [%s] %s=%s", this->name.c_str(), name, newValue);
-            val = new ConfigValue(name, newValue);
+            val = new ConfigValue(this, name, newValue);
             addValue(val);
         }
         else
         {
             log.debug("replace conf value: [%s] %s=%s", this->name.c_str(), name, newValue);
+            val->section = this;
             val->set(newValue);
         }
     }
@@ -142,12 +145,13 @@ namespace FCLIB
         if (val == NULL)
         {
             log.debug("add conf value: [%s] %s=%s", this->name.c_str(), name, newValue ? "true" : "false");
-            val = new ConfigValue(name, newValue);
+            val = new ConfigValue(this, name, newValue);
             addValue(val);
         }
         else
         {
             log.debug("replace conf value: [%s] %s=%s", this->name.c_str(), name, newValue ? "true" : "false");
+            val->section = this;
             val->set(newValue);
         }
     }
@@ -157,13 +161,15 @@ namespace FCLIB
         ConfigValue *val = this->getValue(name);
         if (val == NULL)
         {
-            log.debug("add conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
-            val = new ConfigValue(name, newValue);
+            log.always("add conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
+            val = new ConfigValue(this, name, newValue);
             addValue(val);
         }
         else
         {
-            log.debug("replace conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
+            val->section = this;
+            log.always("replace conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
+            val->section = this;
             val->set(newValue);
         }
     }
@@ -174,12 +180,14 @@ namespace FCLIB
         if (val == NULL)
         {
             log.debug("add conf value: [%s] %s=%f", this->name.c_str(), name, newValue);
-            val = new ConfigValue(name, newValue);
+            val = new ConfigValue(this, name, newValue);
             addValue(val);
         }
         else
         {
+            val->section = this;
             log.debug("replace conf value: [%s] %s=%f", this->name.c_str(), name, newValue);
+            val->section = this;
             val->set(newValue);
         }
     }

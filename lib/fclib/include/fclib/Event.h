@@ -19,6 +19,8 @@ namespace FCLIB
         OFF_EVENT = 102,
         PRESS_EVENT = 103,
         LONGPRESS_EVENT = 104,
+        MOTION_START_EVENT = 105,
+        MOTION_STOP_EVENT = 106,
 
         CONNECTED = 200,
         DISCONNECTED = 201,
@@ -53,6 +55,8 @@ namespace FCLIB
 
         EventHandler *handle(EventType type, void *sender, EventHandlerCallback callback);
         EventHandler *handle(EventType type, EventHandlerCallback callback);
+        EventHandler *handleChange(EventHandlerCallback callback) { return handle(EventType::CHANGE_EVENT, callback); }
+        EventHandler *handleChange(void *sender, EventHandlerCallback callback) { return handle(EventType::CHANGE_EVENT, sender, callback); }
 
     private:
         friend EventManager;
@@ -64,6 +68,8 @@ namespace FCLIB
     {
         EventData_t() { memset(this, 0, sizeof(EventData_t)); }
         bool boolValue;
+        int intValue;
+        float floatValue;
         void *custom;
     };
 
@@ -73,10 +79,14 @@ namespace FCLIB
         static int nextId;
         static void trigger(EventType type, void *sender);
         static void trigger(EventType type, void *sender, bool boolState);
+        static void trigger(EventType type, void *sender, int intVal);
+        static void trigger(EventType type, void *sender, float floatVal);
 
         EventType getType() { return this->type; }
         void *getSender() { return this->sender; }
         int getId();
+        void setAllowMultiple(bool allow = true) { this->mayHaveMultiple = allow; }
+        bool isMultipleAllowed() { return this->mayHaveMultiple; }
 
     protected:
         friend EventManager;
@@ -87,6 +97,7 @@ namespace FCLIB
         void *sender;
         EventData_t data;
         long id;
+        bool mayHaveMultiple; // if true, mutiple messages can be queued from same sender/typ
     };
 
     class EventManager

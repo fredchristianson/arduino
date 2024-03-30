@@ -1,36 +1,60 @@
 #include "fclib/Config.h"
 #include "fclib/File.h"
-#include "Config.h"
+#include "fclib/Event.h"
 
 using namespace FCLIB;
 
 namespace FCLIB
 {
-
+    Logger confLogger("ConfigValue");
     void ConfigValue::set(const char *value)
     {
-        changed = changed || !this->stringValue.equals(value);
+        setChanged(!this->stringValue.equals(value));
         this->stringValue = value;
         this->stringValue.trim();
         this->type = STRING_TYPE;
+        setChanged(changed);
+    }
+
+    void ConfigValue::setChanged(bool isChanged)
+    {
+        changed = isChanged;
+        if (changed)
+        {
+            confLogger.always(" change %lx", this->section);
+            Event::trigger(EventType::CHANGE_EVENT, this, this);
+            if (this->section != NULL)
+            {
+                confLogger.always("section change %x %x", this->section, this->section->getConfig());
+                Event::trigger(EventType::CHANGE_EVENT, this->section, this);
+                Event::trigger(EventType::CHANGE_EVENT, this->section->getConfig(), this);
+            }
+        }
+        else
+        {
+            confLogger.always("no change");
+        }
     }
     void ConfigValue::set(int value)
     {
-        changed = changed || value != intValue;
+        setChanged(intValue != value);
         this->intValue = value;
         this->type = INT_TYPE;
+        setChanged(changed);
     }
     void ConfigValue::set(float value)
     {
-        changed = changed || value != floatValue;
+        setChanged(value != floatValue);
         this->floatValue = value;
         this->type = FLOAT_TYPE;
+        setChanged(changed);
     }
     void ConfigValue::set(bool value)
     {
-        changed = changed || value != boolValue;
+        setChanged(value != boolValue);
         this->boolValue = value;
         this->type = BOOL_TYPE;
+        setChanged(changed);
     }
 
     const String &ConfigValue::toString()

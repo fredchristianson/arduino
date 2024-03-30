@@ -5,6 +5,7 @@
 #include "fclib/Event.h"
 #include "fclib/Hardware.h"
 #include "fclib/HomeAssistant.h"
+#include "fclib/LedStrip.h"
 
 using namespace FCLIB;
 
@@ -17,15 +18,22 @@ public:
     void doTask(); // run every loop
 
 protected:
-    void onButtonChange(Event *event);
+    void onLedPinChange(int pin);
+    void onLedCountChange(int count);
+    void onMotionChange(Event *event);
+    void onLightStateChange(Event *event);
     virtual void setupComplete();
-    HW::Button button;
-    HW::Led led;
+    HW::Motion motion;
+    // HW::Led led;
 
     HA::HomeAssistant *ha;
     HA::Device *haDevice;
-    HA::Entity *haButton;
-    HA::Led *haLed;
+    HA::MotionSensor *haMotion;
+    HA::LightStrip *haLight;
+    HA::Number *haLedCount;
+    HA::Number *haLedPin;
+    NeoPixelStrip *ledStrip;
+    HomeAssistantSceneRenderer renderer;
     EventListener listener;
 };
 

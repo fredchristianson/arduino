@@ -1,8 +1,8 @@
 #ifndef _FCLIB_LED_H_
 #define _FCLIB_LED_H_
 #include <stdint.h>
-#include "FastLED.h"
-#include "Adafruit_NeoPixel.h"
+#include <FastLED.h>
+#include <Adafruit_NeoPixel.h>
 #include "./LinkedList.h"
 #include "./Logging.h"
 
@@ -89,6 +89,14 @@ namespace FCLIB
         static ColorRGB GREEN;
         static ColorRGB BLUE;
 
+        ColorRGB &operator=(const ColorRGB &other)
+        {
+            this->r = other.r;
+            this->g = other.g;
+            this->b = other.b;
+            return *this;
+        }
+
     protected:
         uint8 r;
         uint8 g;
@@ -152,8 +160,11 @@ namespace FCLIB
         virtual void fill(const Color &color, LedOp_t op = DEFOP) = 0;
 
         virtual void show() {} // phsyical strips need this.  others may use it
+        virtual void setBrightness(uint8 level);
+        virtual void setCount(int newCount);
 
     protected:
+        virtual void onCountChange(uint16 oldCount, uint16 newCount) {}
         virtual void setLength(uint16 len);
 
         Logger LOG;
@@ -173,9 +184,12 @@ namespace FCLIB
         virtual void clear() override;
         virtual void fill(const Color &color, LedOp_t op = DEFOP) override;
 
-        void setBrightness(uint8);
+        void setBrightness(uint8 level) override;
+        void setPin(uint8_t pin);
 
     protected:
+        virtual void onCountChange(uint16 oldCount, uint16 newCount);
+
         uint32 getNeoPixelColor(const Color &color) const;
         uint32 getNeoPixelColorFromRgb(const ColorRGB &color) const;
         uint32 getNeoPixelColorFromHsv(const ColorHSV &color) const;
@@ -196,6 +210,7 @@ namespace FCLIB
         virtual void fill(const Color &color, LedOp_t op = DEFOP);
 
         void add(LedStrip *component);
+        void setBrightness(uint8);
 
     private:
         LinkedList<LedStrip *> strips;
@@ -213,6 +228,7 @@ namespace FCLIB
         virtual void fill(const Color &color, LedOp_t op = DEFOP);
 
         virtual void setBase(LedStrip *base);
+        void setBrightness(uint8);
 
     protected:
         LedStrip *baseStrip;

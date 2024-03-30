@@ -8,6 +8,8 @@
 namespace FCLIB
 {
     class ConfigFile;
+    class ConfigSection;
+    class Config;
 
     enum ValueType
     {
@@ -20,29 +22,33 @@ namespace FCLIB
     struct ConfigValue
     {
     public:
-        ConfigValue(const char *name, const char *value)
+        ConfigValue(ConfigSection *section, const char *name, const char *value)
         {
+            this->section = section;
             this->name = name;
             set(value);
             this->changed = false;
         }
 
-        ConfigValue(const char *name, int value)
+        ConfigValue(ConfigSection *section, const char *name, int value)
         {
+            this->section = section;
             this->name = name;
             set(value);
             this->changed = false;
         }
 
-        ConfigValue(const char *name, float value)
+        ConfigValue(ConfigSection *section, const char *name, float value)
         {
+            this->section = section;
             this->name = name;
             set(value);
             this->changed = false;
         }
 
-        ConfigValue(const char *name, bool value)
+        ConfigValue(ConfigSection *section, const char *name, bool value)
         {
+            this->section = section;
             this->name = name;
             set(value);
             this->changed = false;
@@ -62,16 +68,18 @@ namespace FCLIB
         String name;
         ValueType type;
 
+        void setChanged(bool isChanged = true);
         String stringValue;
         int intValue;
         float floatValue;
         bool boolValue;
         bool changed;
+        ConfigSection *section;
     };
 
     struct ConfigSection
     {
-        ConfigSection(const char *name);
+        ConfigSection(Config *config, const char *name);
         ~ConfigSection();
         void set(const char *name, const char *value);
         void set(const char *name, int value);
@@ -92,9 +100,11 @@ namespace FCLIB
         LinkedList<ConfigValue *> values;
         Logger log;
         void clearChanged();
+        Config *getConfig() { return config; }
 
     private:
         void removeValue(ConfigValue *val);
+        Config *config;
     };
 
     class Config

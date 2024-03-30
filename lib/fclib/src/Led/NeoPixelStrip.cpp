@@ -49,7 +49,7 @@ void FCLIB::NeoPixelStrip::fill(const Color &color, LedOp_t op)
 {
     // todo: use op
     uint32 neoColor = this->getNeoPixelColor(color);
-    LOG.debug("Neo color %d %d", color.isHsv(), color.isRgb());
+    LOG.debug("Neo color %d %x", count, neoColor);
     this->controller->fill(neoColor, 0, this->count);
 }
 
@@ -83,4 +83,21 @@ uint32 FCLIB::NeoPixelStrip::getNeoPixelColorFromHsv(const ColorHSV &color) cons
     uint32 neoColor = this->controller->ColorHSV(hue, sat, value);
     LOG.debug("HSV %d %d %d  => %lx", hue, sat, value, neoColor);
     return neoColor;
+}
+
+void FCLIB::NeoPixelStrip::onCountChange(uint16 oldCount, uint16 newCount)
+{
+    controller->clear();
+    controller->show();
+    controller->updateLength(newCount);
+}
+
+void FCLIB::NeoPixelStrip::setPin(uint8_t pin)
+{
+    LOG.info("Pin change to %d", pin);
+    controller->clear();
+    controller->show();
+    this->pin = pin;
+    this->controller->setPin(pin);
+    LOG.info("\tPin changed", pin);
 }

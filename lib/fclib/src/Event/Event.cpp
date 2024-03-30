@@ -26,12 +26,33 @@ namespace FCLIB
         EventManager::addEvent(event);
         log.debug("event added");
     }
+    void Event::trigger(EventType type, void *sender, int intVal)
+    {
+        Logger log("Event::trigger");
+        log.debug("create event");
+        Event *event = new Event(type, sender);
+        event->data.intValue = intVal;
+        log.debug("queue avent");
+        EventManager::addEvent(event);
+        log.debug("event added");
+    }
+    void Event::trigger(EventType type, void *sender, float floatVal)
+    {
+        Logger log("Event::trigger");
+        log.debug("create event");
+        Event *event = new Event(type, sender);
+        event->data.floatValue = floatVal;
+        log.debug("queue avent");
+        EventManager::addEvent(event);
+        log.debug("event added");
+    }
 
     Event::Event(EventType type, void *sender)
     {
         this->type = type;
         this->sender = sender;
         this->id = nextId++;
+        mayHaveMultiple = false;
     }
 
     Event::~Event()

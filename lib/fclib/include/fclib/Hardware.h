@@ -47,7 +47,9 @@ namespace FCLIB
         protected:
             void doTask() override;
             virtual bool setupPin() override;
-
+            virtual void onChange();
+            virtual void onHigh();
+            virtual void onLow();
             int currentState;
             int debounceState;
             unsigned long lastStateChangeMsecs;
@@ -87,6 +89,19 @@ namespace FCLIB
         protected:
         };
 
+        class Motion : public InputPinComponent
+        {
+        public:
+            Motion();
+            virtual ~Motion();
+
+            bool isDetected();
+
+        protected:
+            virtual void onHigh();
+            virtual void onLow();
+        };
+
         class Led : public OutputPinComponent
         {
         public:
@@ -97,6 +112,7 @@ namespace FCLIB
 
         protected:
         };
+
     }
 }
 

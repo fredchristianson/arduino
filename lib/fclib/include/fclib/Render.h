@@ -1,9 +1,10 @@
 #ifndef _FCLIB_RENDERER_H_
 #define _FCLIB_RENDERER_H_
 
-#include "./Logging.h"
-#include "./LedStrip.h"
-#include "./Util.h"
+#include "fclib/Logging.h"
+#include "fclib/LedStrip.h"
+#include "fclib/Util.h"
+#include "fclib/Task.h"
 #include <stdint.h>
 
 using namespace FCLIB;
@@ -130,6 +131,75 @@ namespace FCLIB
     protected:
         LinkedList<PatternElement *> elements;
         Positioning positioning;
+    };
+
+    enum class SceneMode
+    {
+        MODE_OFF,
+        MODE_RGB,
+        MODE_HSV,
+        MODE_WHITE,
+        MODE_TEMPERATURE
+    };
+
+    class SceneRenderer
+    {
+    public:
+        SceneRenderer(LedStrip *strip = NULL);
+        ~SceneRenderer();
+        void setStrip(LedStrip *strip);
+        void setBrightness(uint8 brightness);
+        void render();
+
+        void start();
+        void stop();
+
+    protected:
+        virtual void runRenderers() = 0;
+        Logger log;
+        LedStrip *strip;
+        virtual void onLoop();
+        uint8 brightness;
+        LoopTask *task;
+    };
+
+    class HomeAssistantSceneRenderer : public SceneRenderer
+    {
+    public:
+        HomeAssistantSceneRenderer(LedStrip *strip = NULL);
+        ~HomeAssistantSceneRenderer();
+
+        void setMode(SceneMode mode);
+        void setRGB(const ColorRGB &rgb);
+        void setHSV(const ColorHSV &hsv);
+        void setTemperature(uint temp);
+        void setTransitionMsecs(uint msecs);
+
+        bool isRunning() { return task != NULL; }
+        uint8 getBrightness() { return brightness; }
+        const ColorRGB &getRGB() { return rgb; }
+
+    protected:
+        SceneMode mode;
+        ColorRGB rgb;
+        ColorHSV hsv;
+        float temperature; // 0.5 = no adjust.  0, max blue.  1 max red
+        virtual void runRenderers();
+    };
+
+    class CompositeSceneRenderer : public SceneRenderer
+    {
+    public:
+        CompositeSceneRenderer(LedStrip *strip = NULL);
+        ~CompositeSceneRenderer();
+        void addRenderer(LedRenderer *renderer);
+
+    protected:
+        virtual void runRenderers();
+        LedStrip *strip;
+        LinkedList<LedRenderer *> renderers;
+        virtual void onLoop();
+        LoopTask *task;
     };
 }
 

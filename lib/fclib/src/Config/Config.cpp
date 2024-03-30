@@ -34,7 +34,7 @@ namespace FCLIB
 
     ConfigSection *Config::createSection(const char *name)
     {
-        ConfigSection *section = new ConfigSection(name);
+        ConfigSection *section = new ConfigSection(this, name);
         sections.add(section);
         return section;
     }

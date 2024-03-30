@@ -64,7 +64,23 @@ namespace FCLIB
     void EventManager::add(Event *event)
     {
         log.never("add event %d %lx", currentEventList, event);
-        events[currentEventList].add(event);
+
+        // currentEventList is the one events can be added to.
+        // processEvents() may be using the other one
+        LinkedList<Event *> &cur = events[currentEventList];
+        if (!event->mayHaveMultiple)
+        {
+            // remove existing messages from sender/type unless multiple allowed
+            for (int i = 0; i < cur.size(); i++)
+            {
+                if (cur[i]->sender == event->sender && cur[i]->type == event->type)
+                {
+                    cur.remove(i);
+                    i--;
+                }
+            }
+        }
+        cur.add(event);
     }
 
     void EventManager::processEvents()

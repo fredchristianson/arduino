@@ -66,6 +66,7 @@ namespace FCLIB
 
         TaskBase *getNext() { return next; }
         TaskBase *getPrev() { return prev; }
+        void setStatus(TaskStatus status) { this->status = status; }
 
     protected:
         friend TaskQueue;
@@ -160,7 +161,7 @@ namespace FCLIB
         TaskQueue();
         virtual ~TaskQueue();
         void add(TaskBase *task);
-        void remove(TaskBase *task);
+        void remove(TaskBase *task); // marks for removal
 
         void updateTaskStatus();
         void runTasks();
@@ -171,6 +172,7 @@ namespace FCLIB
         bool isHealthy();
 
     protected:
+        void removeTask(TaskBase *task);
         TaskBase *first;
         TaskBase *last;
         Logger log;

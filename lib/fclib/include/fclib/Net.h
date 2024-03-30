@@ -81,6 +81,7 @@ namespace FCLIB
         void send(String topic, const char *);
 
         void subscribe(const char *topic, MqttCallback callback);
+        void subscribe(const String &topic, MqttCallback callback) { subscribe(topic.c_str(), callback); }
 
     protected:
         void checkConnection();

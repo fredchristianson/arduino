@@ -27,7 +27,7 @@ namespace FCLIB
         name.trim();
         val.trim();
 
-        return new ConfigValue(name.c_str(), val.c_str());
+        return new ConfigValue(NULL, name.c_str(), val.c_str());
     }
 
     ConfigFile::ConfigFile()

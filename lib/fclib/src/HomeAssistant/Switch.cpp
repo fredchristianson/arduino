@@ -24,9 +24,6 @@ namespace FCLIB::HA
     void Switch::onHardwareChange()
     {
         bool isSet = hardware->getState() != 0;
-        log.debug("Switch state change %d", isSet);
-        // JsonDocument doc;
-        // doc["state"] = isSet ? "on" : "off";
-        ha()->publishState(this, isSet ? "on" : "off");
+        setBoolState(isSet);
     }
 }

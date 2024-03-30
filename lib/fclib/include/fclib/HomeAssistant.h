@@ -7,6 +7,7 @@
 #include "fclib/Hardware.h"
 #include "fclib/Net.h"
 #include "fclib/Event.h"
+#include "fclib/Render.h"
 using namespace FCLIB;
 
 namespace FCLIB::HA
@@ -20,7 +21,10 @@ namespace FCLIB::HA
         BUTTON,
         BINARY_SENSOR,
         LIGHT,
-        SWITCH
+        SWITCH,
+        MOTION_SENSOR,
+        NUMBER
+
     };
 
     // https://developers.home-assistant.io/docs/core/entity/#generic-properties
@@ -35,9 +39,18 @@ namespace FCLIB::HA
         virtual const char *getDeviceClass() { return deviceClass.c_str(); }
         virtual const char *getUniqueName() { return uniqueName.c_str(); }
 
-        virtual void updateState(const char *payload);
+        virtual void setupStateTopic(JsonDocument &doc);
+        virtual void setupCommandTopics(JsonDocument &doc);
+        virtual void setupCapabilities(JsonDocument &doc);
+        virtual void subscribe(Mqtt *mqtt) {}
+
+        virtual void publishState();
 
     protected:
+        String baseTopic();
+        virtual void setBoolState(bool isOn);
+        virtual void setStateOn();
+        virtual void setStateOff();
         friend HomeAssistant;
         friend Device;
         Logger log;
@@ -48,14 +61,24 @@ namespace FCLIB::HA
         String componentName;
         String deviceClass;
         String uniqueName;
-        String baseTopic;
         String id;
         bool defaultEntity;
         EventListener events;
+        bool lastBoolState;
 
         HomeAssistant *ha();
     };
 
+    // an entity with a topic to receive commands
+    class CommandEntity : public Entity
+    {
+    public:
+        CommandEntity(const char *name, Device *device, ComponentType type);
+        ~CommandEntity();
+        virtual void setupCommandTopics(JsonDocument &doc);
+        virtual void onCommand(const char *payload);
+        virtual void subscribe(Mqtt *mqtt);
+    };
     // Button has limited HA use.  Binary_sensor and Switch are normally what is wanted.
     class Button : public Entity
     {
@@ -75,6 +98,18 @@ namespace FCLIB::HA
 
     protected:
         HW::InputPinComponent *hardware;
+    };
+
+    class MotionSensor : public BinarySensor
+    {
+    public:
+        MotionSensor(Device *device, HW::Motion *binary, const char *name = "Motion Sensor");
+        virtual ~MotionSensor();
+
+    protected:
+        void onMotionStart();
+        void onMotionStop();
+        HW::Motion motionSensor;
     };
 
     // Switch is a binary device that can send and receive state
@@ -101,6 +136,41 @@ namespace FCLIB::HA
 
     protected:
         HW::OutputPinComponent *hardware;
+    };
+
+    // a light that can be turned on/off by HA
+    class LightStrip : public CommandEntity
+    {
+    public:
+        LightStrip(Device *device, HomeAssistantSceneRenderer *renderer, const char *name = "LED Strip");
+        virtual ~LightStrip();
+        const char *getComponentName() override { return "light"; }
+        virtual void setupCommandTopics(JsonDocument &doc);
+        virtual void setupCapabilities(JsonDocument &doc);
+        virtual void subscribe(Mqtt *mqtt);
+        virtual void publishState() override;
+
+    protected:
+        void onCommand(const char *payload);
+        HomeAssistantSceneRenderer *renderer;
+    };
+
+    class Number : public CommandEntity
+    {
+    public:
+        Number(Device *device, const char *name, float min, float max, float val);
+        virtual ~Number();
+        virtual void publishState() override;
+        virtual void setupCapabilities(JsonDocument &doc);
+
+        float asFloat() { return value; }
+        int asInt() { return (int)(value); }
+
+    protected:
+        void onCommand(const char *payload);
+        float minValue;
+        float maxValue;
+        float value;
     };
 
     class Device
@@ -139,8 +209,10 @@ namespace FCLIB::HA
 
         void addDevice(Device *device);
         void publishConfig();
-        void publishState(Entity *entity, JsonDocument &payload);
-        void publishState(Entity *entity, const char *payload);
+        void publishState(const char *topic, JsonDocument &payload);
+        void publishState(const char *topic, const char *payload);
+        void publishState(const String &topic, JsonDocument &payload) { publishState(topic.c_str(), payload); }
+        void publishState(const String &topic, const char *payload) { publishState(topic.c_str(), payload); }
         Device *createDevice(const char *name);
 
     private:

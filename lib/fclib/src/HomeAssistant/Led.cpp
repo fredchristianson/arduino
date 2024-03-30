@@ -28,6 +28,7 @@ namespace FCLIB::HA
         }
         log.debug("Change LED state: %s", on ? "on" : "off");
         hardware->setOn(on);
-        ha()->publishState(this, on ? "on" : "off");
+        // ha()->publishState(this, on ? "on" : "off");
+        // setBoolState(on);
     }
 }

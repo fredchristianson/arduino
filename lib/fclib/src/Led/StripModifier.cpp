@@ -107,3 +107,7 @@ bool FCLIB::StripModifier::isValidColor(Color &color)
 {
     return true;
 }
+void FCLIB::StripModifier::setBrightness(uint8 brightness)
+{
+    this->baseStrip->setBrightness(brightness);
+}

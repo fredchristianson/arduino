@@ -76,46 +76,40 @@ namespace FCLIB::HA
         {
             Entity *entity = device->entities[eidx];
             publishEntityConfig(entity);
+            entity->subscribe(mqtt);
+            entity->publishState();
         }
     }
     void HomeAssistant::publishEntityConfig(Entity *entity)
     {
-        entity->baseTopic = "homeassistant/" + entity->componentName + "/" + entity->id;
 
         String ename = entity->getComponentName();
         String topic = "homeassistant/" + ename + "/" + entity->id + "/config";
         JsonDocument doc;
         doc["name"] = entity->name;
-        doc["device_class"] = entity->deviceClass;
+        if (entity->deviceClass.length() > 0)
+        {
+            doc["device_class"] = entity->deviceClass;
+        }
         doc["unique_id"] = entity->id;
-        doc["~"] = entity->baseTopic;
-        doc["cmd_t"] = "~/state";
-        doc["stat_t"] = "~/set";
-        doc["schema"] = "json";
-        doc["state_on"] = "on";
-        doc["state_off"] = "off";
+        doc["~"] = entity->baseTopic();
+        entity->setupCapabilities(doc);
+        entity->setupStateTopic(doc);
+        entity->setupCommandTopics(doc);
         doc["object_id"] = entity->id;
-        // doc["value_template"] = "{{ value_json.state }}";
         JsonObject devObject = doc["device"].to<JsonObject>();
         entity->device->getJson(devObject);
         mqtt->send(topic, doc);
-
-        String setTopic = entity->baseTopic + "/state";
-        mqtt->subscribe(setTopic.c_str(), [this, entity](const char *payload)
-                        { entity->updateState(payload); });
     }
 
-    void HomeAssistant::publishState(Entity *entity, JsonDocument &payload)
+    void HomeAssistant::publishState(const char *topic, JsonDocument &payload)
     {
-        String topic = entity->baseTopic + "/set";
         mqtt->send(topic, payload);
     }
 
-    void HomeAssistant::publishState(Entity *entity, const char *payload)
+    void HomeAssistant::publishState(const char *topic, const char *payload)
     {
-        String topic = entity->baseTopic + "/set";
         mqtt->send(topic, payload);
-        topic = entity->baseTopic + "/state";
         mqtt->send(topic, payload);
     }
 }

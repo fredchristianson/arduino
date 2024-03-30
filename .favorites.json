@@ -1,0 +1,83 @@
+[
+    {
+        "type": "Group",
+        "name": "HallApp",
+        "parent_id": null,
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "dTFoxErp5mPvqBse"
+    },
+    {
+        "type": "File",
+        "name": "/Users/fredchristianson/fred/arduino/projects/HallLights/src/HallApp.cpp",
+        "parent_id": "dTFoxErp5mPvqBse",
+        "workspaceRoot": "/Users/fredchristianson/fred/arduino",
+        "workspacePath": "projects/HallLights/src/HallApp.cpp",
+        "id": "7tIop0yLeZ3fGqvx"
+    },
+    {
+        "type": "File",
+        "name": "/Users/fredchristianson/fred/arduino/projects/HallLights/src/HallApp.h",
+        "parent_id": "dTFoxErp5mPvqBse",
+        "workspaceRoot": "/Users/fredchristianson/fred/arduino",
+        "workspacePath": "projects/HallLights/src/HallApp.h",
+        "id": "SVlt5xabF3heYcun"
+    },
+    {
+        "type": "File",
+        "name": "/Users/fredchristianson/fred/arduino/projects/HallLights/data/config.ini",
+        "parent_id": "dTFoxErp5mPvqBse",
+        "workspaceRoot": "/Users/fredchristianson/fred/arduino",
+        "workspacePath": "projects/HallLights/data/config.ini",
+        "id": "76L3vmh4oN2PgWIf"
+    },
+    {
+        "type": "Group",
+        "name": "FCLIB",
+        "parent_id": null,
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "RFXQba9yHweL0qvG"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/fredchristianson/fred/arduino/lib/fclib/src/Hardware",
+        "parent_id": "RFXQba9yHweL0qvG",
+        "workspaceRoot": "/Users/fredchristianson/fred/arduino",
+        "workspacePath": "lib/fclib/src/Hardware",
+        "id": "5ShmMXsTLAg21tjH"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/fredchristianson/fred/arduino/lib/fclib/src/HomeAssistant",
+        "parent_id": "RFXQba9yHweL0qvG",
+        "workspaceRoot": "/Users/fredchristianson/fred/arduino",
+        "workspacePath": "lib/fclib/src/HomeAssistant",
+        "id": "cJaEsiNbRMzgHQfG"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/fredchristianson/fred/arduino/lib/fclib/src/Led",
+        "parent_id": "RFXQba9yHweL0qvG",
+        "workspaceRoot": "/Users/fredchristianson/fred/arduino",
+        "workspacePath": "lib/fclib/src/Led",
+        "id": "JuHvBNmbIkiZzjLy"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/fredchristianson/fred/arduino/lib/fclib/src/Renderer",
+        "parent_id": "RFXQba9yHweL0qvG",
+        "workspaceRoot": "/Users/fredchristianson/fred/arduino",
+        "workspacePath": "lib/fclib/src/Renderer",
+        "id": "EM8zHWAKfcGL5dVg"
+    },
+    {
+        "type": "Directory",
+        "name": "/Users/fredchristianson/fred/arduino/lib/fclib/include/fclib",
+        "parent_id": "RFXQba9yHweL0qvG",
+        "workspaceRoot": "/Users/fredchristianson/fred/arduino",
+        "workspacePath": "lib/fclib/include/fclib",
+        "id": "iSTmPGCRIpFfWKaE",
+        "label": "include"
+    }
+]
