@@ -44,6 +44,7 @@ void HallApp::setupComplete()
     haLedCount = new HA::Number(haDevice, "LED Count", 0, 900, ledCount);
     haLedPin = new HA::Number(haDevice, "LED Strip Pin", 0, 16, ledPin);
     renderer.setStrip(this->ledStrip);
+
     ha->publishConfig();
     ConfigSection *s = getConfig()->getSection("renderer");
     renderer.setBrightness(s->get("brightness", 50));
@@ -52,7 +53,7 @@ void HallApp::setupComplete()
 
     Task::repeat([this]()
                  { this->log.showMemory(); })
-        ->delaySeconds(60);
+        ->delaySeconds(15);
     listener.handle(EventType::CHANGE_EVENT, haLedCount, [this](Event *event)
                     { this->onLedCountChange(haLedCount->asInt()); });
     listener.handle(EventType::CHANGE_EVENT, haLedPin, [this](Event *event)
@@ -60,8 +61,8 @@ void HallApp::setupComplete()
 
     listener.handleChange(config, [this, config, hardwareConfig](Event *event)
                           {
-        this->log.always("save config");
-        config->save(); });
+               this->log.always("save config");
+               config->save(); });
     listener.handleChange(haLight, [this](Event *event)
                           { this->onLightStateChange(event); });
 }
@@ -94,9 +95,15 @@ void HallApp::onMotionChange(Event *event)
 void HallApp::onLedCountChange(int count)
 {
     ledStrip->setCount(count);
+    Config *config = getConfig();
+    ConfigSection *hardwareConfig = config->getSection("hardware");
+    hardwareConfig->set("led_count", count);
 }
 
 void HallApp::onLedPinChange(int pin)
 {
+    Config *config = getConfig();
+    ConfigSection *hardwareConfig = config->getSection("hardware");
+    hardwareConfig->set("led_pin", pin);
     ledStrip->setPin(pin);
 }

@@ -19,6 +19,10 @@ namespace FCLIB
     TaskStatus TimerTask::updateStatus()
     {
         log.never("Update status 0x%lx %ld %ld", this, repeatCount, FCLIB_REPEAT_FOREVER);
+        if (status == TASK_COMPLETE)
+        {
+            return status;
+        }
         if (repeatCount < 1 && repeatCount != FCLIB_REPEAT_FOREVER)
         {
             log.never("complete");

@@ -21,18 +21,18 @@ namespace FCLIB
         changed = isChanged;
         if (changed)
         {
-            confLogger.always(" change %lx", this->section);
+            confLogger.never(" change %lx", this->section);
             Event::trigger(EventType::CHANGE_EVENT, this, this);
             if (this->section != NULL)
             {
-                confLogger.always("section change %x %x", this->section, this->section->getConfig());
+                confLogger.never("section change %x %x", this->section, this->section->getConfig());
                 Event::trigger(EventType::CHANGE_EVENT, this->section, this);
                 Event::trigger(EventType::CHANGE_EVENT, this->section->getConfig(), this);
             }
         }
         else
         {
-            confLogger.always("no change");
+            confLogger.never("no change");
         }
     }
     void ConfigValue::set(int value)

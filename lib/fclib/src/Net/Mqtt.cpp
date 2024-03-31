@@ -47,12 +47,13 @@ namespace FCLIB
         };
 
         pubSubClient.setCallback(callback);
+        pubSubClient.setServer(mqttServer, port);
 
-        this->reconnect();
+        this->connect();
         return true;
     }
 
-    bool Mqtt::reconnect()
+    bool Mqtt::connect()
     {
         while (!pubSubClient.connected())
         {
@@ -74,8 +75,8 @@ namespace FCLIB
 
     void Mqtt::send(String topic, JsonDocument &doc)
     {
-        checkConnection();
         int len = measureJson(doc);
+        log.never("send: %s", topic.c_str());
         pubSubClient.beginPublish(topic.c_str(), len, false);
         serializeJson(doc, pubSubClient);
         pubSubClient.endPublish();
@@ -83,16 +84,12 @@ namespace FCLIB
 
     void Mqtt::send(String topic, const char *payload)
     {
-        checkConnection();
+        log.never("sends: %s", topic.c_str());
         pubSubClient.publish(topic.c_str(), payload);
     }
 
     void Mqtt::checkConnection()
     {
-        if (!pubSubClient.connected())
-        {
-            this->reconnect();
-        }
         pubSubClient.loop();
     }
 

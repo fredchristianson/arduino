@@ -75,7 +75,7 @@ namespace FCLIB
 
         bool configure(const char *deviceName, const char *mqttServer, const char *user, const char *password, int mqttPort = 1883);
 
-        bool reconnect();
+        bool connect();
 
         void send(String topic, JsonDocument &doc);
         void send(String topic, const char *);
@@ -101,7 +101,7 @@ namespace FCLIB
         public:
             Subscriber(const char *stopic, MqttCallback callback)
             {
-                Logger log("Subscriber");
+                Logger log("MqttSubscriber");
                 log.debug("topic: %s", stopic);
                 this->topic = stopic;
                 this->callback = callback;

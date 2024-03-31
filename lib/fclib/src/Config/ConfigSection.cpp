@@ -161,14 +161,14 @@ namespace FCLIB
         ConfigValue *val = this->getValue(name);
         if (val == NULL)
         {
-            log.always("add conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
+            log.never("add conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
             val = new ConfigValue(this, name, newValue);
             addValue(val);
         }
         else
         {
             val->section = this;
-            log.always("replace conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
+            log.never("replace conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
             val->section = this;
             val->set(newValue);
         }

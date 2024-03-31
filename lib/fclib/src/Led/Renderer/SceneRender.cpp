@@ -21,24 +21,31 @@ namespace FCLIB
 
     void SceneRenderer::start()
     {
-        log.debug("start rendering");
+        log.never("start rendering");
         if (task != NULL)
         {
             log.warn("already rendering");
             return;
         }
-        task = LoopTask::create([this]()
-                                { this->onLoop(); });
+        // task = LoopTask::create([this]()
+        //                         { this->onLoop(); });
+        task = Task::repeat([this]()
+                            { this->onLoop(); })
+                   ->delayMsecs(500);
+        log.never("created task %lx", task);
     }
 
     void SceneRenderer::stop()
     {
+        log.never("remove task %lx", task);
+
         if (task != NULL)
         {
             AppLoop::removeTask(task);
             strip->clear();
             strip->show();
             task = NULL;
+            log.never("removed");
         }
     }
 
@@ -56,7 +63,7 @@ namespace FCLIB
 
     void SceneRenderer::render()
     {
-        // log.debug("render %d", this->brightness);
+        log.never("render %lx %d", this, this->brightness);
         strip->clear();
         strip->setBrightness(this->brightness);
         this->runRenderers();

@@ -18,7 +18,7 @@ namespace FCLIB::HA
     String HomeAssistant::toUnfriendlyName(const char *name)
     {
         Logger log("HomeAssistant");
-        log.debug("nameToId %s", name);
+        log.never("nameToId %s", name);
 
         String id;
         const char *p = name;
@@ -34,7 +34,7 @@ namespace FCLIB::HA
             }
             p++;
         }
-        log.debug("id %s", id.c_str());
+        log.never("id %s", id.c_str());
         return id;
     }
 
@@ -109,7 +109,6 @@ namespace FCLIB::HA
 
     void HomeAssistant::publishState(const char *topic, const char *payload)
     {
-        mqtt->send(topic, payload);
         mqtt->send(topic, payload);
     }
 }

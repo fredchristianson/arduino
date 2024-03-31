@@ -29,8 +29,13 @@ void setup()
     hallApp.setup(&config);
 }
 
+int cnt = 0;
 void loop()
 {
+    // if ((cnt++ % 1000) == 0)
+    // {
+    //     logger->showMemory("main");
+    // }
     if (testsPass)
     {
         hallApp.loop();

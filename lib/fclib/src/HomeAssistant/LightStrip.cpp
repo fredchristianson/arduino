@@ -29,6 +29,7 @@ namespace FCLIB::HA
         doc["color"]["b"] = renderer->getRGB().blue();
         doc["color_mode"] = "rgb";
         ha()->publishState(baseTopic() + "/set", doc);
+        // ha()->publishState(baseTopic() + "/set", "{\"state\":\"ON\"}");
     }
 
     void LightStrip::setupCommandTopics(JsonDocument &doc)
@@ -93,13 +94,13 @@ namespace FCLIB::HA
         {
             log.debug("turn on");
             renderer->start();
-            setStateOn();
+            this->lastBoolState = true;
         }
         else
         {
             log.debug("turn off");
             renderer->stop();
-            setStateOff();
+            this->lastBoolState = false;
         }
         Event::trigger(EventType::CHANGE_EVENT, this);
         this->publishState();

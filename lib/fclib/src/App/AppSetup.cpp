@@ -41,7 +41,10 @@ namespace FCLIB
     bool AppSetup::setupLogging()
     {
         log.always("AppSetup::setupLogging");
+        ConfigFile logConfig;
+        logConfig.load("/logging.ini");
         configureLogging(this->config->getSection("logging"));
+        configureLogging(logConfig.getSection("levels"));
         return true;
     }
 

@@ -47,7 +47,7 @@ namespace FCLIB
     IntervalTimer it(5000);
     void HomeAssistantSceneRenderer::runRenderers()
     {
-        log.conditional(it.isComplete(), NEVER_LEVEL, "runRenderers");
+        // log.conditional(it.isComplete(), NEVER_LEVEL, "runRenderers");
         if (mode == SceneMode::MODE_RGB)
         {
             strip->fill(rgb);
