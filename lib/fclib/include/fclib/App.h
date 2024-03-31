@@ -6,7 +6,6 @@
 #include "./Timer.h"
 #include "./Config.h"
 #include "./Event.h"
-#include "./LinkedList.h"
 #include "./Net.h"
 #include "./Logging.h"
 #include "./Task.h"
@@ -157,7 +156,7 @@ namespace FCLIB
         virtual AppLoop *createLoop();
 
     private:
-        LinkedList<Event *> events;
+        List<Event *> events;
         bool running;
         AppSetup *appSetup;
         AppLoop *appLoop;

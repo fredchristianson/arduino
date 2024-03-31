@@ -1,7 +1,6 @@
 #include <string.h>
 #include <cstddef>
 #include <stdlib.h>
-#include "LinkedList.h"
 #ifndef FCLIB_UTIL_H
 #define FCLIB_UTIL_H
 
@@ -49,28 +48,6 @@ namespace FCLIB
             }
             return val;
         };
-
-        template <typename T>
-        void forEach(LinkedList<T> &list, auto func)
-        {
-            for (int i = 0; i < list.size(); i++)
-            {
-                T item = list.get(i);
-                func(item);
-            }
-        }
-
-        template <typename T>
-        int sum(LinkedList<T> &list, auto func)
-        {
-            int result = 0;
-            for (int i = 0; i < list.size(); i++)
-            {
-                T item = list.get(i);
-                result = result + func(item);
-            }
-            return result;
-        }
 
     }
 }

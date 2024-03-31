@@ -1,9 +1,9 @@
 #ifndef _FCLIB_CONFIG_H_
 #define _FCLIB_CONFIG_H_
 #include <WString.h>
-#include "fclib/LinkedList.h"
 #include "fclib/Logging.h"
 #include "fclib/Test.h"
+#include "fclib/List.h"
 
 namespace FCLIB
 {
@@ -97,7 +97,7 @@ namespace FCLIB
         void addValue(ConfigValue *value);
         bool isChanged();
         String name;
-        LinkedList<ConfigValue *> values;
+        List<ConfigValue> values;
         Logger log;
         void clearChanged();
         Config *getConfig() { return config; }
@@ -147,7 +147,7 @@ namespace FCLIB
         void clearChanged();
 
     protected:
-        LinkedList<ConfigSection *> sections;
+        List<ConfigSection> sections;
         ConfigSection *createSection(const char *name);
         Logger log;
     };

@@ -4,6 +4,8 @@ using namespace FCLIB;
 
 namespace FCLIB
 {
+    /* EventManager Static */
+    /***********************/
 
     EventManager *singletonEventManager;
 
@@ -15,45 +17,53 @@ namespace FCLIB
         }
         return singletonEventManager;
     }
-    void EventManager::addListener(EventListener *listener)
+    void EventManager::add(EventListener *listener)
     {
-        if (!get()->hasListener(listener))
-        {
-            get()->listeners.add(listener);
-        }
+        get()->addListener(listener);
     }
-    void EventManager::removeListener(EventListener *listener)
+    void EventManager::remove(EventListener *listener)
     {
-        EventManager *em = get();
-        for (int i = 0; i < em->listeners.size(); i++)
-        {
-            EventListener *l = em->listeners[i];
-            if (l == listener)
-            {
-                em->listeners.remove(i);
-                return;
-            }
-        }
+        get()->removeListener(listener);
     }
 
-    void EventManager::addEvent(Event *event)
+    void EventManager::add(Event *event)
     {
-        get()->add(event);
+        get()->addEvent(event);
     }
+
+    void EventManager::processEvents()
+    {
+        get()->process();
+    }
+    /**************************/
+    /* EventManager end Static*/
 
     EventManager::EventManager() : log("EventManager")
     {
-        currentEventList = 0;
+        eventQueue = &events[0];
     }
+
     EventManager::~EventManager()
     {
+    }
+    void EventManager::addListener(EventListener *listener)
+    {
+        if (!listeners.contains(listener))
+        {
+            listeners.add(listener);
+        }
+    }
+
+    void EventManager::removeListener(EventListener *listener)
+    {
+        listeners.remove(listener);
     }
 
     bool EventManager::hasListener(EventListener *listener)
     {
         for (int i = 0; i < listeners.size(); i++)
         {
-            if (listener == listeners[i])
+            if (listener == listeners.getAt(i))
             {
                 return true;
             }
@@ -61,49 +71,40 @@ namespace FCLIB
         return false;
     }
 
-    void EventManager::add(Event *event)
+    void EventManager::addEvent(Event *event)
     {
-        log.never("add event %d %lx", currentEventList, event);
-
-        // currentEventList is the one events can be added to.
-        // processEvents() may be using the other one
-        LinkedList<Event *> &cur = events[currentEventList];
         if (!event->mayHaveMultiple)
         {
-            // remove existing messages from sender/type unless multiple allowed
-            for (int i = 0; i < cur.size(); i++)
-            {
-                if (cur[i]->sender == event->sender && cur[i]->type == event->type)
-                {
-                    cur.remove(i);
-                    i--;
-                }
-            }
+            // remove other events matching this type/sender if multiple are not allowed
+            eventQueue->removeIf([event](Event *other)
+                                 { return event->getType() == other->getType() && event->getSender() == other->getSender(); });
         }
-        cur.add(event);
+        eventQueue->add(event);
     }
 
-    void EventManager::processEvents()
+    void EventManager::process()
     {
-        EventManager *em = get();
-        LinkedList<Event *> *events = &(em->events[em->currentEventList]);
-        em->currentEventList = (em->currentEventList == 0) ? 1 : 0;
-        if (events->size() == 0)
+        // eventQueue is the one events can be added to.
+        // the one they have been added to is put in cur
+        List<Event> *cur = eventQueue;
+
+        if (cur->size() == 0)
         {
             return;
         }
-        Event *event;
-        while ((event = events->pop()) != NULL)
+        if (eventQueue == &events[0])
         {
-            em->log.debug("process event 0x%lx", event);
-            for (int i = 0; i < em->listeners.size(); i++)
-            {
-                EventListener *listener = em->listeners[i];
-                em->log.debug("\tcall listener 0x%lx", listener);
-                listener->processEvent(event);
-                em->log.debug("\tdelete event");
-            }
-            delete event;
+            eventQueue = &events[1];
         }
+        else
+        {
+            eventQueue = &events[0];
+        }
+        cur->forEach([this](Event *event)
+                     { this->listeners.forEach([event](EventListener *listener)
+                                               { listener->processEvent(event); }); });
+        cur->forEach([](Event *event)
+                     { delete event; });
+        cur->clear();
     }
 }

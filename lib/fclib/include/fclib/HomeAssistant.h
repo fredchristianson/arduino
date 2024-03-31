@@ -3,11 +3,11 @@
 #include <ArduinoJson.h>
 #include <c_types.h>
 #include "fclib/Logging.h"
-#include "fclib/LinkedList.h"
 #include "fclib/Hardware.h"
 #include "fclib/Net.h"
 #include "fclib/Event.h"
 #include "fclib/Render.h"
+#include "fclib/List.h"
 using namespace FCLIB;
 
 namespace FCLIB::HA
@@ -189,7 +189,7 @@ namespace FCLIB::HA
         friend Entity;
         void getJson(JsonObject &json);
         Logger log;
-        LinkedList<Entity *> entities;
+        List<Entity> entities;
         String name;
         String friendlyName;
         String id;
@@ -221,7 +221,7 @@ namespace FCLIB::HA
         Logger log;
         Mqtt *mqtt;
         EventListener listener;
-        LinkedList<Device *> devices;
+        List<Device> devices;
     };
 
 }

@@ -13,7 +13,7 @@ namespace FCLIB
         log.debug("create event");
         Event *event = new Event(type, sender);
         log.debug("queue avent");
-        EventManager::addEvent(event);
+        EventManager::add(event);
         log.debug("event added");
     }
     void Event::trigger(EventType type, void *sender, bool boolState)
@@ -23,7 +23,7 @@ namespace FCLIB
         Event *event = new Event(type, sender);
         event->data.boolValue = boolState;
         log.debug("queue avent");
-        EventManager::addEvent(event);
+        EventManager::add(event);
         log.debug("event added");
     }
     void Event::trigger(EventType type, void *sender, int intVal)
@@ -33,7 +33,7 @@ namespace FCLIB
         Event *event = new Event(type, sender);
         event->data.intValue = intVal;
         log.debug("queue avent");
-        EventManager::addEvent(event);
+        EventManager::add(event);
         log.debug("event added");
     }
     void Event::trigger(EventType type, void *sender, float floatVal)
@@ -43,7 +43,7 @@ namespace FCLIB
         Event *event = new Event(type, sender);
         event->data.floatValue = floatVal;
         log.debug("queue avent");
-        EventManager::addEvent(event);
+        EventManager::add(event);
         log.debug("event added");
     }
 

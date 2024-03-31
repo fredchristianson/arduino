@@ -13,7 +13,6 @@
   "frameworks": "*",
   "platforms": "*",
   "dependencies": {
-    "fastled/FastLED": "*",
     "adafruit/Adafruit NeoPixel": "*",
     "tzapu/WiFiManager": "^0.16.0",
     "littlefs": "*",

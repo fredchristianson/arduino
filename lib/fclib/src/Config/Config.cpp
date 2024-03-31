@@ -14,7 +14,7 @@ namespace FCLIB
     {
         for (int i = 0; i < this->sections.size(); i++)
         {
-            ConfigSection *val = this->sections.get(i);
+            ConfigSection *val = this->sections[i];
             delete val;
         }
     }

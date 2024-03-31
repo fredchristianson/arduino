@@ -1,8 +1,8 @@
 #ifndef _FCLIB_EVENT_H_
 #define _FCLIB_EVENT_H_
 #include <functional>
-#include "fclib/LinkedList.h"
 #include "fclib/Logging.h"
+#include "fclib/List.h"
 
 namespace FCLIB
 {
@@ -12,6 +12,7 @@ namespace FCLIB
     class EventListener;
 
     using EventHandlerCallback = std::function<void(Event *)>;
+
     enum class EventType
     {
         CHANGE_EVENT = 100,
@@ -39,7 +40,7 @@ namespace FCLIB
         friend EventManager;
         friend EventListener;
 
-        virtual bool match(EventType type, void *sender);
+        virtual bool match(EventType type, const void *sender);
         virtual void handle(Event *);
 
         EventType type;
@@ -61,7 +62,7 @@ namespace FCLIB
     private:
         friend EventManager;
         void processEvent(Event *event);
-        LinkedList<EventHandler *> handlers;
+        List<EventHandler> handlers;
     };
 
     union EventData_t
@@ -82,8 +83,8 @@ namespace FCLIB
         static void trigger(EventType type, void *sender, int intVal);
         static void trigger(EventType type, void *sender, float floatVal);
 
-        EventType getType() { return this->type; }
-        void *getSender() { return this->sender; }
+        const EventType getType() const { return this->type; }
+        const void *getSender() const { return this->sender; }
         int getId();
         void setAllowMultiple(bool allow = true) { this->mayHaveMultiple = allow; }
         bool isMultipleAllowed() { return this->mayHaveMultiple; }
@@ -103,21 +104,24 @@ namespace FCLIB
     class EventManager
     {
     public:
-        static void addListener(EventListener *listener);
-        static void removeListener(EventListener *listener);
-        static void addEvent(Event *event);
+        static void add(EventListener *listener);
+        static void remove(EventListener *listener);
+        static void add(Event *event);
         static void processEvents();
 
         static EventManager *get();
 
     private:
+        void addListener(EventListener *listener);
+        void removeListener(EventListener *listener);
         bool hasListener(EventListener *listener);
-        void add(Event *event);
+        void addEvent(Event *event);
         EventManager();
         virtual ~EventManager();
-        LinkedList<Event *> events[2];
-        int currentEventList;
-        LinkedList<EventListener *> listeners;
+        List<Event> events[2];   // one is current and one is a queue for next loop
+        List<Event> *eventQueue; // points to one of the events[2] lists.  new events added here
+        List<EventListener> listeners;
+        void process();
         Logger log;
     };
 }

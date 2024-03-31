@@ -20,9 +20,9 @@ namespace FCLIB
     {
         uint idx = 0;
         int pos = compositePos;
-        while (idx < (int)strips.size() && pos >= strips.get(idx)->length())
+        while (idx < (int)strips.size() && pos >= strips[idx]->length())
         {
-            pos -= strips.get(idx)->length();
+            pos -= strips[idx]->length();
             idx++;
         }
         if (idx < 0 || idx >= strips.size())
@@ -30,13 +30,13 @@ namespace FCLIB
             LOG.warn("composit pos %d ignored. strip count=%d.   Composite length=%d", strips.size(), this->length());
             return;
         }
-        strips.get(idx)->set(pos, color, op);
+        strips[idx]->set(pos, color, op);
     }
 
     void CompositeStrip::clear()
     {
-        forEach<LedStrip *>(strips, [](LedStrip *&strip)
-                            { strip->clear(); });
+        strips.forEach([](LedStrip *strip)
+                       { strip->clear(); });
     }
 
     void CompositeStrip::fill(const Color &color, LedOp_t op)
@@ -54,8 +54,12 @@ namespace FCLIB
     void CompositeStrip::add(LedStrip *component)
     {
         strips.add(component);
-        this->setLength(sum(strips, [](LedStrip *s)
-                            { return s->length(); }));
+        uint16 count = 0;
+        for (int i = 0; i < strips.size(); i++)
+        {
+            count += strips[i]->length();
+        }
+        this->setLength(count);
         LOG.never("Composite length %d", this->length());
     }
 

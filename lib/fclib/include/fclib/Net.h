@@ -2,11 +2,11 @@
 #define __FCNET_H_
 #include <ArduinoJson.h>
 #include "fclib/Logging.h"
-#include "fclib/LinkedList.h"
 #include <WiFiManager.h>
 #include <PubSubClient.h>
 #include <NTPClient.h>
 #include "fclib/Task.h"
+#include "fclib/List.h"
 
 namespace FCLIB
 {
@@ -39,7 +39,7 @@ namespace FCLIB
 
     private:
         Logger log;
-        LinkedList<WiFiPortalParameter *> params;
+        List<WiFiPortalParameter> params;
     };
 
     class TimeClient
@@ -111,7 +111,7 @@ namespace FCLIB
             MqttCallback callback;
         };
 
-        LinkedList<Subscriber *> subscribers;
+        List<Subscriber> subscribers;
     };
 }
 

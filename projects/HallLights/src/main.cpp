@@ -16,6 +16,9 @@ bool testsPass = true;
 
 void setup()
 {
+    int test = 0;
+    logger->info("stack %lx", &test);
+    logger->showMemory("setup");
     testsPass = HALLLIGHTS_TEST::runTests();
 
     if (!testsPass)
@@ -32,10 +35,12 @@ void setup()
 int cnt = 0;
 void loop()
 {
-    // if ((cnt++ % 1000) == 0)
-    // {
-    //     logger->showMemory("main");
-    // }
+    int test = 0;
+    if ((cnt++ % 5000) == 0)
+    {
+        logger->info("stack %lx", &test);
+        logger->showMemory("loop");
+    }
     if (testsPass)
     {
         hallApp.loop();

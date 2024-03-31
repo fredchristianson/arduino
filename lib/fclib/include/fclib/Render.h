@@ -129,7 +129,7 @@ namespace FCLIB
         virtual void draw(LedStrip &strip, LedOp_t op = DEFOP) override;
 
     protected:
-        LinkedList<PatternElement *> elements;
+        List<PatternElement> elements;
         Positioning positioning;
     };
 
@@ -197,7 +197,7 @@ namespace FCLIB
     protected:
         virtual void runRenderers();
         LedStrip *strip;
-        LinkedList<LedRenderer *> renderers;
+        List<LedRenderer> renderers;
         virtual void onLoop();
         LoopTask *task;
     };

@@ -10,8 +10,8 @@ FCLIB::PatternRenderer::PatternRenderer(Positioning positioning)
 
 FCLIB::PatternRenderer::~PatternRenderer()
 {
-    forEach(this->elements, [](PatternElement *element)
-            { delete element; });
+    this->elements.forEach([](PatternElement *element)
+                           { delete element; });
 }
 
 PatternRenderer &FCLIB::PatternRenderer::addElement(uint count, Color &color, PositionUnit unit)

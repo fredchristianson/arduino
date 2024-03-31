@@ -17,7 +17,7 @@ namespace FCLIB
     {
     }
 
-    bool EventHandler::match(EventType type, void *sender)
+    bool EventHandler::match(EventType type, const void *sender)
     {
         if (this->type != EventType::ANY && this->type != type)
         {

@@ -1,9 +1,8 @@
 #ifndef _FCLIB_LED_H_
 #define _FCLIB_LED_H_
 #include <stdint.h>
-#include <FastLED.h>
 #include <Adafruit_NeoPixel.h>
-#include "./LinkedList.h"
+#include "./List.h"
 #include "./Logging.h"
 
 namespace FCLIB
@@ -213,7 +212,7 @@ namespace FCLIB
         void setBrightness(uint8);
 
     private:
-        LinkedList<LedStrip *> strips;
+        List<LedStrip> strips;
     };
 
     class StripModifier : public LedStrip

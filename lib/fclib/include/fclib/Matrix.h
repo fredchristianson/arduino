@@ -1,9 +1,8 @@
 #ifndef _FCLIB_MATRIX_H_
 #define _FCLIB_MATRIX_H_
 #include <stdint.h>
-#include <FastLED.h>
 #include <Adafruit_NeoPixel.h>
-#include "./LinkedList.h"
+#include "./List.h"
 #include "./Logging.h"
 #include "./LedStrip.h"
 

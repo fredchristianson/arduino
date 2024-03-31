@@ -83,7 +83,7 @@ namespace FCLIB
         FileWriter writer(filePath);
         for (int i = 0; i < sections.size(); i++)
         {
-            ConfigSection *section = sections[i];
+            ConfigSection *section = sections.getAt(i);
             String line = "[";
             line.concat(section->name);
             line.concat("]");

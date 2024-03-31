@@ -17,7 +17,7 @@ namespace FCLIB
     {
         for (int i = 0; i < this->values.size(); i++)
         {
-            ConfigValue *val = this->values.get(i);
+            ConfigValue *val = this->values[i];
             delete val;
         }
     }
@@ -26,7 +26,7 @@ namespace FCLIB
     {
         for (int i = 0; i < this->values.size(); i++)
         {
-            ConfigValue *val = this->values.get(i);
+            ConfigValue *val = this->values[i];
             val->changed = false;
         }
     }
