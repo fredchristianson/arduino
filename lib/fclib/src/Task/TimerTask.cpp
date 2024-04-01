@@ -4,14 +4,26 @@ using namespace FCLIB;
 
 namespace FCLIB
 {
-    TimerTask::TimerTask(TaskCallback callback, long repeatCount) : LoopTask(this), timer(0, TIME_MSECS)
+    TimerTask::TimerTask(SimpleCallable callback, long repeatCount) : Task(this), timer(0, TIME_MSECS)
     {
         log.setModuleName("TimerTask");
         this->repeatCount = repeatCount;
         this->status = TASK_WAITING;
         this->callback = callback;
+        this->action = NULL;
         log.debug("TimerTask 0x%lx %d", this, repeatCount);
     }
+
+    TimerTask::TimerTask(TaskAction *action, long repeatCount) : Task(this), timer(0, TIME_MSECS)
+    {
+        log.setModuleName("TimerTask");
+        this->repeatCount = repeatCount;
+        this->status = TASK_WAITING;
+        this->callback = NULL;
+        this->action = action;
+        log.debug("TimerTask 0x%lx %d", this, repeatCount);
+    }
+
     TimerTask::~TimerTask()
     {
     }
@@ -49,7 +61,18 @@ namespace FCLIB
         if ((repeatCount > 0 || repeatCount == FCLIB_REPEAT_FOREVER) && timer.isComplete())
         {
             log.debug("Timer triggered");
-            callback();
+            if (this->action != NULL)
+            {
+                this->action->doTask();
+            }
+            else if (callback != NULL)
+            {
+                callback();
+            }
+            else
+            {
+                log.error("TimerTask doesn't have an action");
+            }
             if (repeatCount != FCLIB_REPEAT_FOREVER)
             {
                 repeatCount -= 1;
@@ -75,26 +98,28 @@ namespace FCLIB
         return this;
     }
 
-    OneTimeTask::OneTimeTask(TaskCallback callback) : TimerTask(callback, 1)
+    OneTimeTask::OneTimeTask(SimpleCallable callback) : TimerTask(callback, 1)
+    {
+        log.setModuleName("OneTimeTask");
+        log.debug("OneTimeTask created 0x%lx", this);
+    }
+    OneTimeTask::OneTimeTask(TaskAction *action) : TimerTask(action, 1)
     {
         log.setModuleName("OneTimeTask");
         log.debug("OneTimeTask created 0x%lx", this);
     }
     OneTimeTask::~OneTimeTask() {}
 
-    RepeatingTask::RepeatingTask(TaskCallback callback, long repeatCount) : TimerTask(callback, repeatCount)
+    RepeatingTask::RepeatingTask(SimpleCallable callback, long repeatCount) : TimerTask(callback, repeatCount)
+    {
+        log.setModuleName("RepeatingTask");
+        log.debug("Task created 0x%lx", this);
+    }
+    RepeatingTask::RepeatingTask(TaskAction *action, long repeatCount) : TimerTask(action, repeatCount)
     {
         log.setModuleName("RepeatingTask");
         log.debug("Task created 0x%lx", this);
     }
     RepeatingTask::~RepeatingTask() {}
 
-    TimerTask *Task::once(TaskCallback callback)
-    {
-        return new OneTimeTask(callback);
-    }
-    TimerTask *Task::repeat(TaskCallback callback, long repeatCount)
-    {
-        return new RepeatingTask(callback, repeatCount);
-    }
 }

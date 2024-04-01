@@ -26,6 +26,8 @@ namespace FCLIB
         CONNECTED = 200,
         DISCONNECTED = 201,
 
+        TASK_CREATED = 300,
+
         ANY = 0xFFFF
     };
 
@@ -82,6 +84,7 @@ namespace FCLIB
         static void trigger(EventType type, void *sender, bool boolState);
         static void trigger(EventType type, void *sender, int intVal);
         static void trigger(EventType type, void *sender, float floatVal);
+        static void trigger(EventType type, void *sender, void *custom);
 
         const EventType getType() const { return this->type; }
         const void *getSender() const { return this->sender; }

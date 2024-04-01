@@ -10,9 +10,6 @@ namespace FCLIB
     HomeAssistantSceneRenderer::HomeAssistantSceneRenderer(LedStrip *strip) : SceneRenderer(strip)
     {
         log.setModuleName("HomeAssistantSceneRenderer");
-        this->strip = strip;
-        this->brightness = 50;
-        this->task = NULL;
         this->mode = SceneMode::MODE_OFF;
     }
 

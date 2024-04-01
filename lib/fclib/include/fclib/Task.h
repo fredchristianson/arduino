@@ -5,19 +5,20 @@
 #include "fclib/Logging.h"
 #include "fclib/Timer.h"
 #include "fclib/Test.h"
+#include "fclib/Callable.h"
+#include "fclib/List.h"
+#include "fclib/Event.h"
+#include "fclib/Config.h"
+
+using namespace FCLIB;
 
 #define FCLIB_REPEAT_FOREVER -1
 namespace FCLIB
 {
     class TaskQueue;
-    using TaskCallback = std::function<void()>;
-
-    enum LoopStage
-    {
-        LOOP_BEGIN = 0,
-        LOOP_NORMAL = 1,
-        LOOP_END
-    };
+    class Task;
+    class TimerTask;
+    class LoopTask;
 
     enum TaskStatus
     {
@@ -25,14 +26,6 @@ namespace FCLIB
         TASK_WAITING = 1,
         TASK_COMPLETE = 2
     };
-
-    enum TaskType
-    {
-        LOOP_TASK = 0,
-        NULL_TASK = -1
-    };
-
-    class LoopTasks;
 
     class TaskAction
     {
@@ -42,82 +35,58 @@ namespace FCLIB
         virtual void doTask() = 0;
     };
 
-    class TaskCallbackAction : public TaskAction
+    class Task
     {
     public:
-        TaskCallbackAction(TaskCallback callback) { this->callback = callback; }
-        virtual void doTask() override { (this->callback)(); }
-
-    private:
-        TaskCallback callback;
-    };
-
-    class TaskBase
-    {
-    public:
-        TaskBase(TaskAction *action, TaskType type, uint8 priority = 50);
-        virtual ~TaskBase();
-
-        uint8 getPriority() { return this->priority; }
         TaskStatus getStatus() { return this->status; }
-        TaskType getTaskType() { return this->taskType; }
         virtual TaskStatus updateStatus() = 0;
         virtual void doTask() { action->doTask(); };
 
-        TaskBase *getNext() { return next; }
-        TaskBase *getPrev() { return prev; }
         void setStatus(TaskStatus status) { this->status = status; }
+        void end() { this->status = TASK_COMPLETE; }
 
     protected:
-        friend TaskQueue;
-        uint8 priority; // 0(low) - 100(high)
+        Task(TaskAction *action);
+        virtual ~Task();
         TaskStatus status;
-        TaskType taskType;
         TaskAction *action;
         Logger log;
 
     private:
         friend TaskQueue;
-        TaskBase *prev;
-        TaskBase *next;
+
+    public:
+        static TimerTask *once(TaskAction *action);
+        static TimerTask *repeat(TaskAction *action, long repeatCount = FCLIB_REPEAT_FOREVER);
+
+        static TimerTask *once(SimpleCallable callback);
+        static TimerTask *repeat(SimpleCallable callback, long repeatCount = FCLIB_REPEAT_FOREVER);
+
+        static LoopTask *onLoop(TaskAction *action);
+        static LoopTask *onLoop(SimpleCallable callback);
     };
 
-    class LoopTask : public TaskBase
+    class LoopTask : public Task, public TaskAction
     {
     public:
-        static LoopTask *create(TaskCallback callback, LoopStage stage = LOOP_NORMAL, uint8 priority = 50);
-        static LoopTask *create(TaskAction *action, LoopStage stage = LOOP_NORMAL, uint8 priority = 50);
-        LoopStage getStage() { return this->stage; }
         virtual TaskStatus updateStatus() { return TASK_READY; }
 
-    protected:
-        LoopTask(TaskAction *action, LoopStage stage = LOOP_NORMAL, uint8 priority = 50);
-        virtual ~LoopTask();
-        void setStage(LoopStage stage) { this->stage = stage; }
+        void doTask() override;
 
     protected:
-        LoopStage stage;
-        bool ownAction; // action created/owned by this object (e.g. delete )
+        friend Task;
+        LoopTask(TaskAction *action);
+        LoopTask(SimpleCallable callback);
+        ~LoopTask();
+        TaskAction *action; // owned by another object
+        SimpleCallable callback;
     };
 
-    /* NullTasks are used as placeholders so queues are never empty.*/
-    class NullTask : public TaskBase
+    class TimerTask : public Task, public TaskAction
     {
     public:
-        NullTask();
-        virtual ~NullTask();
-        virtual TaskStatus updateStatus() { return TASK_WAITING; }
-        virtual void doTask() {}
-    };
-
-    class TimerTask : public LoopTask, public TaskAction
-    {
-    public:
-        TimerTask(TaskCallback callback, long repeatCount);
-        virtual ~TimerTask();
         virtual TaskStatus updateStatus() override;
 
-        virtual void doTask() override;
         TimerTask *delaySeconds(int seconds);
         TimerTask *delayMinutes(int minutes);
         TimerTask *delayMsecs(int msecs);
@@ -126,56 +95,60 @@ namespace FCLIB
         long getRepeatCount() { return this->repeatCount; }
 
     protected:
+        TimerTask(TaskAction *action, long repeatCount);
+        TimerTask(SimpleCallable callback, long repeatCount);
+        virtual ~TimerTask();
+        void doTask() override;
+
         Timer timer;
-        long repeatCount; // -1 means forever
-        TaskCallback callback;
+        long repeatCount;        // -1 means forever
+        TaskAction *action;      // owned by another object
+        SimpleCallable callback; // owned by this object (e.g. delete on descructor)
     };
 
     class OneTimeTask : public TimerTask
     {
-    public:
-        OneTimeTask(TaskCallback callback);
+    protected:
+        friend Task;
+        OneTimeTask(SimpleCallable callback);
+        OneTimeTask(TaskAction *action);
         virtual ~OneTimeTask();
     };
 
     class RepeatingTask : public TimerTask
     {
-    public:
-        RepeatingTask(TaskCallback callback, long repeatCount = FCLIB_REPEAT_FOREVER);
+    protected:
+        friend Task;
+        RepeatingTask(SimpleCallable callback, long repeatCount = FCLIB_REPEAT_FOREVER);
+        RepeatingTask(TaskAction *action, long repeatCount = FCLIB_REPEAT_FOREVER);
         virtual ~RepeatingTask();
-    };
-
-    class Task
-    {
-    public:
-        static TimerTask *once(TaskAction &action);
-        static TimerTask *repeat(TaskAction &action, long repeatCount = FCLIB_REPEAT_FOREVER);
-
-        static TimerTask *once(TaskCallback callback);
-        static TimerTask *repeat(TaskCallback callback, long repeatCount = FCLIB_REPEAT_FOREVER);
     };
 
     class TaskQueue
     {
     public:
-        TaskQueue();
-        virtual ~TaskQueue();
-        void add(TaskBase *task);
-        void remove(TaskBase *task); // marks for removal
+        static void configure(Config *config);
+        static void process();
+        static TaskQueue *singleton;
+        static TaskQueue *get();
+        static void destroy(); // only for tests
 
-        void updateTaskStatus();
         void runTasks();
-
-        TaskBase *getFirstNull() { return first; }
-        TaskBase *getLastNull() { return last; }
-
-        bool isHealthy();
+        uint16 size() const { return tasks.size(); }
 
     protected:
-        void removeTask(TaskBase *task);
-        TaskBase *first;
-        TaskBase *last;
+        TaskQueue();
+        virtual ~TaskQueue();
+        friend Task;
+        static void onTaskCreate(Task *task);
+        static void onTaskDestroy(Task *task);
+
+    private:
+        void add(Task *task);
+        void remove(Task *task); // marks for removal
+        List<Task> tasks;
         Logger log;
+        EventListener listener;
     };
 
     namespace TEST

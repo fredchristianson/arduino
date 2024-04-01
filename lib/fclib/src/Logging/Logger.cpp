@@ -56,12 +56,14 @@ void Logger::write(int level, const char *message, ...) const
     write(level, message, args);
 }
 
+#ifdef DEBUG_LOGGING
 void Logger::debug(const char *message, ...) const
 {
     va_list args;
     va_start(args, message);
     write(DEBUG_LEVEL, message, args);
 }
+#endif
 
 void Logger::info(const char *message, ...) const
 {
@@ -89,11 +91,6 @@ void Logger::always(const char *message, ...) const
     va_list args;
     va_start(args, message);
     write(ALWAYS_LEVEL, message, args);
-}
-
-void Logger::never(const char *message, ...) const
-{
-    // ignore
 }
 
 void Logger::conditional(bool test, int level, const char *message, ...) const

@@ -7,52 +7,44 @@
 namespace FCLIB
 {
 
+    Mqtt *Network::singletonMqtt = NULL;
+    TimeClient *Network::singletonTimeClient = NULL;
+    Network *singletonNetwork = NULL;
+    Mqtt *Network::getMqtt() { return singletonMqtt; }
+
     bool savePortalParameters = false;
     void saveWifiConfig(WiFiSetup *setup)
     {
-        Logger log("AppNetwork");
+        Logger log("Network");
         log.debug("params changed");
         savePortalParameters = true; // params changed so need to save;
     }
 
-    AppNetwork::AppNetwork() : AppComponent(), log("AppNetwork")
+    Network::Network() : log("Network")
     {
-
-        this->useWifi = true;
-        this->useNtp = true;
-        this->useMqtt = true;
         this->ntpOffsetMinutes = 0;
-        this->mqtt = NULL;
+        resetWifi = false;
     }
 
-    AppNetwork::~AppNetwork()
+    Network::~Network()
     {
-        delete mqtt;
     }
 
-    bool AppNetwork::setup(Config *config)
+    bool Network::setup(Config *config)
     {
         log.debug("network setup");
         deviceName = config->get("device_name", "FCLIB_DEVICE");
         log.always("deviceName: %s", deviceName.c_str());
         ConfigSection *wifi = config->getSection("wifi");
-        useWifi = (wifi != NULL);
-        if (useWifi)
-        {
-            useWifi = wifi->get("connect", true);
-            resetWifi = wifi->get("reset", false);
-            log.debug("use wifi %d.  reset %d", useWifi, resetWifi);
-        }
+
+        resetWifi = wifi->get("reset", false);
         ConfigSection *ntp = config->getSection("ntp");
         if (ntp != NULL)
         {
-            this->useNtp = ntp->get("connect", true);
             this->ntpOffsetMinutes = ntp->get("tz_offset_minutes", 0);
-            log.debug("use ntp %d", useNtp);
         }
         ConfigSection *mqtt = config->getSection("mqtt");
-        this->useMqtt = (mqtt != NULL);
-        if (this->useMqtt)
+        if (mqtt)
         {
             this->mqttPassword = mqtt->get("mqtt_password", "");
             this->mqttUser = mqtt->get("mqtt_user", "");
@@ -63,39 +55,27 @@ namespace FCLIB
         return true;
     }
 
-    bool AppNetwork::connect()
+    bool Network::connect()
     {
         log.info("Connect Network");
 
-        if (!this->useWifi)
+        while (!connectWifi())
         {
-            return false;
+            log.error("wifi failed.  Waiting 10 seconds to retry");
+            delay(10000);
+            log.info("retrying wifi connection");
         }
-        else
-        {
-            while (!connectWifi())
-            {
-                log.error("wifi failed.  Waiting 10 seconds to retry");
-                delay(10000);
-                log.info("retrying wifi connection");
-            }
-            // getConfig()->set("reset", false, "wifi");
-        }
+        // getConfig()->set("reset", false, "wifi");
 
         bool success = true;
 
-        if (this->useNtp)
-        {
-            success &= this->connectNtp();
-        }
-        if (this->useMqtt)
-        {
-            success &= this->connectMqtt();
-        }
+        success &= this->connectTimeClient();
+
+        success &= this->connectMqtt();
         return true;
     }
 
-    bool AppNetwork::connectWifi()
+    bool Network::connectWifi()
     {
         savePortalParameters = false;
         log.info("Connecting wifi");
@@ -125,7 +105,7 @@ namespace FCLIB
         {
             log.debug("Update mqtt params: %s %s %s", mqttUserParam.getValue(), mqttUserParam.getValue(), mqttServerParam.getValue());
 
-            Config *config = getConfig();
+            Config *config = App::THE_APP->getConfig();
             config->set("mqtt_user", mqttUserParam.getValue(), "mqtt");
             config->set("mqtt_password", mqttPasswordParam.getValue(), "mqtt");
             config->set("mqtt_server", mqttServerParam.getValue(), "mqtt");
@@ -138,21 +118,21 @@ namespace FCLIB
         return connected;
     }
 
-    bool AppNetwork::connectNtp()
+    bool Network::connectTimeClient()
     {
         int tz_offset = this->ntpOffsetMinutes;
         log.debug("tz_offset: %d", tz_offset);
-        TimeClient::run(tz_offset);
+        singletonTimeClient = TimeClient::run(tz_offset);
         return true;
     }
 
-    bool AppNetwork::connectMqtt()
+    bool Network::connectMqtt()
     {
-        if (mqtt != NULL)
+        if (singletonMqtt != NULL)
         {
-            delete mqtt;
+            delete singletonMqtt;
         }
-        mqtt = new Mqtt();
-        return mqtt->configure(mqttServer.c_str(), mqttDeviceName.c_str(), mqttUser.c_str(), mqttPassword.c_str());
+        singletonMqtt = new Mqtt();
+        return singletonMqtt->configure(mqttServer.c_str(), mqttDeviceName.c_str(), mqttUser.c_str(), mqttPassword.c_str());
     }
 }

@@ -1,21 +1,46 @@
 #include "fclib/Task.h"
+#include "fclib/Event.h"
 
 using namespace FCLIB;
 
 namespace FCLIB
 {
-    TaskBase::TaskBase(TaskAction *action, TaskType type, uint8 priority) : log("TaskBase")
+
+    TimerTask *Task::once(SimpleCallable callback)
+    {
+        return new OneTimeTask(callback);
+    }
+    TimerTask *Task::repeat(SimpleCallable callback, long repeatCount)
+    {
+        return new RepeatingTask(callback, repeatCount);
+    }
+
+    TimerTask *Task::once(TaskAction *action)
+    {
+        return new OneTimeTask(action);
+    }
+    TimerTask *Task::repeat(TaskAction *action, long repeatCount)
+    {
+        return new RepeatingTask(action, repeatCount);
+    }
+
+    LoopTask *Task::onLoop(TaskAction *action)
+    {
+        return new LoopTask(action);
+    }
+    LoopTask *Task::onLoop(SimpleCallable callback)
+    {
+        return new LoopTask(callback);
+    }
+
+    Task::Task(TaskAction *action) : log("Task")
     {
         this->action = action;
-        this->taskType = type;
-        this->priority = priority;
-        next = NULL;
-        prev = NULL;
-        log.debug("TaskBase: 0x%lx 0x%lx %d %d", this, this->action, this->taskType, this->priority);
+        TaskQueue::onTaskCreate(this);
     }
 
-    TaskBase::~TaskBase()
+    Task::~Task()
     {
+        TaskQueue::onTaskDestroy(this);
     }
-
 }

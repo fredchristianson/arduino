@@ -39,7 +39,7 @@ namespace FCLIB
             void warning(const char *message);
 
         protected:
-            String message;
+            // String message;
             ResultType type;
 
             friend TestSuite;

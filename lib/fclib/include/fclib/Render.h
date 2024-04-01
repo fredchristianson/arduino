@@ -149,18 +149,21 @@ namespace FCLIB
         ~SceneRenderer();
         void setStrip(LedStrip *strip);
         void setBrightness(uint8 brightness);
-        void render();
 
         void start();
         void stop();
+        bool isRunning() { return task != NULL; }
+        uint8 getBrightness() { return brightness; }
 
     protected:
         virtual void runRenderers() = 0;
         Logger log;
         LedStrip *strip;
-        virtual void onLoop();
+        virtual void render();
         uint8 brightness;
-        LoopTask *task;
+
+    private:
+        Task *task;
     };
 
     class HomeAssistantSceneRenderer : public SceneRenderer
@@ -175,8 +178,6 @@ namespace FCLIB
         void setTemperature(uint temp);
         void setTransitionMsecs(uint msecs);
 
-        bool isRunning() { return task != NULL; }
-        uint8 getBrightness() { return brightness; }
         const ColorRGB &getRGB() { return rgb; }
 
     protected:

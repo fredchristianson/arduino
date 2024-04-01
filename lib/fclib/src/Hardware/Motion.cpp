@@ -21,12 +21,12 @@ namespace FCLIB::HW
 
     void Motion::onHigh()
     {
-        log.debug("got motion");
+        log.always("got motion");
         Event::trigger(EventType::MOTION_START_EVENT, this, true);
     }
     void Motion::onLow()
     {
-        log.debug("no motion");
+        log.always("no motion");
 
         Event::trigger(EventType::MOTION_STOP_EVENT, this, true);
     }

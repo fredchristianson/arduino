@@ -4,6 +4,8 @@
 #include "fclib/Timer.h"
 #include "fclib/LedStrip.h"
 #include "fclib/Render.h"
+#include "fclib/Task.h"
+#include "fclib/Net.h"
 
 using namespace FCLIB;
 
@@ -20,9 +22,13 @@ HallApp::~HallApp()
 
 void HallApp::setupComplete()
 {
-    LoopTask::create([this]()
-                     { this->doTask(); });
+    Task::onLoop([this]()
+                 { this->doTask(); });
+    Task::repeat([this]()
+                 { this->log.showMemory(); })
+        ->delaySeconds(15);
 
+    log.showMemory("create hardware");
     Config *config = getConfig();
     ConfigSection *hardwareConfig = config->getSection("hardware");
     motion.setPin(hardwareConfig->get("motion_pin", 4));
@@ -37,7 +43,7 @@ void HallApp::setupComplete()
                     { this->onMotionChange(event); });
 
     String deviceName = getConfig()->get("device_name", "FCLIB Device");
-    ha = new HA::HomeAssistant(getNetwork()->getMqtt());
+    ha = new HA::HomeAssistant(Network::getMqtt());
     haDevice = ha->createDevice(deviceName.c_str());
     haMotion = new HA::MotionSensor(haDevice, &motion, "Motion Sensor");
     haLight = new HA::LightStrip(haDevice, &renderer, "LedStrip");
@@ -51,9 +57,6 @@ void HallApp::setupComplete()
     log.always("Config RGB %d,%d,%d", s->get("red", 255), s->get("green", 255), s->get("blue", 0));
     renderer.setRGB(ColorRGB(s->get("red", 255), s->get("green", 255), s->get("blue", 0)));
 
-    Task::repeat([this]()
-                 { this->log.showMemory(); })
-        ->delaySeconds(15);
     listener.handle(EventType::CHANGE_EVENT, haLedCount, [this](Event *event)
                     { this->onLedCountChange(haLedCount->asInt()); });
     listener.handle(EventType::CHANGE_EVENT, haLedPin, [this](Event *event)

@@ -37,12 +37,16 @@ namespace FCLIB
         virtual void write(int level, const char *message, va_list args) const;
         virtual void write(int level, const char *message, ...) const;
 
+#ifdef DEBUG_LOGGING
         virtual void debug(const char *message, ...) const;
+#else
+        virtual void debug(...) const {}
+#endif
         virtual void info(const char *message, ...) const;
         virtual void warn(const char *message, ...) const;
         virtual void error(const char *message, ...) const;
         virtual void always(const char *message, ...) const;
-        virtual void never(const char *message, ...) const;
+        virtual void never(const char *message, ...) const {}
         virtual void conditional(bool test, int level, const char *message, ...) const;
         virtual void errorNoRepeat(const char *message, ...) const;
         virtual void showMemory(const char *label = "Memory") const;

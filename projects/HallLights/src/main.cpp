@@ -32,15 +32,9 @@ void setup()
     hallApp.setup(&config);
 }
 
-int cnt = 0;
 void loop()
 {
-    int test = 0;
-    if ((cnt++ % 5000) == 0)
-    {
-        logger->info("stack %lx", &test);
-        logger->showMemory("loop");
-    }
+
     if (testsPass)
     {
         hallApp.loop();

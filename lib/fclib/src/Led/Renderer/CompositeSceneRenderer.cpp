@@ -11,12 +11,10 @@ namespace FCLIB
     {
         this->strip = strip;
         this->brightness = 50;
-        this->task = NULL;
     }
 
     CompositeSceneRenderer::~CompositeSceneRenderer()
     {
-        AppLoop::removeTask(task);
     }
 
     void CompositeSceneRenderer::addRenderer(LedRenderer *renderer)

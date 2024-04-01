@@ -46,6 +46,16 @@ namespace FCLIB
         EventManager::add(event);
         log.debug("event added");
     }
+    void Event::trigger(EventType type, void *sender, void *custom)
+    {
+        Logger log("Event::trigger");
+        log.debug("create event");
+        Event *event = new Event(type, sender);
+        event->data.custom = custom;
+        log.debug("queue avent");
+        EventManager::add(event);
+        log.debug("event added");
+    }
 
     Event::Event(EventType type, void *sender)
     {

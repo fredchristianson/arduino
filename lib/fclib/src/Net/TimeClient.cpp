@@ -12,10 +12,11 @@ namespace FCLIB
     WiFiUDP timeClientUdp;
     String lastDisplayTime;
 
-    void TimeClient::run(long timezoneOffsetMinutes)
+    TimeClient *TimeClient::run(long timezoneOffsetMinutes)
     {
         singletonTimeClient->setTimezoneOffset(timezoneOffsetMinutes);
         singletonTimeClient->start();
+        return singletonTimeClient;
     }
 
     void TimeClient::setTimezoneOffsetMinutes(long minutes)

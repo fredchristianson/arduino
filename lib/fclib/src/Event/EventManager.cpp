@@ -48,8 +48,10 @@ namespace FCLIB
     }
     void EventManager::addListener(EventListener *listener)
     {
+        log.always("check contains");
         if (!listeners.contains(listener))
         {
+            log.always("not found");
             listeners.add(listener);
         }
     }
@@ -73,6 +75,7 @@ namespace FCLIB
 
     void EventManager::addEvent(Event *event)
     {
+        log.debug("add event type %d", event->type);
         if (!event->mayHaveMultiple)
         {
             // remove other events matching this type/sender if multiple are not allowed
@@ -90,19 +93,27 @@ namespace FCLIB
 
         if (cur->size() == 0)
         {
+            log.never("no events to process");
             return;
         }
         if (eventQueue == &events[0])
         {
+            log.never("switch event queue 1");
             eventQueue = &events[1];
         }
         else
         {
+            log.never("switch event queue 0");
+
             eventQueue = &events[0];
         }
         cur->forEach([this](Event *event)
-                     { this->listeners.forEach([event](EventListener *listener)
-                                               { listener->processEvent(event); }); });
+                     { 
+                        log.never("pocess event type %d",event->getType());
+                        this->listeners.forEach([this,event](EventListener *listener)
+                                               { 
+                                                log.always("send to listener %x",listener);
+                                                listener->processEvent(event); }); });
         cur->forEach([](Event *event)
                      { delete event; });
         cur->clear();

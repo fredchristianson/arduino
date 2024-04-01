@@ -6,7 +6,6 @@
 namespace FCLIB
 {
 
-    // todo: setup watchdog timer
     App::App() : log("App")
     {
         wdt_enable(WDTO_4S); // enable watchdog timer
@@ -29,30 +28,39 @@ namespace FCLIB
     {
         if (running)
         {
-            getLoop()->run();
+            this->beforeLoop();
+            EventManager::processEvents();
+            this->runTasks();
+            this->afterLoop();
         }
+    }
+
+    void App::beforeLoop() {}
+    void App::afterLoop() {}
+    void App::runTasks()
+    {
+        TaskQueue::process();
     }
 
     bool App::setup(Config *config)
     {
         this->config = config;
-        log.debug("App::setup");
-        bool success = getSetup()->setup(config) &&
-                       getNetwork()->setup(config) &&
-                       getDevices()->setup(config) &&
-                       getLoop()->setup(config) &&
-                       getNetwork()->connect();
-        running = success;
-        log.debug("App::setup result: %s", success ? "success" : "fail");
+        // ensure the TaskQueue is created
+        TaskQueue::configure(config);
+
+        bool success = this->beginSetup() &&
+                       this->setupLogging() &&
+                       this->setupNetwork() &&
+                       this->setupDevices() &&
+                       this->endSetup();
         if (config->isChanged())
         {
             log.always("config changed");
             config->save();
         }
-        else
-        {
-            log.always("config did not change");
-        }
+
+        running = success;
+
         if (success)
         {
             setupComplete();
@@ -60,82 +68,40 @@ namespace FCLIB
         return success;
     }
 
+    bool App::beginSetup()
+    {
+
+        return true;
+    }
+    bool App::endSetup()
+    {
+        return true;
+    }
+    bool App::setupNetwork()
+    {
+        return network.setup(config) && network.connect();
+    }
+
+    bool App::setupDevices()
+    {
+        return true;
+    }
+    bool App::setupLogging()
+    {
+        log.always("setupLogging");
+        ConfigFile logConfig;
+        logConfig.load("/logging.ini");
+        configureLogging(this->config->getSection("logging"));
+        configureLogging(logConfig.getSection("levels"));
+        return true;
+    }
+
     Config *App::getConfig()
     {
 
         return config;
     }
-    AppSetup *App::getSetup()
-    {
-        if (appSetup == NULL)
-        {
-            appSetup = createSetup();
-        }
-        return appSetup;
-    }
-    AppDevices *App::getDevices()
-    {
-        if (appDevices == NULL)
-        {
-            appDevices = createDevices();
-        }
-        return appDevices;
-    }
 
-    AppNetwork *App::getNetwork()
-    {
-        if (appNetwork == NULL)
-        {
-            appNetwork = createNetwork();
-        }
-        return appNetwork;
-    }
-    AppLoop *App::getLoop()
-    {
-        if (appLoop == NULL)
-        {
-            appLoop = createLoop();
-        }
-        return appLoop;
-    }
-
-    AppSetup *App::createSetup()
-    {
-        AppSetup *setup = new AppSetup();
-        setup->app = this;
-        return setup;
-    }
-    AppDevices *App::createDevices()
-    {
-        AppDevices *devices = new AppDevices();
-        devices->app = this;
-        return devices;
-    }
-    AppNetwork *App::createNetwork()
-    {
-        AppNetwork *network = new AppNetwork();
-        network->app = this;
-        return network;
-    }
-    AppLoop *App::createLoop()
-    {
-        AppLoop *loop = new AppLoop();
-        loop->app = this;
-        return loop;
-    }
-
-    AppComponent::AppComponent() {}
-    AppComponent::~AppComponent() {}
-    App *AppComponent::getApp() { return app; }
-
-    Config *AppComponent::getConfig() { return app->getConfig(); }
-    AppSetup *AppComponent::getSetup() { return app->getSetup(); }
-    AppDevices *AppComponent::getDevices()
-    {
-        return app->getDevices();
-    }
-    AppNetwork *AppComponent::getNetwork() { return app->getNetwork(); }
-    AppLoop *AppComponent::getLoop() { return app->getLoop(); }
     App *App::THE_APP;
     Board *App::THE_BOARD;
 }

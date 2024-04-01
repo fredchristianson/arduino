@@ -19,15 +19,16 @@ namespace FCLIB
         free(items);
     }
 
-    uint16 ListBase::size()
+    uint16 ListBase::size() const
     {
         return used;
     }
-    bool ListBase::contains(void *item)
+    bool ListBase::contains(void *item) const
     {
         return indexOf(item) >= 0;
     }
-    uint16 ListBase::indexOf(void *item)
+
+    sint16 ListBase::indexOf(void *item) const
     {
         for (int i = 0; i < used; i++)
         {
@@ -79,7 +80,7 @@ namespace FCLIB
             }
         }
     }
-    void *ListBase::get_item_at(uint16 index)
+    void *ListBase::get_item_at(uint16 index) const
     {
         if (index >= 0 && index < used)
         {

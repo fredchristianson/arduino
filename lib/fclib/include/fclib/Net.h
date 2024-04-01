@@ -7,6 +7,7 @@
 #include <NTPClient.h>
 #include "fclib/Task.h"
 #include "fclib/List.h"
+#include "fclib/Config.h"
 
 namespace FCLIB
 {
@@ -45,7 +46,7 @@ namespace FCLIB
     class TimeClient
     {
     public:
-        static void run(long timezoneOffsetMinuetes = 0);
+        static TimeClient *run(long timezoneOffsetMinuetes = 0);
         static const char *getDisplayTime();
         static long getEpochTime();
         static void setTimezoneOffsetMinutes(long minutes);
@@ -112,6 +113,36 @@ namespace FCLIB
         };
 
         List<Subscriber> subscribers;
+    };
+
+    class Network
+    {
+    public:
+        static Mqtt *getMqtt();
+        Network();
+        virtual ~Network();
+
+        virtual bool setup(Config *config);
+        virtual bool connect();
+
+    protected:
+        bool connectWifi();
+        bool connectMqtt();
+        bool connectTimeClient();
+
+        String mqttUser;
+        String mqttPassword;
+        String mqttServer;
+        String mqttDeviceName;
+        bool resetWifi;
+        int ntpOffsetMinutes;
+        String deviceName;
+
+    private:
+        static Mqtt *singletonMqtt;
+        static TimeClient *singletonTimeClient;
+        static Network *singletonNetwork;
+        Logger log;
     };
 }
 

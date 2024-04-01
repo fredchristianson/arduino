@@ -16,7 +16,10 @@ namespace FCLIB
 
     SceneRenderer::~SceneRenderer()
     {
-        AppLoop::removeTask(task);
+        if (task)
+        {
+            task->end();
+        }
     }
 
     void SceneRenderer::start()
@@ -30,7 +33,7 @@ namespace FCLIB
         // task = LoopTask::create([this]()
         //                         { this->onLoop(); });
         task = Task::repeat([this]()
-                            { this->onLoop(); })
+                            { this->render(); })
                    ->delayMsecs(500);
         log.never("created task %lx", task);
     }
@@ -41,7 +44,7 @@ namespace FCLIB
 
         if (task != NULL)
         {
-            AppLoop::removeTask(task);
+            task->end();
             strip->clear();
             strip->show();
             task = NULL;
@@ -70,8 +73,4 @@ namespace FCLIB
         strip->show();
     }
 
-    void SceneRenderer::onLoop()
-    {
-        this->render();
-    }
 }

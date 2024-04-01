@@ -14,16 +14,16 @@ namespace FCLIB
         ListBase(uint16 initSize = 20);
         virtual ~ListBase();
 
-        uint16 size();
-        bool contains(void *item);
-        uint16 indexOf(void *item);
+        uint16 size() const;
+        bool contains(void *item) const;
+        sint16 indexOf(void *item) const;
         void *removeAt(uint16 index);
         void clear();
 
     protected:
         void insert_item(void *item);
         void remove_item(void *item);
-        void *get_item_at(uint16 index);
+        void *get_item_at(uint16 index) const;
         void **items;
         uint16 capacity;
         uint16 used;
