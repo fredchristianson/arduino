@@ -6,6 +6,7 @@
 #include "fclib/Test.h"
 #include "fclib/Logging.h"
 #include "fclib/List.h"
+#include "fclib/Animation.h"
 
 using namespace FCLIB;
 using namespace FCLIB::TEST;
@@ -23,6 +24,8 @@ namespace HALLLIGHTS_TEST
         runner.run(task);
         LIST::ListTestSuite list;
         runner.run(list);
+        ANIMATION::AnimationTestSuite animate;
+        runner.run(animate);
         return runner.isSuccess();
     }
 }

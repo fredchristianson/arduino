@@ -24,11 +24,13 @@ namespace FCLIB
             TestResult(const char *message, TestSuite *suite, Logger *testLogger);
             virtual ~TestResult();
             bool fail(const char *message);
+            bool equal(float val, float expect, const char *testMessage, ResultType errorType = FAIL);
             bool equal(int val, int expect, const char *testMessage, ResultType errorType = FAIL);
             bool equal(void *val, void *expect, const char *testMessage, ResultType errorType = FAIL);
             bool notEqual(int val, int expect, const char *testMessage, ResultType errorType = FAIL);
             bool notNull(void *val, const char *testMessage, ResultType errorType = FAIL);
             bool null(void *val, const char *testMessage, ResultType errorType = FAIL);
+            bool test(bool isSuccess, const char *testMessage, ResultType errorType = FAIL) { return equal(isSuccess, true, testMessage, errorType); }
 
             bool isSuccess() const { return type == SUCCESS; }
             bool isFail() const { return type == FAIL; }
@@ -37,6 +39,8 @@ namespace FCLIB
             void success(const char *message);
             void failure(const char *message, ResultType err = FAIL);
             void warning(const char *message);
+
+            Logger *getLog() { return log; }
 
         protected:
             // String message;

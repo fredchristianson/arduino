@@ -56,6 +56,20 @@ bool TestResult::equal(int val, int expect, const char *testMessage, ResultType 
     }
 }
 
+bool TestResult::equal(float val, float expect, const char *testMessage, ResultType errType)
+{
+    if (val != expect)
+    {
+        this->failure(testMessage, errType);
+        return errType != ResultType::FAIL;
+    }
+    else
+    {
+        this->success(testMessage);
+        return true;
+    }
+}
+
 bool TestResult::equal(void *val, void *expect, const char *testMessage, ResultType errType)
 {
     if (val != expect)

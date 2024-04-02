@@ -23,10 +23,12 @@ namespace FCLIB::TEST::LIST
             list.add(&items[i]);
         }
         result.equal(list.size(), 20, "Added 20 items");
-        for (int i = 0; i < 20; i++)
+        bool success = true;
+        for (int i = 0; success && i < 20; i++)
         {
-            result.equal(list[i]->val, i, "Item has correct value");
+            success = success && list[i]->val == i;
         }
+        result.equal(success, true, "Item has correct value");
     }
 
     void testRemove(TestResult &result)

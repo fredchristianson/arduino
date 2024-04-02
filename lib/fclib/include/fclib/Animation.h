@@ -9,8 +9,7 @@ using namespace FCLIB;
 
 namespace FCLIB
 {
-    template <typename T>
-    class AbstractAnimation;
+    class AnimationBase;
 
     class Ease
     {
@@ -21,9 +20,12 @@ namespace FCLIB
 
     class Animator
     {
+    public:
+        float getCurrentValue() const { return currentValue; }
+        bool isComplete() const { return complete; }
+
     protected:
-        friend template <typename T>
-        class AbstractAnimation;
+        friend class AnimationBase;
         Animator(float start, float end, Calculate<float> easingFunction);
         virtual ~Animator();
         float update();
@@ -31,110 +33,110 @@ namespace FCLIB
         float endValue;
         float currentValue;
         bool complete;
-        int startMsecs;
-        int durationMsecs;
-        Calculate<float> *easing;
+        unsigned long startMsecs;
+        unsigned long durationMsecs;
+        Calculate<float> easing;
     };
 
-    template <typename T>
-    class AbstractAnimation
+    class AnimationBase
     {
     public:
-        AbstractAnimation(T startValue, T endValue, Calculate<T> easingFunction = Ease::linear) : Animator(startValue, endValue, easingFunction) { task = NULL; }
-        AbstractAnimation &seconds(int secs)
-        { // adds sec to lenght of animation
-            animator.durationMsecs += secs * 1000;
-            return *this;
-        }
-        AbstractAnimation &msecs(int msecs)
-        { // adds milleseconds  to lenght of animation
-            animator.durationMsecs += msecs;
-            return *this;
-        }
-        AbstractAnimation &minutes(int minutes)
-        { // adds minutes to lenght of animation
-            animator.durationMsecs += minutes * 60 * 1000;
-            return *this;
-        }
-        AbstractAnimation &startTime(int msecs)
-        { // default to create time
-            animator.startMsecs = msecs;
-            return *this;
-        }
-        AbstractAnimation &duration(int msecs)
-        {
-            animator.durationMsecs = msecs;
-            return *this;
-        }
-        AbstractAnimation &endTime(int msecs)
-        { // must be called after startTime if startTime changes
-            animator.durationMsecs = msecs - animator.startMsecs;
-            return *this;
-        }
-        AbstractAnimation &start(T start)
-        {
-            animator.startValue = start;
-            return *this;
-        }
-        AbstractAnimation &end(T end)
-        {
-            animator.endValue = end;
-            return *this;
-        }
+        AnimationBase(float startValue, float endValue, Calculate<float> easingFunction = Ease::linear);
+        AnimationBase &seconds(long secs);
+        AnimationBase &msecs(long msecs);
+        AnimationBase &minutes(long minutes);
+        AnimationBase &startTime(long msecs);
+        AnimationBase &duration(long msecs);
+        AnimationBase &endTime(long msecs);
+        AnimationBase &start(float start);
+        AnimationBase &end(float end);
 
-        AbstractAnimation &onChange(Callback<T> callback)
-        {
-            changeCallback = callback;
-            return *this;
-        }
-        AbstractAnimation &onDone(SimpleCallable callback)
-        {
-            doneCallback = callback;
-            return *this;
-        }
+        AnimationBase &onDone(SimpleCallable callback);
 
-        AbstractAnimation &easing(Calculate<T> calc)
-        {
-            animator.easing = calc;
-            return *this;
-        }
+        AnimationBase &easing(Calculate<float> calc);
 
-        T get()
-        {
-            update();
-            return currentValue;
-        }
-        bool isComplete() { return animator.complete; }
+        bool isComplete() const;
+        // update and return true if changed
+        virtual bool update();
 
     protected:
+        float get();
+        virtual void changed(float newValue) {}
         Animator animator;
-        virtual bool update()
-        {
-            animator.update();
-            return animator.complete;
-        }
-        virtual ~AbstractAnimation()
-        {
-            if (task != NULL)
-            {
-                task->end();
-            }
-        }
-        Callback<T> changeCallback;
+
+        virtual ~AnimationBase();
         SimpleCallable doneCallback;
         Task *task;
+        Logger log;
     };
-    class AnimateInt : public AbstractAnimation<int>
+    class AnimateInt : public AnimationBase
     {
     public:
-        AnimateInt(int start = 0, int end = 100, Calcualte<float> easing = Ease::linear) : AbstractAnimation<int>(start, end, easing) {}
+        AnimateInt(int start = 0, int end = 100, Calculate<float> easing = Ease::linear) : AnimationBase(start, end, easing) {}
         virtual ~AnimateInt() {}
+
+        AnimateInt &onChange(Callback<int> callback)
+        {
+            this->callback = callback;
+            return *this;
+        }
+
+        int value() const { return (int)animator.getCurrentValue(); }
+
+    protected:
+        void changed(float newValue) override
+        {
+            if (callback != NULL)
+            {
+                callback((int)newValue);
+            }
+        }
+
+    private:
+        Callback<int> callback;
     };
-    class AnimateFloat : public AbstractAnimation<float>
+    class AnimateFloat : public AnimationBase
     {
     public:
-        AnimateFloat(float start = 0, float end = 100, Calcualte<float> easing = Ease::linear) : AbstractAnimation<float>(start, end, easing) {}
-        virtual ~AnimationFloat() {}
+        AnimateFloat(float start = 0, float end = 100, Calculate<float> easing = Ease::linear) : AnimationBase(start, end, easing) {}
+        virtual ~AnimateFloat() {}
+        AnimateFloat &onChange(Callback<float> callback)
+        {
+            this->callback = callback;
+            return *this;
+        }
+
+        float value() const { return animator.getCurrentValue(); }
+
+    protected:
+        void changed(float newValue) override
+        {
+            if (callback != NULL)
+            {
+
+                callback(newValue);
+            }
+        }
+
+    private:
+        Callback<float> callback;
     };
+
+    namespace TEST
+    {
+        namespace ANIMATION
+        {
+            class AnimationTestSuite : public TestSuite
+            {
+            public:
+                AnimationTestSuite();
+                virtual ~AnimationTestSuite();
+
+            protected:
+                virtual void runTests() override;
+                void run();
+            };
+        }
+    }
 }
 #endif

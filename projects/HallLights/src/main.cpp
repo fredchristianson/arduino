@@ -20,6 +20,7 @@ void setup()
     logger->info("stack %lx", &test);
     logger->showMemory("setup");
 #ifdef RUN_TESTS
+    wdt_disable(); // some tests may take a while
     testsPass = HALLLIGHTS_TEST::runTests();
 #endif
     if (!testsPass)
@@ -27,6 +28,8 @@ void setup()
         logger->error("tests failed");
         return;
     }
+
+    wdt_enable(WDTO_1S);
 
     logger->debug("Load config");
     config.load("/config.ini");
