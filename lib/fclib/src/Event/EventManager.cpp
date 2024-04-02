@@ -48,10 +48,10 @@ namespace FCLIB
     }
     void EventManager::addListener(EventListener *listener)
     {
-        log.always("check contains");
+        log.never("check contains");
         if (!listeners.contains(listener))
         {
-            log.always("not found");
+            log.never("not found");
             listeners.add(listener);
         }
     }
@@ -112,7 +112,7 @@ namespace FCLIB
                         log.never("pocess event type %d",event->getType());
                         this->listeners.forEach([this,event](EventListener *listener)
                                                { 
-                                                log.always("send to listener %x",listener);
+                                                log.never("send to listener %x",listener);
                                                 listener->processEvent(event); }); });
         cur->forEach([](Event *event)
                      { delete event; });

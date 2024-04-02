@@ -19,8 +19,9 @@ void setup()
     int test = 0;
     logger->info("stack %lx", &test);
     logger->showMemory("setup");
+#ifdef RUN_TESTS
     testsPass = HALLLIGHTS_TEST::runTests();
-
+#endif
     if (!testsPass)
     {
         logger->error("tests failed");

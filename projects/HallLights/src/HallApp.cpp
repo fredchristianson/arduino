@@ -13,7 +13,7 @@ HallApp::HallApp()
 {
     log.setModuleName("HallApp");
 
-    log.info("Created");
+    log.showMemory("HallApp Created");
 }
 
 HallApp::~HallApp()
@@ -39,9 +39,7 @@ void HallApp::setupComplete()
                                              hardwareConfig->get("led_brightness", 50));
     this->ledStrip = strip;
 
-    listener.handle(EventType::CHANGE_EVENT, &motion, [this](Event *event)
-                    { this->onMotionChange(event); });
-
+    log.showMemory("create HA entities");
     String deviceName = getConfig()->get("device_name", "FCLIB Device");
     ha = new HA::HomeAssistant(Network::getMqtt());
     haDevice = ha->createDevice(deviceName.c_str());
@@ -50,13 +48,16 @@ void HallApp::setupComplete()
     haLedCount = new HA::Number(haDevice, "LED Count", 0, 900, ledCount);
     haLedPin = new HA::Number(haDevice, "LED Strip Pin", 0, 16, ledPin);
     renderer.setStrip(this->ledStrip);
-
+    log.showMemory("publish MQTT discovery");
     ha->publishConfig();
     ConfigSection *s = getConfig()->getSection("renderer");
     renderer.setBrightness(s->get("brightness", 50));
     log.always("Config RGB %d,%d,%d", s->get("red", 255), s->get("green", 255), s->get("blue", 0));
     renderer.setRGB(ColorRGB(s->get("red", 255), s->get("green", 255), s->get("blue", 0)));
 
+    log.showMemory("setup listeners");
+    listener.handle(EventType::CHANGE_EVENT, &motion, [this](Event *event)
+                    { this->onMotionChange(event); });
     listener.handle(EventType::CHANGE_EVENT, haLedCount, [this](Event *event)
                     { this->onLedCountChange(haLedCount->asInt()); });
     listener.handle(EventType::CHANGE_EVENT, haLedPin, [this](Event *event)

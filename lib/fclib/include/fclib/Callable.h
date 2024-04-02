@@ -11,5 +11,8 @@ namespace FCLIB
 
     template <typename T>
     using TestCallback = std::function<bool(T)>;
+
+    template <typename T>
+    using Calculate = std::function<T(T)>;
 }
 #endif

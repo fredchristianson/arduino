@@ -96,7 +96,7 @@ ColorRGB ColorRGB::GREEN(0, 255, 0);
 ColorRGB ColorRGB::BLUE(0, 0, 255);
 
 ColorHSV ColorHSV::BLACK(0, 0, 0);
-ColorHSV ColorHSV::WHITE(0, 0, 255);
+ColorHSV ColorHSV::WHITE(0, 0, 100);
 ColorHSV ColorHSV::FIRST(0, 100, 100);
 ColorHSV ColorHSV::LAST(360, 100, 100);
 ColorHSV ColorHSV::RED_START(0, 100, 100);
@@ -111,5 +111,5 @@ ColorHSV ColorHSV::AZURE(210, 100, 100);
 ColorHSV ColorHSV::BLUE(240, 100, 100);
 ColorHSV ColorHSV::VIOLET(270, 100, 100);
 ColorHSV ColorHSV::MAGENTA(300, 100, 100);
-ColorHSV ColorHSV::ROSE(3300, 100, 100);
+ColorHSV ColorHSV::ROSE(330, 100, 100);
 ColorHSV ColorHSV::RED_END(360, 100, 100);
