@@ -134,7 +134,7 @@ namespace FCLIB
         static void destroy(); // only for tests
 
         void runTasks();
-        uint16 size() const { return tasks.size(); }
+        uint16 size() { return tasks.size(); }
 
     protected:
         TaskQueue();

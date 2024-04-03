@@ -11,6 +11,7 @@ namespace FCLIB
     {
         log.setModuleName("HomeAssistantSceneRenderer");
         this->mode = SceneMode::MODE_OFF;
+        stateChangeDelay = NULL;
     }
 
     HomeAssistantSceneRenderer::~HomeAssistantSceneRenderer()
@@ -18,6 +19,7 @@ namespace FCLIB
     }
     void HomeAssistantSceneRenderer::setMode(SceneMode mode)
     {
+        log.always("Set mode %d", mode);
         this->mode = mode;
     }
     void HomeAssistantSceneRenderer::setRGB(const ColorRGB &newRgb)
@@ -36,10 +38,6 @@ namespace FCLIB
     {
         this->temperature = temp;
     }
-    void HomeAssistantSceneRenderer::setTransitionMsecs(uint msecs)
-    {
-        // todo: implement transition.  brightness? color?
-    }
 
     IntervalTimer it(5000);
     void HomeAssistantSceneRenderer::runRenderers()
@@ -55,4 +53,50 @@ namespace FCLIB
         }
     }
 
+    void HomeAssistantSceneRenderer::setBrightness(uint8 brightness, int transitionSeconds)
+    {
+        int start = mode == SceneMode::MODE_RGB ? getBrightness() : 0;
+        this->brightness = start;
+        log.always("transition brightness from %d to  %d over %d secs", start, brightness, transitionSeconds);
+        brightnessAnimation.onChange([this](int b)
+                                     { log.never("new brightness %d", b );
+                                                  this->brightness = b; })
+            .onDone([this]()
+                    { log.always("transition done"); })
+            .seconds(transitionSeconds, AnimationTimeType::SET)
+            .start(start)
+            .end(brightness)
+            .easing(Ease::cubic)
+            .run();
+    }
+
+    void HomeAssistantSceneRenderer::turnOff(int transitionSeconds)
+    {
+        if (stateChangeDelay != NULL)
+        {
+            stateChangeDelay->end();
+        }
+        stateChangeDelay = Task::once([this]()
+                                      { this->mode = SceneMode::MODE_OFF;this->stateChangeDelay=NULL; });
+
+        stateChangeDelay->delaySeconds(transitionSeconds);
+    }
+    void HomeAssistantSceneRenderer::turnOn(int transitionSeconds)
+    {
+        if (stateChangeDelay != NULL)
+        {
+            stateChangeDelay->end();
+            stateChangeDelay = NULL;
+        }
+        // on needs to happen now so brightness can transition
+        this->mode = SceneMode::MODE_RGB;
+        if (this->brightness == 0)
+        {
+            this->brightness = 255;
+        }
+
+        // stateChangeDelay = Task::once([this]()
+        //                               { this->mode = SceneMode::MODE_RGB;this->stateChangeDelay=NULL; });
+        // stateChangeDelay->delaySeconds(transitionSeconds);
+    }
 }

@@ -39,4 +39,12 @@ namespace FCLIB
         // log.always("Animator %d-%d  ==> %f->%f.  %f, %f, %f", startMsecs, startMsecs + durationMsecs, startValue, endValue, pct, rangePct, result);
         return result;
     }
+
+    void Animator::restart()
+    {
+        startMsecs = THE_BOARD->currentMsecs();
+        // Logger log("Animator");
+        // log.always("restarting animation at %d.  end in %d at %d", startMsecs, durationMsecs, startMsecs + durationMsecs);
+        complete = false;
+    }
 }

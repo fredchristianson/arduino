@@ -13,15 +13,16 @@ namespace FCLIB::TEST::ANIMATION
         AnimateFloat a(0, 10);
 
         a.duration(200);
+
         while (!a.isComplete())
         {
             delay(1);
-            a.get();
+            a.update();
         }
         // wdt_enable(WDTO_1S);
         TaskQueue::process();
 
-        result.equal(a.get(), 10.0, "end value correct");
+        result.equal(a.value(), 10.0, "end value correct");
         TaskQueue::destroy();
     }
 
@@ -46,6 +47,22 @@ namespace FCLIB::TEST::ANIMATION
         TaskQueue::destroy();
     }
 
+    void testRestart(TestResult &result)
+    {
+        TaskQueue::get();
+        AnimateInt a(0, 10000);
+        a.duration(200);
+        a.run().run();
+
+        while (!a.isComplete())
+        {
+            TaskQueue::process();
+        }
+
+        result.equal(a.value(), 10000, "final value correct");
+        TaskQueue::destroy();
+    }
+
     AnimationTestSuite::AnimationTestSuite() : TestSuite("AnimationTestSuite")
     {
     }
@@ -58,5 +75,6 @@ namespace FCLIB::TEST::ANIMATION
     {
         test("Float animation", testFloatAnimation);
         test("Callbacks", testCallbacks);
+        test("Restart", testRestart);
     }
 }

@@ -66,6 +66,16 @@ namespace FCLIB::HA
         JsonDocument doc;
         deserializeJson(doc, payload);
         String state = doc["state"];
+        int transitionSeconds = 2;
+        if (doc.containsKey("transition"))
+        {
+            transitionSeconds = doc["transition"].as<int>();
+        }
+        if (doc.containsKey("brightness"))
+        {
+            int b = doc["brightness"].as<int>();
+            renderer->setBrightness(b, transitionSeconds);
+        }
         if (doc.containsKey("color"))
         {
             JsonObject color = doc["color"];
@@ -84,21 +94,19 @@ namespace FCLIB::HA
             int temp = doc["color_temp"].as<int>();
             log.debug("temp %d", temp);
         }
-        if (doc.containsKey("brightness"))
-        {
-            int b = doc["brightness"].as<int>();
-            renderer->setBrightness(b);
-        }
 
         if (state.equals("ON"))
         {
             log.debug("turn on");
+            renderer->turnOn(transitionSeconds);
             renderer->start();
             this->lastBoolState = true;
         }
         else
         {
             log.debug("turn off");
+            renderer->setBrightness(0, transitionSeconds);
+            renderer->turnOff(transitionSeconds);
             renderer->stop();
             this->lastBoolState = false;
         }

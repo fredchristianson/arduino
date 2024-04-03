@@ -34,7 +34,7 @@ namespace FCLIB
         //                         { this->onLoop(); });
         task = Task::repeat([this]()
                             { this->render(); })
-                   ->delayMsecs(500);
+                   ->delayMsecs(5);
         log.never("created task %lx", task);
     }
 

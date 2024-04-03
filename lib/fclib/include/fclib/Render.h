@@ -5,6 +5,7 @@
 #include "fclib/LedStrip.h"
 #include "fclib/Util.h"
 #include "fclib/Task.h"
+#include "fclib/Animation.h"
 #include <stdint.h>
 
 using namespace FCLIB;
@@ -148,7 +149,7 @@ namespace FCLIB
         SceneRenderer(LedStrip *strip = NULL);
         ~SceneRenderer();
         void setStrip(LedStrip *strip);
-        void setBrightness(uint8 brightness);
+        virtual void setBrightness(uint8 brightness);
 
         void start();
         void stop();
@@ -176,9 +177,12 @@ namespace FCLIB
         void setRGB(const ColorRGB &rgb);
         void setHSV(const ColorHSV &hsv);
         void setTemperature(uint temp);
-        void setTransitionMsecs(uint msecs);
 
         const ColorRGB &getRGB() { return rgb; }
+        void setBrightness(uint8 brightness) { this->brightness = brightness; }
+        void setBrightness(uint8 brightness, int transitionSeconds);
+        void turnOn(int transitionSeconds);
+        void turnOff(int transitionSeconds);
 
     protected:
         SceneMode mode;
@@ -186,6 +190,8 @@ namespace FCLIB
         ColorHSV hsv;
         float temperature; // 0.5 = no adjust.  0, max blue.  1 max red
         virtual void runRenderers();
+        AnimateInt brightnessAnimation;
+        TimerTask *stateChangeDelay;
     };
 
     class CompositeSceneRenderer : public SceneRenderer

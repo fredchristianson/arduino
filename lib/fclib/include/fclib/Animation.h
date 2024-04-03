@@ -11,6 +11,11 @@ namespace FCLIB
 {
     class AnimationBase;
 
+    enum class AnimationTimeType
+    {
+        ADD = 0,
+        SET = 1
+    };
     class Ease
     {
     public:
@@ -29,6 +34,7 @@ namespace FCLIB
         Animator(float start, float end, Calculate<float> easingFunction);
         virtual ~Animator();
         float update();
+        void restart();
         float startValue;
         float endValue;
         float currentValue;
@@ -42,14 +48,15 @@ namespace FCLIB
     {
     public:
         AnimationBase(float startValue, float endValue, Calculate<float> easingFunction = Ease::linear);
-        AnimationBase &seconds(long secs);
-        AnimationBase &msecs(long msecs);
-        AnimationBase &minutes(long minutes);
+        AnimationBase &seconds(long secs, AnimationTimeType type = AnimationTimeType::ADD);
+        AnimationBase &msecs(long msecs, AnimationTimeType type = AnimationTimeType::ADD);
+        AnimationBase &minutes(long minutes, AnimationTimeType type = AnimationTimeType::ADD);
         AnimationBase &startTime(long msecs);
         AnimationBase &duration(long msecs);
         AnimationBase &endTime(long msecs);
         AnimationBase &start(float start);
         AnimationBase &end(float end);
+        AnimationBase &run(); // start or restart
 
         AnimationBase &onDone(SimpleCallable callback);
 
@@ -62,6 +69,8 @@ namespace FCLIB
     protected:
         float get();
         virtual void changed(float newValue) {}
+        // if the derived class is not a float, the old/new values may not be different
+        virtual bool isDifferent(float oldValue, float newValue) { return oldValue != newValue; }
         Animator animator;
 
         virtual ~AnimationBase();
@@ -84,6 +93,8 @@ namespace FCLIB
         int value() const { return (int)animator.getCurrentValue(); }
 
     protected:
+        virtual bool isDifferent(float oldValue, float newValue) { return ((int)oldValue) != ((int)newValue); }
+
         void changed(float newValue) override
         {
             if (callback != NULL)

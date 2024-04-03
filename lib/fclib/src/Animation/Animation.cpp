@@ -12,19 +12,41 @@ namespace FCLIB
                             { this->update(); })
                    ->delayMsecs(1);
     }
-    AnimationBase &AnimationBase::seconds(long secs)
+
+    AnimationBase &AnimationBase::seconds(long secs, AnimationTimeType type)
     { // adds sec to lenght of animation
-        animator.durationMsecs += secs * 1000;
+        if (type == AnimationTimeType::ADD)
+        {
+            animator.durationMsecs += secs * 1000;
+        }
+        else
+        {
+            animator.durationMsecs = secs * 1000;
+        }
         return *this;
     }
-    AnimationBase &AnimationBase::msecs(long msecs)
+    AnimationBase &AnimationBase::msecs(long msecs, AnimationTimeType type)
     { // adds milleseconds  to lenght of animation
-        animator.durationMsecs += msecs;
+        if (type == AnimationTimeType::ADD)
+        {
+            animator.durationMsecs += msecs;
+        }
+        else
+        {
+            animator.durationMsecs = msecs;
+        }
         return *this;
     }
-    AnimationBase &AnimationBase::minutes(long minutes)
+    AnimationBase &AnimationBase::minutes(long minutes, AnimationTimeType type)
     { // adds minutes to lenght of animation
-        animator.durationMsecs += minutes * 60 * 1000;
+        if (type == AnimationTimeType::ADD)
+        {
+            animator.durationMsecs += minutes * 60 * 1000;
+        }
+        else
+        {
+            animator.durationMsecs = minutes * 60 * 1000;
+        }
         return *this;
     }
     AnimationBase &AnimationBase::startTime(long msecs)
@@ -71,6 +93,18 @@ namespace FCLIB
         animator.easing = calc;
         return *this;
     }
+    AnimationBase &AnimationBase::run()
+    {
+        if (task != NULL)
+        {
+            task->end();
+        }
+        task = Task::repeat([this]()
+                            { this->update(); })
+                   ->delayMsecs(1);
+        animator.restart();
+        return *this;
+    }
 
     float AnimationBase::get()
     {
@@ -79,7 +113,7 @@ namespace FCLIB
         return animator.currentValue;
     }
 
-    bool AnimationBase::isComplete() { return animator.complete; }
+    bool AnimationBase::isComplete() const { return animator.complete; }
 
     // update and return true if changed
     bool AnimationBase::update()
@@ -92,7 +126,7 @@ namespace FCLIB
         float old = animator.currentValue;
         animator.update();
 
-        bool change = (old != animator.currentValue);
+        bool change = isDifferent(old, animator.currentValue);
         if (change)
         {
             changed(animator.currentValue);
@@ -100,6 +134,8 @@ namespace FCLIB
         if (isComplete() && doneCallback)
         {
             doneCallback();
+            task->end();
+            task = NULL;
         }
         return change;
     }

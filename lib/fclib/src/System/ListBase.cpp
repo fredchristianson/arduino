@@ -19,7 +19,7 @@ namespace FCLIB
         free(items);
     }
 
-    uint16 ListBase::size() const
+    uint16 ListBase::size()
     {
         return used;
     }
@@ -41,12 +41,22 @@ namespace FCLIB
     }
     void *ListBase::removeAt(uint16 index)
     {
+        if (index < 0 || index >= used)
+        {
+            return NULL;
+        }
         void *result = NULL;
         if (index + 1 < used)
         {
+
             result = items[index];
-            memcpy(items + index * LIST_ITEM_PTR_SIZE, items + (index + 1) * LIST_ITEM_PTR_SIZE, (used - index - 1) * LIST_ITEM_PTR_SIZE);
-        }
+            // memcpy isn't working.  copy each pointer
+            for (int i = index; i + 1 < used; i++)
+            {
+                items[i] = items[i + 1];
+            }
+            // memcpy(items + index * LIST_ITEM_PTR_SIZE, items + (index + 1) * LIST_ITEM_PTR_SIZE, (used - index) * LIST_ITEM_PTR_SIZE);
+                }
         used -= 1;
         return result;
     }

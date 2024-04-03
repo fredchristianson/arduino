@@ -1,3 +1,4 @@
+#include "fclib/System.h"
 #include "fclib/Task.h"
 
 using namespace FCLIB;
@@ -81,14 +82,18 @@ namespace FCLIB
         tasks.remove(task);
     }
 
+    int maxQueueTime = 0;
     void TaskQueue::runTasks()
     {
-        log.never("Run tasks");
+        int startTime = THE_BOARD->currentMsecs();
+        int cnt = tasks.size();
         for (int i = 0; i < tasks.size(); i++)
         {
             Task *task = tasks[i];
+            log.never("Check task %d %x", i, task);
+
             TaskStatus status = task->updateStatus();
-            log.never("Check task %d", status);
+            log.never("\tstatus %d", status);
             if (status == TASK_READY)
             {
                 log.never("Run task 0x%lx", task);
@@ -96,9 +101,23 @@ namespace FCLIB
             }
             else if (status == TASK_COMPLETE)
             {
+                log.never("delete task %x", task);
+                tasks.remove(task);
                 delete task;
+                log.never("deleted.  size=%d", tasks.size());
                 i--;
             }
         }
+        int endTime = THE_BOARD->currentMsecs();
+        int diff = endTime - startTime;
+        if (diff > maxQueueTime)
+        {
+            log.always("max queue time: %d", diff);
+            maxQueueTime = diff;
+        }
+        // if (diff > 10)
+        // {
+        //     log.always("%d tasks took msecs: %d", cnt, diff);
+        // }
     }
 }
