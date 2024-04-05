@@ -5,111 +5,171 @@
 using namespace FCLIB;
 using namespace FCLIB::Util;
 
-Logger colorLogger("Color");
-#define LOG colorLogger
-
-FCLIB::Color::Color(ColorType type)
+namespace FCLIB
 {
-    this->type = type;
+    Color Color::fromRGB(uint8 red, uint8 green, uint8 blue)
+    {
+        RGB rgb(red, green, blue);
+        return Color(rgb);
+    }
+    Color Color::fromHSV(uint8 hue, uint8 sat, uint8 value)
+    {
+        HSV hsv(hue, sat, value);
+        return Color(hsv);
+    }
+    Color Color::fromMired(uint16 mireds)
+    {
+        Temp temp(mireds);
+        return Color(temp);
+    }
+    Color Color::fromKelvin(uint16 kelvin)
+    {
+        Temp temp(1000000 / kelvin);
+        return Color(temp);
+    }
+
+    Color::Color(const Color &other)
+    {
+        this->type = other.type;
+        switch (this->type)
+        {
+        case ColorType::RGB:
+            this->rgb = other.rgb;
+            break;
+        case ColorType::HSV:
+            this->hsv = other.hsv;
+            break;
+        case ColorType::TEMP:
+            this->temp = other.temp;
+            break;
+        }
+    }
+    Color::Color(const Color::RGB &rgb)
+    {
+        this->type = ColorType::RGB;
+        this->rgb = rgb;
+    }
+    Color::Color(const Color::HSV &hsv)
+    {
+        this->type = ColorType::HSV;
+        this->hsv = hsv;
+    }
+    Color::Color(const Color::Temp &temp)
+    {
+        this->type = ColorType::TEMP;
+        this->temp = temp;
+    }
+    Color::Color()
+    {
+        this->type = ColorType::RGB;
+    }
+    Color::~Color() {}
+
+    const Color &Color::operator=(const Color &other)
+    {
+        this->type = other.type;
+        switch (this->type)
+        {
+        case ColorType::RGB:
+            this->rgb = other.rgb;
+            break;
+        case ColorType::HSV:
+            this->hsv = other.hsv;
+            break;
+        case ColorType::TEMP:
+            this->temp = other.temp;
+            break;
+        }
+        return *this;
+    }
+
+    // conversions between types are approximate (and maybe just a guess in some cases)
+    Color::RGB Color::toRGB() const
+    {
+        if (this->type == ColorType::RGB)
+        {
+            return rgb;
+        }
+        else if (this->type == ColorType::HSV)
+        {
+            return HSVToRGB(hsv);
+        }
+        else if (this->type == ColorType::TEMP)
+        {
+            return TempToRGB(temp);
+        }
+        else
+        {
+            Logger log("Color");
+            log.error("unknown color type %d", this->type);
+            return RGB();
+        }
+    }
+    Color::HSV Color::toHSV() const
+    {
+        if (this->type == ColorType::RGB)
+        {
+            return RGBToHSV(rgb);
+        }
+        else if (this->type == ColorType::HSV)
+        {
+            return hsv;
+        }
+        else if (this->type == ColorType::TEMP)
+        {
+            return TempToHSV(temp);
+        }
+        else
+        {
+            Logger log("Color");
+            log.error("unknown color type %d", this->type);
+            return HSV();
+        }
+    }
+    Color::Temp Color::toTemp() const
+    {
+        if (this->type == ColorType::RGB)
+        {
+            return RGBToTemp(rgb);
+        }
+        else if (this->type == ColorType::HSV)
+        {
+            return HSVToTemp(hsv);
+        }
+        else if (this->type == ColorType::TEMP)
+        {
+            return temp;
+        }
+        else
+        {
+            Logger log("Color");
+            log.error("unknown color type %d", this->type);
+            return Temp();
+        }
+    }
 }
 
-FCLIB::Color::~Color()
-{
-}
+Color::RGB Color::RGB::BLACK(0, 0, 0);
+Color::RGB Color::RGB::WHITE(255, 255, 255);
+Color::RGB Color::RGB::RED(255, 0, 0);
+Color::RGB Color::RGB::GREEN(0, 255, 0);
+Color::RGB Color::RGB::BLUE(0, 0, 255);
 
-bool FCLIB::Color::isRgb() const
-{
-    return false;
-}
-
-bool FCLIB::Color::isHsv() const
-{
-    return false;
-}
-
-FCLIB::ColorRGB::ColorRGB(uint8 r, uint8 g, uint8 b) : Color(RGB)
-{
-    this->r = r;
-    this->g = g;
-    this->b = b;
-}
-
-FCLIB::ColorRGB::ColorRGB(const ColorRGB &other) : Color(other.type)
-{
-    this->r = other.r;
-    this->g = other.g;
-    this->b = other.b;
-}
-
-FCLIB::ColorRGB::~ColorRGB()
-{
-}
-
-bool FCLIB::ColorRGB::isRgb() const
-{
-    return true;
-}
-
-bool FCLIB::ColorRGB::isHsv() const
-{
-    return false;
-}
-
-FCLIB::ColorHSV::ColorHSV(uint16 h, uint8 s, uint8 v) : Color(HSV)
-{
-    LOG.conditional(h > 360, WARN_LEVEL, "Hue out of range (0-360): %d", h);
-    LOG.conditional(s > 100, WARN_LEVEL, "Saturation out of range (0-100): %d", s);
-    LOG.conditional(v > 100, WARN_LEVEL, "Value out of range (0-100): %d", v);
-    this->h = clamp(h, 0, 360);
-    this->s = clamp(s, 0, 100);
-    this->v = clamp(v, 0, 100);
-}
-
-FCLIB::ColorHSV::ColorHSV(const ColorHSV &other) : Color(other.type)
-{
-    this->h = other.h;
-    this->s = other.s;
-    this->v = other.v;
-}
-
-void FCLIB::ColorHSV::dump()
-{
-    LOG.never("HSV: %d, %d, %d", h, s, v);
-}
-
-bool FCLIB::ColorHSV::isRgb() const
-{
-    return false;
-}
-bool FCLIB::ColorHSV::isHsv() const
-{
-    return true;
-}
-FCLIB::ColorHSV::~ColorHSV()
-{
-}
-
-ColorRGB ColorRGB::BLACK(0, 0, 0);
-ColorRGB ColorRGB::WHITE(255, 255, 255);
-ColorRGB ColorRGB::RED(255, 0, 0);
-ColorRGB ColorRGB::GREEN(0, 255, 0);
-ColorRGB ColorRGB::BLUE(0, 0, 255);
-
-ColorHSV ColorHSV::BLACK(0, 0, 0);
-ColorHSV ColorHSV::WHITE(0, 0, 100);
-ColorHSV ColorHSV::FIRST(0, 100, 100);
-ColorHSV ColorHSV::LAST(360, 100, 100);
-ColorHSV ColorHSV::RED_START(0, 100, 100);
-ColorHSV ColorHSV::RED(0, 100, 100);
-ColorHSV ColorHSV::ORANGE(30, 100, 100);
-ColorHSV ColorHSV::YELLOW(60, 100, 100);
-ColorHSV ColorHSV::CHARTREUSE(90, 100, 100);
-ColorHSV ColorHSV::GREEN(120, 100, 100);
-ColorHSV ColorHSV::SPRING(150, 100, 100);
-ColorHSV ColorHSV::CYAN(180, 100, 100);
-ColorHSV ColorHSV::AZURE(210, 100, 100);
-ColorHSV ColorHSV::BLUE(240, 100, 100);
-ColorHSV ColorHSV::VIOLET(270, 100, 100);
-ColorHSV ColorHSV::MAGENTA(300, 100, 100);
-ColorHSV ColorHSV::ROSE(330, 100, 100);
-ColorHSV ColorHSV::RED_END(360, 100, 100);
+Color::HSV Color::HSV::BLACK(0, 0, 0);
+Color::HSV Color::HSV::WHITE(0, 0, 100);
+Color::HSV Color::HSV::FIRST(0, 100, 100);
+Color::HSV Color::HSV::LAST(360, 100, 100);
+Color::HSV Color::HSV::RED_START(0, 100, 100);
+Color::HSV Color::HSV::RED(0, 100, 100);
+Color::HSV Color::HSV::ORANGE(30, 100, 100);
+Color::HSV Color::HSV::YELLOW(60, 100, 100);
+Color::HSV Color::HSV::CHARTREUSE(90, 100, 100);
+Color::HSV Color::HSV::GREEN(120, 100, 100);
+Color::HSV Color::HSV::SPRING(150, 100, 100);
+Color::HSV Color::HSV::CYAN(180, 100, 100);
+Color::HSV Color::HSV::AZURE(210, 100, 100);
+Color::HSV Color::HSV::BLUE(240, 100, 100);
+Color::HSV Color::HSV::VIOLET(270, 100, 100);
+Color::HSV Color::HSV::MAGENTA(300, 100, 100);
+Color::HSV Color::HSV::ROSE(330, 100, 100);
+Color::HSV Color::HSV::RED_END(360, 100, 100);

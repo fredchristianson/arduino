@@ -2,6 +2,8 @@
 #include "fclib/App.h"
 #include "fclib/System.h"
 #include <Esp.h>
+#include "fclib/Persistance.h"
+#include "fclib/Event.h"
 
 namespace FCLIB
 {
@@ -44,6 +46,20 @@ namespace FCLIB
 
     bool App::setup(Config *config)
     {
+        bool startupFail = Persist::get("app", "startupFail", false);
+        if (startupFail)
+        {
+            log.error("Startup failed last time.");
+            // set to false so we retry when rebooted
+            Persist::set("app", "startupFail", false);
+            Persist::store();
+            running = false;
+            return false;
+        }
+        // assume startup fails.  will be reset if things configure right and
+        // run for 10 seconds
+        Persist::set("app", "startupFail", true);
+
         this->config = config;
         // ensure the TaskQueue is created
         TaskQueue::configure(config);
@@ -65,6 +81,12 @@ namespace FCLIB
         {
             setupComplete();
         }
+        // set to startupFail to false if things run ok for 20 seconds
+        Task::once([this]()
+                   { 
+                        this->log.always("Assuming startup was ok after 10 seconds.");
+                        Persist::set("app", "startupFail", false); })
+            ->delaySeconds(10);
         return success;
     }
 

@@ -55,25 +55,28 @@ void FCLIB::NeoPixelStrip::fill(const Color &color, LedOp_t op)
 
 uint32 FCLIB::NeoPixelStrip::getNeoPixelColor(const Color &color) const
 {
-    if (color.isHsv())
+    if (color.getType() == ColorType::HSV)
     {
-        return this->getNeoPixelColorFromHsv((ColorHSV &)color);
+        return this->getNeoPixelColorFromHSV(color.toHSV());
     }
-    else if (color.isRgb())
+    else if (color.getType() == ColorType::RGB)
     {
-        return this->getNeoPixelColorFromRgb((ColorRGB &)color);
+        return this->getNeoPixelColorFromRGB(color.toRGB());
     }
-    LOG.error("unknown color type %d %d", color.isHsv(), color.isRgb());
+    else if (color.getType() == ColorType::TEMP)
+    {
+        return this->getNeoPixelColorFromTemp(color.toTemp());
+    }
     return 0;
 }
 
-uint32 FCLIB::NeoPixelStrip::getNeoPixelColorFromRgb(const ColorRGB &color) const
+uint32 FCLIB::NeoPixelStrip::getNeoPixelColorFromRGB(const Color::RGB &color) const
 {
 
     return this->controller->Color(color.red(), color.green(), color.blue());
 }
 
-uint32 FCLIB::NeoPixelStrip::getNeoPixelColorFromHsv(const ColorHSV &color) const
+uint32 FCLIB::NeoPixelStrip::getNeoPixelColorFromHSV(const Color::HSV &color) const
 {
     // todo: convert to rainbow instead of spectrum RGB.
     LOG.debug("HSV %d %d %d", color.hue(), color.saturation(), color.value());
@@ -82,6 +85,13 @@ uint32 FCLIB::NeoPixelStrip::getNeoPixelColorFromHsv(const ColorHSV &color) cons
     uint value = ((uint)color.value() * 255) / 100;     // convert 0-100% to (0-255)
     uint32 neoColor = this->controller->ColorHSV(hue, sat, value);
     LOG.debug("HSV %d %d %d  => %lx", hue, sat, value, neoColor);
+    return neoColor;
+}
+
+uint32 FCLIB::NeoPixelStrip::getNeoPixelColorFromTemp(const Color::Temp &color) const
+{
+    Color::RGB rgb = Color::TempToRGB(color);
+    uint32 neoColor = this->controller->Color(rgb.red(), rgb.green(), rgb.blue());
     return neoColor;
 }
 

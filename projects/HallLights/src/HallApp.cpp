@@ -48,12 +48,7 @@ void HallApp::setupComplete()
     haLedCount = new HA::Number(haDevice, "LED Count", 0, 900, ledCount);
     haLedPin = new HA::Number(haDevice, "LED Strip Pin", 0, 16, ledPin);
     renderer.setStrip(this->ledStrip);
-    log.showMemory("publish MQTT discovery");
     ha->publishConfig();
-    ConfigSection *s = getConfig()->getSection("renderer");
-    renderer.setBrightness(s->get("brightness", 50));
-    log.always("Config RGB %d,%d,%d", s->get("red", 255), s->get("green", 255), s->get("blue", 0));
-    renderer.setRGB(ColorRGB(s->get("red", 255), s->get("green", 255), s->get("blue", 0)));
 
     log.showMemory("setup listeners");
     listener.handle(EventType::CHANGE_EVENT, &motion, [this](Event *event)
@@ -78,12 +73,6 @@ void HallApp::doTask()
 void HallApp::onLightStateChange(Event *event)
 {
     log.debug("LightStrip change");
-    const ColorRGB &rgb = renderer.getRGB();
-    ConfigSection *s = getConfig()->getSection("renderer");
-    s->set("red", rgb.red());
-    s->set("green", rgb.green());
-    s->set("blue", rgb.blue());
-    s->set("brightness", renderer.getBrightness());
 }
 void HallApp::onMotionChange(Event *event)
 {

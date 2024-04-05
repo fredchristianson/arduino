@@ -41,12 +41,9 @@ namespace FCLIB
 
     void CompositeStrip::fill(const Color &color, LedOp_t op)
     {
-        LOG.debug("fill color %d %d", color.isHsv(), color.isRgb());
-        Logger *l = &LOG;
         for (int i = 0; i < strips.size(); i++)
         {
             LedStrip *strip = strips[i];
-            l->debug("Strip %lx %d %d", strip, color.isHsv(), color.isRgb());
             strip->fill(color, op);
         }
     }

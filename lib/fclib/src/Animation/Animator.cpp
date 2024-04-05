@@ -19,6 +19,11 @@ namespace FCLIB
 
     float Animator::update()
     {
+        this->currentValue = calcCurrent(startValue, endValue);
+        return this->currentValue;
+    }
+    float Animator::calcCurrent(float start, float end)
+    {
         int now = THE_BOARD->currentMsecs();
         float change = (now - startMsecs) * 100;
         float pct = change / (durationMsecs * 100.0);
@@ -28,12 +33,11 @@ namespace FCLIB
             pct = 1;
         }
         float rangePct = easing(pct);
-        float range = endValue - startValue;
-        float result = startValue + range * rangePct;
-        this->currentValue = result;
-        if (result > endValue)
+        float range = end - start;
+        float result = start + range * rangePct;
+        if (result > end)
         {
-            result = endValue;
+            result = end;
         }
         // Logger log("Animator");
         // log.always("Animator %d-%d  ==> %f->%f.  %f, %f, %f", startMsecs, startMsecs + durationMsecs, startValue, endValue, pct, rangePct, result);

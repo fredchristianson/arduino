@@ -16,14 +16,8 @@ FCLIB::PatternRenderer::~PatternRenderer()
 
 PatternRenderer &FCLIB::PatternRenderer::addElement(uint count, Color &color, PositionUnit unit)
 {
-    if (color.isHsv())
-    {
-        elements.add(new PatternElementHSV((ColorHSV &)color, count, unit));
-    }
-    else if (color.isRgb())
-    {
-        elements.add(new PatternElementRGB((ColorRGB &)color, count, unit));
-    }
+    elements.add(new PatternElement(color, count, unit));
+
     return *this;
 }
 
@@ -37,13 +31,8 @@ void FCLIB::PatternRenderer::draw(LedStrip &strip, LedOp_t op)
         for (int idx = 0; idx < elements.size(); idx++)
         {
             const PatternElement *elem = elements[idx];
-            const Color &color = elem->color();
             for (uint c = 0; pos < length && c < elem->count(); c++)
             {
-                if (color.isRgb())
-                {
-                    // ColorRGB &rgb = (ColorRGB &)color;
-                }
                 strip.set(pos, elem->color(), op);
                 pos++;
             }
@@ -51,8 +40,9 @@ void FCLIB::PatternRenderer::draw(LedStrip &strip, LedOp_t op)
     }
 }
 
-FCLIB::PatternElement::PatternElement(uint count, PositionUnit unit)
+FCLIB::PatternElement::PatternElement(const Color &color, uint count, PositionUnit unit)
 {
+    this->elementColor = color;
     this->elementCount = count;
     this->posUnit = unit;
 }
@@ -62,29 +52,3 @@ FCLIB::PatternElement::~PatternElement()
 }
 uint FCLIB::PatternElement::count() const { return this->elementCount; }
 PositionUnit FCLIB::PatternElement::unit() { return this->posUnit; }
-
-FCLIB::PatternElementHSV::PatternElementHSV(ColorHSV &color, uint count, PositionUnit unit) : PatternElement(count, unit), elementColor(color)
-{
-}
-
-FCLIB::PatternElementHSV::~PatternElementHSV()
-{
-}
-
-const Color &FCLIB::PatternElementHSV::color() const
-{
-    return this->elementColor;
-}
-
-FCLIB::PatternElementRGB::PatternElementRGB(ColorRGB &color, uint count, PositionUnit unit) : PatternElement(count, unit), elementColor(color)
-{
-}
-
-FCLIB::PatternElementRGB::~PatternElementRGB()
-{
-}
-
-const Color &FCLIB::PatternElementRGB::color() const
-{
-    return this->elementColor;
-}

@@ -4,6 +4,7 @@
 #include "fclib/Logging.h"
 #include "fclib/Callable.h"
 #include "fclib/Task.h"
+#include "fclib/Color.h"
 
 using namespace FCLIB;
 
@@ -28,6 +29,7 @@ namespace FCLIB
     public:
         float getCurrentValue() const { return currentValue; }
         bool isComplete() const { return complete; }
+        float calcCurrent(float start, float end);
 
     protected:
         friend class AnimationBase;
@@ -131,6 +133,38 @@ namespace FCLIB
 
     private:
         Callback<float> callback;
+    };
+
+    class AnimateColor : public AnimationBase
+    {
+    public:
+        AnimateColor(float start = 0, float end = 100, Calculate<float> easing = Ease::linear);
+        virtual ~AnimateColor() {}
+        AnimateColor &onChange(Callback<const Color &> callback)
+        {
+            this->callback = callback;
+            return *this;
+        }
+        AnimateColor &startColor(const Color &color)
+        {
+            current = color;
+            from = color;
+            return *this;
+        }
+        AnimateColor &endColor(const Color &color)
+        {
+            to = color;
+            return *this;
+        }
+        Color value() const { return current; }
+        virtual bool update();
+
+    protected:
+    private:
+        Callback<const Color &> callback;
+        Color from;
+        Color to;
+        Color current;
     };
 
     namespace TEST

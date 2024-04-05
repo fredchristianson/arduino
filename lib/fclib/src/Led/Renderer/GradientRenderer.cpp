@@ -2,48 +2,56 @@
 
 using namespace FCLIB;
 
-FCLIB::RGBGradientRenderer::RGBGradientRenderer(const ColorRGB &initStart, const ColorRGB &initEnd)
+FCLIB::GradientRenderer::GradientRenderer(const Color &initStart, const Color &initEnd)
     : startColor(initStart), endColor(initEnd)
 {
 }
 
-FCLIB::RGBGradientRenderer::~RGBGradientRenderer()
+FCLIB::GradientRenderer::~GradientRenderer()
 {
 }
 
-void FCLIB::RGBGradientRenderer::draw(LedStrip &strip, LedOp_t op)
+void FCLIB::GradientRenderer::draw(LedStrip &strip, LedOp_t op)
+{
+    if (startColor.getType() == ColorType::HSV)
+    {
+        Color::HSV start = startColor.toHSV();
+        Color::HSV end = endColor.toHSV();
+        drawHSV(start, end, strip, op);
+    }
+    else
+    {
+        Color::RGB start = startColor.toRGB();
+        Color::RGB end = endColor.toRGB();
+        drawRGB(start, end, strip, op);
+    }
+}
+
+void FCLIB::GradientRenderer::drawRGB(Color::RGB start, Color::RGB end, LedStrip &strip, LedOp_t op)
 {
     uint count = strip.length();
     if (count == 0)
     {
         return;
     }
-    float diffR = endColor.red() - startColor.red();
-    float diffG = endColor.green() - startColor.green();
-    float diffB = endColor.blue() - startColor.blue();
+    float diffR = end.red() - start.red();
+    float diffG = end.green() - start.green();
+    float diffB = end.blue() - start.blue();
     float stepR = diffR / count;
     float stepG = diffG / count;
     float stepB = diffB / count;
-    ColorRGB pixelColor;
+    Color::RGB pixel;
     for (uint i = 0; i < count; i++)
     {
-        pixelColor.red(startColor.red() + i * stepR);
-        pixelColor.green(startColor.green() + i * stepG);
-        pixelColor.blue(startColor.blue() + i * stepB);
-        strip.set(i, pixelColor, op);
+        pixel.red(start.red() + i * stepR);
+        pixel.green(start.green() + i * stepG);
+        pixel.blue(start.blue() + i * stepB);
+        Color color(pixel);
+        strip.set(i, color, op);
     }
 }
 
-FCLIB::HSVGradientRenderer::HSVGradientRenderer(const ColorHSV &initStart, const ColorHSV &initEnd)
-    : startColor(initStart), endColor(initEnd)
-{
-}
-
-FCLIB::HSVGradientRenderer::~HSVGradientRenderer()
-{
-}
-
-void FCLIB::HSVGradientRenderer::draw(LedStrip &strip, LedOp_t op)
+void FCLIB::GradientRenderer::drawHSV(Color::HSV start, Color::HSV end, LedStrip &strip, LedOp_t op)
 {
     float count = strip.length();
     if (count == 0)
@@ -51,23 +59,24 @@ void FCLIB::HSVGradientRenderer::draw(LedStrip &strip, LedOp_t op)
         return;
     }
     LOG.never("Start %d,%d,%d    End %d,%d,%d",
-              startColor.hue(), startColor.saturation(), startColor.value(),
-              endColor.hue(), endColor.saturation(), endColor.value());
+              start.hue(), start.saturation(), start.value(),
+              end.hue(), end.saturation(), end.value());
 
-    float diffH = endColor.hue() - startColor.hue();
-    float diffS = endColor.saturation() - startColor.saturation();
-    float diffV = endColor.value() - startColor.value();
+    float diffH = end.hue() - start.hue();
+    float diffS = end.saturation() - start.saturation();
+    float diffV = end.value() - start.value();
     LOG.never("%f %f %f %f", count, diffH, diffS, diffV);
     float stepH = diffH / count;
     float stepS = diffS / count;
     float stepV = diffV / count;
-    ColorHSV pixelColor;
+    Color::HSV pixel;
     LOG.never("HSV gradient steps %f %f %f", stepH, stepS, stepV);
     for (uint i = 0; i < count; i++)
     {
-        pixelColor.hue(startColor.hue() + i * stepH);
-        pixelColor.saturation(startColor.saturation() + i * stepS);
-        pixelColor.value(startColor.value() + i * stepV);
-        strip.set(i, pixelColor, op);
+        pixel.hue(start.hue() + i * stepH);
+        pixel.saturation(start.saturation() + i * stepS);
+        pixel.value(start.value() + i * stepV);
+        Color color(pixel);
+        strip.set(i, color, op);
     }
 }

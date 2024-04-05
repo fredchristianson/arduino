@@ -10,93 +10,88 @@ namespace FCLIB
     HomeAssistantSceneRenderer::HomeAssistantSceneRenderer(LedStrip *strip) : SceneRenderer(strip)
     {
         log.setModuleName("HomeAssistantSceneRenderer");
-        this->mode = SceneMode::MODE_OFF;
-        stateChangeDelay = NULL;
+        loadState(currentState);
     }
 
     HomeAssistantSceneRenderer::~HomeAssistantSceneRenderer()
     {
     }
-    void HomeAssistantSceneRenderer::setMode(SceneMode mode)
-    {
-        log.always("Set mode %d", mode);
-        this->mode = mode;
-    }
-    void HomeAssistantSceneRenderer::setRGB(const ColorRGB &newRgb)
-    {
-        this->rgb.red(newRgb.red());
-        this->rgb = newRgb;
-        log.debug("set RGB %d,%d,%d", this->rgb.red(), this->rgb.green(), this->rgb.blue());
-        mode = SceneMode::MODE_RGB;
-    }
-    void HomeAssistantSceneRenderer::setHSV(const ColorHSV &hsv)
-    {
-        this->hsv = hsv;
-        mode = SceneMode::MODE_HSV;
-    }
-    void HomeAssistantSceneRenderer::setTemperature(uint temp)
-    {
-        this->temperature = temp;
-    }
 
-    IntervalTimer it(5000);
     void HomeAssistantSceneRenderer::runRenderers()
     {
         // log.conditional(it.isComplete(), NEVER_LEVEL, "runRenderers");
-        if (mode == SceneMode::MODE_RGB)
-        {
-            strip->fill(rgb);
-        }
-        else if (mode == SceneMode::MODE_HSV)
-        {
-            strip->fill(hsv);
-        }
+        strip->setBrightness(currentState.brightness);
+        strip->fill(currentState.color);
     }
 
-    void HomeAssistantSceneRenderer::setBrightness(uint8 brightness, int transitionSeconds)
+    void HomeAssistantSceneRenderer::saveState(SceneState &state)
     {
-        int start = mode == SceneMode::MODE_RGB ? getBrightness() : 0;
-        this->brightness = start;
-        log.always("transition brightness from %d to  %d over %d secs", start, brightness, transitionSeconds);
-        brightnessAnimation.onChange([this](int b)
-                                     { log.never("new brightness %d", b );
-                                                  this->brightness = b; })
-            .onDone([this]()
-                    { log.always("transition done"); })
-            .seconds(transitionSeconds, AnimationTimeType::SET)
-            .start(start)
-            .end(brightness)
-            .easing(Ease::cubic)
-            .run();
+        Persist::set("hascene", "brightness", state.brightness);
+        Color::RGB rgb = state.color.toRGB();
+        Persist::set("hascene", "r", rgb.red());
+        Persist::set("hascene", "g", rgb.green());
+        Persist::set("hascene", "b", rgb.blue());
+    }
+    void HomeAssistantSceneRenderer::loadState(SceneState &state)
+    {
+        state.brightness = Persist::get("hascene", "brightness", 255);
+        int r = Persist::get("hascene", "r", 255);
+        int g = Persist::get("hascene", "g", 255);
+        int b = Persist::get("hascene", "b", 255);
+        state.color = Color::fromRGB(r, g, b);
     }
 
+    void HomeAssistantSceneRenderer::setSceneState(const SceneState &state, uint16 transitionMsecs)
+    {
+        transition.from = currentState;
+        transition.to = state;
+        transition.transistionMsecs = transitionMsecs;
+        startTransition();
+    }
+    const SceneState HomeAssistantSceneRenderer::getSceneState() { return currentState; }
     void HomeAssistantSceneRenderer::turnOff(int transitionSeconds)
     {
-        if (stateChangeDelay != NULL)
+        if (currentState.mode == SceneMode::MODE_OFF)
         {
-            stateChangeDelay->end();
+            saveState(currentState);
         }
-        stateChangeDelay = Task::once([this]()
-                                      { this->mode = SceneMode::MODE_OFF;this->stateChangeDelay=NULL; });
-
-        stateChangeDelay->delaySeconds(transitionSeconds);
+        if (currentState.mode != SceneMode::MODE_OFF)
+        {
+            transition.from = currentState;
+            transition.to = currentState;
+            transition.to.mode = SceneMode::MODE_OFF;
+            transition.to.brightness = 0;
+            transition.transistionMsecs = transitionSeconds * 1000;
+            startTransition();
+        }
+    }
+    void HomeAssistantSceneRenderer::startTransition()
+    {
+        animateColor.onChange([this](const Color &newColor)
+                              { this->currentState.color = newColor; })
+            .startColor(transition.from.color)
+            .endColor(transition.to.color)
+            .msecs(transition.transistionMsecs, AnimationTimeType::SET)
+            .run();
+        animateBrightness.onChange([this](int val)
+                                   { this->currentState.brightness = val; })
+            .start(transition.from.brightness)
+            .end(transition.to.brightness)
+            .msecs(transition.transistionMsecs, AnimationTimeType::SET)
+            .onDone([this]()
+                    { this->currentState.mode = this->transition.to.mode; })
+            .run();
+        currentState.mode = SceneMode::MODE_TRANSITION;
     }
     void HomeAssistantSceneRenderer::turnOn(int transitionSeconds)
     {
-        if (stateChangeDelay != NULL)
+        if (currentState.mode == SceneMode::MODE_OFF)
         {
-            stateChangeDelay->end();
-            stateChangeDelay = NULL;
+            transition.from = currentState;
+            loadState(transition.to);
+            transition.to.mode = SceneMode::MODE_ON;
+            transition.transistionMsecs = transitionSeconds * 1000;
+            startTransition();
         }
-        // on needs to happen now so brightness can transition
-        this->mode = SceneMode::MODE_RGB;
-        if (this->brightness == 0)
-        {
-            this->brightness = 255;
-        }
-
-        // stateChangeDelay = Task::once([this]()
-        //                               { this->mode = SceneMode::MODE_RGB;this->stateChangeDelay=NULL; });
-        // stateChangeDelay->delaySeconds(transitionSeconds);
     }
 }

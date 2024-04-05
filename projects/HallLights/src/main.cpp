@@ -3,7 +3,9 @@
 #include "fclib/Net.h"
 #include "fclib/File.h"
 #include "fclib/Config.h"
+#ifdef RUN_TESTS
 #include "test/Test.h"
+#endif
 #include "fclib/System.h"
 #include "./HallApp.h"
 

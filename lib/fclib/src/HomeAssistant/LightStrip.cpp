@@ -19,15 +19,34 @@ namespace FCLIB::HA
 
     void LightStrip::publishState()
     {
+        SceneState scene = renderer->getSceneState();
+        Color color = scene.color;
         log.debug("publish LightStrip state");
         JsonDocument doc;
-        doc["state"] = renderer->isRunning() ? "ON" : "OFF";
-        doc["brightness"] = renderer->getBrightness();
-        doc["color"] = JsonObject();
-        doc["color"]["r"] = renderer->getRGB().red();
-        doc["color"]["g"] = renderer->getRGB().green();
-        doc["color"]["b"] = renderer->getRGB().blue();
-        doc["color_mode"] = "rgb";
+        doc["state"] = scene.mode != SceneMode::MODE_OFF ? "ON" : "OFF";
+        doc["brightness"] = scene.brightness;
+        if (color.getType() == ColorType::RGB)
+        {
+            doc["color"] = JsonObject();
+            Color::RGB rgb = color.toRGB();
+            doc["color"]["r"] = rgb.red();
+            doc["color"]["g"] = rgb.green();
+            doc["color"]["b"] = rgb.blue();
+            doc["color_mode"] = "rgb";
+        }
+        else if (color.getType() == ColorType::HSV)
+        {
+            doc["color"] = JsonObject();
+            Color::HSV hsv = color.toHSV();
+            doc["color_mode"] = "hs";
+            doc["color"]["h"] = hsv.hue();
+            doc["color"]["s"] = hsv.saturation();
+        }
+        else if (color.getType() == ColorType::TEMP)
+        {
+            doc["color"] = "color_temp";
+            doc["color_temp"] = color.toTemp().mireds();
+        }
         ha()->publishState(baseTopic() + "/set", doc);
         // ha()->publishState(baseTopic() + "/set", "{\"state\":\"ON\"}");
     }
@@ -52,6 +71,7 @@ namespace FCLIB::HA
         doc["supported_color_modes"] = JsonArray();
         doc["supported_color_modes"].add("color_temp");
         doc["supported_color_modes"].add("rgb");
+        doc["supported_color_modes"].add("hs");
         // doc["supported_color_modes"].add("white");
 
         // HA mired range is about 140-500.  Map to 2-6k when received or HA slider looks wrong
@@ -62,7 +82,9 @@ namespace FCLIB::HA
 
     void LightStrip::onCommand(const char *payload)
     {
-        log.debug("got command: %s", payload);
+        log.always("got command: %s", payload);
+        SceneState scene = renderer->getSceneState();
+
         JsonDocument doc;
         deserializeJson(doc, payload);
         String state = doc["state"];
@@ -71,10 +93,11 @@ namespace FCLIB::HA
         {
             transitionSeconds = doc["transition"].as<int>();
         }
+
         if (doc.containsKey("brightness"))
         {
             int b = doc["brightness"].as<int>();
-            renderer->setBrightness(b, transitionSeconds);
+            scene.brightness = b;
         }
         if (doc.containsKey("color"))
         {
@@ -86,30 +109,29 @@ namespace FCLIB::HA
                 int g = color["g"].as<int>();
                 int b = color["b"].as<int>();
                 log.debug("set RGB: %d,%d,%d", r, g, b);
-                renderer->setRGB(ColorRGB(r, g, b));
+                // renderer->setRGB(ColorRGB(r, g, b));
+                scene.color = Color::fromRGB(r, g, b);
             }
         }
         else if (doc.containsKey("color_temp"))
         {
             int temp = doc["color_temp"].as<int>();
-            log.debug("temp %d", temp);
+            scene.color = Color::fromMired(temp);
         }
 
         if (state.equals("ON"))
         {
             log.debug("turn on");
-            renderer->turnOn(transitionSeconds);
-            renderer->start();
+            scene.mode = SceneMode::MODE_ON;
             this->lastBoolState = true;
         }
         else
         {
             log.debug("turn off");
-            renderer->setBrightness(0, transitionSeconds);
-            renderer->turnOff(transitionSeconds);
-            renderer->stop();
+            scene.mode = SceneMode::MODE_OFF;
             this->lastBoolState = false;
         }
+        renderer->setSceneState(scene, transitionSeconds);
         Event::trigger(EventType::CHANGE_EVENT, this);
         this->publishState();
     }

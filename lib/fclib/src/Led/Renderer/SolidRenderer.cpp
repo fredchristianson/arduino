@@ -2,36 +2,15 @@
 
 using namespace FCLIB;
 
-FCLIB::RGBRenderer::RGBRenderer(uint8 r, uint8 g, uint8 b) : color(r, g, b)
+FCLIB::SolidRenderer::SolidRenderer(const Color &initColor) : color(initColor)
 {
 }
 
-FCLIB::RGBRenderer::RGBRenderer(ColorRGB &initColor) : color(initColor)
+FCLIB::SolidRenderer::~SolidRenderer()
 {
 }
 
-FCLIB::RGBRenderer::~RGBRenderer()
-{
-}
-
-void FCLIB::RGBRenderer::draw(LedStrip &strip, LedOp_t op)
-{
-    strip.fill(this->color, op);
-}
-
-FCLIB::HSVRenderer::HSVRenderer(uint16 h, uint8 s, uint8 v) : color(h, s, v)
-{
-}
-
-FCLIB::HSVRenderer::HSVRenderer(const ColorHSV &initColor) : color(initColor)
-{
-}
-
-FCLIB::HSVRenderer::~HSVRenderer()
-{
-}
-
-void FCLIB::HSVRenderer::draw(LedStrip &strip, LedOp_t op)
+void FCLIB::SolidRenderer::draw(LedStrip &strip, LedOp_t op)
 {
     strip.fill(this->color, op);
 }

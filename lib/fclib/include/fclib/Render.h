@@ -6,6 +6,8 @@
 #include "fclib/Util.h"
 #include "fclib/Task.h"
 #include "fclib/Animation.h"
+#include "fclib/Persistance.h"
+#include "fclib/Animation.h"
 #include <stdint.h>
 
 using namespace FCLIB;
@@ -28,96 +30,42 @@ namespace FCLIB
     class SolidRenderer : public LedRenderer
     {
     public:
-        SolidRenderer() {}
-        virtual ~SolidRenderer() {}
+        SolidRenderer(const Color &color);
+        virtual ~SolidRenderer();
+        void draw(LedStrip &strip, LedOp_t op = DEFOP) override;
 
     protected:
+        Color color;
     };
 
-    class RGBRenderer : public SolidRenderer
+    class GradientRenderer : public LedRenderer
     {
     public:
-        RGBRenderer(uint8 r, uint8 g, uint8 b);
-        RGBRenderer(ColorRGB &initColor = ColorRGB::BLACK);
-        virtual ~RGBRenderer();
-        virtual void draw(LedStrip &strip, LedOp_t op = DEFOP) override;
+        GradientRenderer(const Color &startColor, const Color &endColor);
+        virtual ~GradientRenderer();
+
+        void draw(LedStrip &strip, LedOp_t op = DEFOP) override;
 
     protected:
-        ColorRGB color;
-    };
-
-    class HSVRenderer : public SolidRenderer
-    {
-    public:
-        HSVRenderer(uint16 h, uint8 s, uint8 v);
-        HSVRenderer(const ColorHSV &initColor);
-        virtual ~HSVRenderer();
-        virtual void draw(LedStrip &strip, LedOp_t op = DEFOP) override;
-
-    protected:
-        ColorHSV color;
-    };
-
-    class RGBGradientRenderer : public LedRenderer
-    {
-    public:
-        RGBGradientRenderer(const ColorRGB &startColor, const ColorRGB &endColor);
-        virtual ~RGBGradientRenderer();
-
-        virtual void draw(LedStrip &strip, LedOp_t op = DEFOP) override;
-
-    protected:
-        const ColorRGB startColor;
-        const ColorRGB endColor;
-    };
-
-    class HSVGradientRenderer : public LedRenderer
-    {
-    public:
-        HSVGradientRenderer(const ColorHSV &startColor, const ColorHSV &endColor);
-        virtual ~HSVGradientRenderer();
-
-        virtual void draw(LedStrip &strip, LedOp_t op = DEFOP) override;
-
-    protected:
-        const ColorHSV startColor;
-        const ColorHSV endColor;
+        void drawHSV(Color::HSV start, Color::HSV end, LedStrip &strip, LedOp_t op = DEFOP);
+        void drawRGB(Color::RGB start, Color::RGB end, LedStrip &strip, LedOp_t op = DEFOP);
+        const Color startColor;
+        const Color endColor;
     };
 
     class PatternElement
     {
     public:
-        PatternElement(uint count, PositionUnit unit);
+        PatternElement(const Color &color, uint count, PositionUnit unit);
         virtual ~PatternElement();
         virtual uint count() const;
-        virtual const Color &color() const = 0;
+        virtual const Color &color() const { return elementColor; };
         virtual PositionUnit unit();
 
     protected:
+        Color elementColor;
         uint elementCount;
         PositionUnit posUnit;
-    };
-
-    class PatternElementRGB : public PatternElement
-    {
-    public:
-        PatternElementRGB(ColorRGB &color, uint count, PositionUnit unit);
-        virtual ~PatternElementRGB();
-        virtual const Color &color() const;
-
-    protected:
-        ColorRGB elementColor;
-    };
-
-    class PatternElementHSV : public PatternElement
-    {
-    public:
-        PatternElementHSV(ColorHSV &color, uint count, PositionUnit unit);
-        virtual ~PatternElementHSV();
-        virtual const Color &color() const;
-
-    protected:
-        ColorHSV elementColor;
     };
 
     class PatternRenderer : public LedRenderer
@@ -137,10 +85,28 @@ namespace FCLIB
     enum class SceneMode
     {
         MODE_OFF,
-        MODE_RGB,
-        MODE_HSV,
-        MODE_WHITE,
-        MODE_TEMPERATURE
+        MODE_ON,
+        MODE_TRANSITION
+    };
+
+    struct SceneState
+    {
+    public:
+        SceneState();
+        SceneState(const SceneState &other);
+        SceneState &operator=(const SceneState &other);
+        SceneMode mode;
+        Color color;
+        uint8 brightness;
+    };
+
+    struct SceneTransistion
+    {
+    public:
+        SceneTransistion();
+        SceneState from;
+        SceneState to;
+        uint16_t transistionMsecs;
     };
 
     class SceneRenderer
@@ -173,25 +139,21 @@ namespace FCLIB
         HomeAssistantSceneRenderer(LedStrip *strip = NULL);
         ~HomeAssistantSceneRenderer();
 
-        void setMode(SceneMode mode);
-        void setRGB(const ColorRGB &rgb);
-        void setHSV(const ColorHSV &hsv);
-        void setTemperature(uint temp);
+        void setSceneState(const SceneState &state, uint16 transitionMSecs);
+        const SceneState getSceneState();
 
-        const ColorRGB &getRGB() { return rgb; }
-        void setBrightness(uint8 brightness) { this->brightness = brightness; }
-        void setBrightness(uint8 brightness, int transitionSeconds);
         void turnOn(int transitionSeconds);
         void turnOff(int transitionSeconds);
 
     protected:
-        SceneMode mode;
-        ColorRGB rgb;
-        ColorHSV hsv;
-        float temperature; // 0.5 = no adjust.  0, max blue.  1 max red
+        SceneState currentState;
+        SceneTransistion transition;
         virtual void runRenderers();
-        AnimateInt brightnessAnimation;
-        TimerTask *stateChangeDelay;
+        void saveState(SceneState &state);
+        void loadState(SceneState &state);
+        void startTransition();
+        AnimateColor animateColor;
+        AnimateInt animateBrightness;
     };
 
     class CompositeSceneRenderer : public SceneRenderer

@@ -4,6 +4,7 @@
 #include <Adafruit_NeoPixel.h>
 #include "./List.h"
 #include "./Logging.h"
+#include "./Color.h"
 
 namespace FCLIB
 {
@@ -35,116 +36,6 @@ namespace FCLIB
         MAX,
         AVG
     } LedOp_t;
-
-    enum ColorType : uint8_t
-    {
-        RED = (1 << 0),
-        GREEN = (1 << 1),
-        BLUE = (1 << 2),
-        HUE = (1 << 3),
-        SATURATION = (1 << 4),
-        VALUE = (1 << 5),
-        RGB = (RED + GREEN + BLUE),
-        HSV = (HUE + SATURATION + VALUE)
-    };
-
-    class Color
-    {
-    public:
-        Color(ColorType type);
-        ~Color();
-
-        virtual bool isRgb() const;
-        virtual bool isHsv() const;
-
-    protected:
-        ColorType type;
-    };
-
-    class ColorRGB : public Color
-    {
-    public:
-        ColorRGB(uint8 red = 0, uint8 blue = 0, uint8 green = 0);
-        ColorRGB(const ColorRGB &other);
-        ~ColorRGB();
-        uint8 red() const { return r; }
-
-        uint8 green() const { return g; }
-
-        uint8 blue() const { return b; }
-
-        void red(uint8 v) { r = v; }
-
-        void green(uint8 v) { g = v; }
-
-        void blue(uint8 v) { b = v; }
-
-        virtual bool isRgb() const;
-        virtual bool isHsv() const;
-
-        static ColorRGB BLACK;
-        static ColorRGB WHITE;
-        static ColorRGB RED;
-        static ColorRGB GREEN;
-        static ColorRGB BLUE;
-
-        ColorRGB &operator=(const ColorRGB &other)
-        {
-            this->r = other.r;
-            this->g = other.g;
-            this->b = other.b;
-            return *this;
-        }
-
-    protected:
-        uint8 r;
-        uint8 g;
-        uint8 b;
-    };
-
-    class ColorHSV : public Color
-    {
-    public:
-        ColorHSV(uint16 h = 0, uint8 s = 100, uint8 v = 100);
-        ColorHSV(const ColorHSV &other);
-        ~ColorHSV();
-        void dump();
-        uint16 hue() const { return h; }       // 0-360: color wheel
-        uint8 saturation() const { return s; } // 0-100%
-        uint8 value() const { return v; }      // 0-100%
-        virtual bool isHsv() const;
-        virtual bool isRgb() const;
-
-        void hue(uint16 v) { h = v; }
-
-        void saturation(uint8 v) { s = v; }
-
-        void value(uint8 v) { this->v = v; }
-        static ColorHSV BLACK;
-        static ColorHSV WHITE;
-        static ColorHSV FIRST;
-        static ColorHSV LAST;
-
-        static ColorHSV RED;
-        static ColorHSV RED_START;
-        static ColorHSV RED_END;
-        static ColorHSV ORANGE;
-        static ColorHSV YELLOW;
-        static ColorHSV CHARTREUSE;
-        static ColorHSV GREEN;
-        static ColorHSV SPRING;
-        static ColorHSV CYAN;
-        static ColorHSV AZURE;
-        static ColorHSV BLUE;
-        static ColorHSV VIOLET;
-        static ColorHSV MAGENTA;
-        static ColorHSV ROSE;
-
-    protected:
-        uint16 h;
-        uint8 s;
-        uint8 v;
-    };
 
     class LedStrip
     {
@@ -190,8 +81,9 @@ namespace FCLIB
         virtual void onCountChange(uint16 oldCount, uint16 newCount);
 
         uint32 getNeoPixelColor(const Color &color) const;
-        uint32 getNeoPixelColorFromRgb(const ColorRGB &color) const;
-        uint32 getNeoPixelColorFromHsv(const ColorHSV &color) const;
+        uint32 getNeoPixelColorFromRGB(const Color::RGB &color) const;
+        uint32 getNeoPixelColorFromHSV(const Color::HSV &color) const;
+        uint32 getNeoPixelColorFromTemp(const Color::Temp &color) const;
         uint8_t pin;
         uint8 brightness; // 0 - 255
         Adafruit_NeoPixel *controller;
@@ -232,8 +124,7 @@ namespace FCLIB
     protected:
         LedStrip *baseStrip;
 
-        virtual const ColorHSV &modifyColor(int pos, const ColorHSV &origColor, ColorHSV &modifiedColor, LedOp_t op);
-        virtual const ColorRGB &modifyColor(int pos, const ColorRGB &origColor, ColorRGB &modifiedColor, LedOp_t op);
+        virtual Color modifyColor(int pos, const Color &origColor, LedOp_t op);
 
         virtual int modifyPosition(int pos);
         virtual bool isValidPosition(int pos);   // based on original position
