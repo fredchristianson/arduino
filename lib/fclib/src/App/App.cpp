@@ -71,7 +71,7 @@ namespace FCLIB
                        this->endSetup();
         if (config->isChanged())
         {
-            log.always("config changed");
+            log.debug("config changed");
             config->save();
         }
 
@@ -84,7 +84,7 @@ namespace FCLIB
         // set to startupFail to false if things run ok for 20 seconds
         Task::once([this]()
                    { 
-                        this->log.always("Assuming startup was ok after 10 seconds.");
+                        this->log.debug("Assuming startup was ok after 10 seconds.");
                         Persist::set("app", "startupFail", false); })
             ->delaySeconds(10);
         return success;
@@ -110,7 +110,7 @@ namespace FCLIB
     }
     bool App::setupLogging()
     {
-        log.always("setupLogging");
+        log.debug("setupLogging");
         ConfigFile logConfig;
         logConfig.load("/logging.ini");
         configureLogging(this->config->getSection("logging"));

@@ -35,12 +35,12 @@ namespace FCLIB
         float rangePct = easing(pct);
         float range = end - start;
         float result = start + range * rangePct;
-        if (result > end)
+        if ((end > start && result > end) || (end < start && result < end))
         {
             result = end;
         }
         // Logger log("Animator");
-        // log.always("Animator %d-%d  ==> %f->%f.  %f, %f, %f", startMsecs, startMsecs + durationMsecs, startValue, endValue, pct, rangePct, result);
+        // log.debug("Animator %d-%d  ==> %f->%f.  %f, %f, %f", startMsecs, startMsecs + durationMsecs, startValue, endValue, pct, rangePct, result);
         return result;
     }
 
@@ -48,7 +48,7 @@ namespace FCLIB
     {
         startMsecs = THE_BOARD->currentMsecs();
         // Logger log("Animator");
-        // log.always("restarting animation at %d.  end in %d at %d", startMsecs, durationMsecs, startMsecs + durationMsecs);
+        // log.debug("restarting animation at %d.  end in %d at %d", startMsecs, durationMsecs, startMsecs + durationMsecs);
         complete = false;
     }
 }

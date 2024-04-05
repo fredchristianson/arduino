@@ -4,23 +4,29 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    Entity::Entity(const char *name, Device *device, ComponentType type) : log("HA::Entity")
+    Entity::Entity(const char *name, ComponentType type) : log("HA::Entity")
     {
         this->name = name;
         this->type = type;
         this->device = device;
         componentTypeIndex = 0;
         defaultEntity = false;
-        device->add(this);
         lastBoolState = false;
+        device = NULL;
     }
 
     Entity::~Entity()
     {
-        device->remove(this);
+        if (device != NULL)
+        {
+            device->remove(this);
+        }
     }
 
-    HomeAssistant *Entity::ha() { return device->ha; }
+    HomeAssistant *Entity::ha()
+    {
+        return device != NULL ? device->ha : NULL;
+    }
 
     String Entity::baseTopic()
     {

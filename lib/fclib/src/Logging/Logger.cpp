@@ -264,7 +264,7 @@ LogLevel Logger::getModuleLoggerLevel() const
         {
             bestMatch = search;
             // Logger log("dbg");
-            // log.always("Best Match: %s for %s", search->name.c_str(), this->ucModuleName.c_str());
+            // log.debug("Best Match: %s for %s", search->name.c_str(), this->ucModuleName.c_str());
         }
         search = search->next;
     }

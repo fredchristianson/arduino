@@ -4,24 +4,36 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    LightStrip::LightStrip(Device *device, HomeAssistantSceneRenderer *render, const char *name) : CommandEntity(name == NULL ? "LightStrip" : name, device, ComponentType::LIGHT)
+    LightStrip::LightStrip(HomeAssistantSceneRenderer *render, const char *name) : CommandEntity(name == NULL ? "LightStrip" : name, ComponentType::LIGHT)
     {
         log.setModuleName("HA::LightStrip");
         log.setLevel(DEBUG_LEVEL);
+        publishThrottle.setMaxFrequency(250, TIME_MSECS);
         this->renderer = render;
         this->deviceClass = "light";
         componentName = "light";
+        log.debug("created HA:LightStrip %x", this);
+        events.handle(EventType::CHANGE_EVENT, render, [this](const Event *event)
+                      { this->publishTransitionState(); });
+        events.handle(EventType::TASK_DONE, render, [this](const Event *event)
+                      { this->publishState(); });
     }
 
     LightStrip::~LightStrip()
     {
     }
 
+    void LightStrip::publishTransitionState()
+    {
+        publishThrottle.run([this]()
+                            { this->publishState(); });
+    }
     void LightStrip::publishState()
     {
+
         SceneState scene = renderer->getSceneState();
         Color color = scene.color;
-        log.debug("publish LightStrip state");
+        log.never("publish LightStrip state");
         JsonDocument doc;
         doc["state"] = scene.mode != SceneMode::MODE_OFF ? "ON" : "OFF";
         doc["brightness"] = scene.brightness;
@@ -44,6 +56,7 @@ namespace FCLIB::HA
         }
         else if (color.getType() == ColorType::TEMP)
         {
+            log.debug("publich temp: %d", color.toTemp().mireds());
             doc["color"] = "color_temp";
             doc["color_temp"] = color.toTemp().mireds();
         }
@@ -82,16 +95,16 @@ namespace FCLIB::HA
 
     void LightStrip::onCommand(const char *payload)
     {
-        log.always("got command: %s", payload);
+        log.debug("got command: %s", payload);
         SceneState scene = renderer->getSceneState();
 
         JsonDocument doc;
         deserializeJson(doc, payload);
         String state = doc["state"];
-        int transitionSeconds = 2;
+        int transitionMsecs = 250;
         if (doc.containsKey("transition"))
         {
-            transitionSeconds = doc["transition"].as<int>();
+            transitionMsecs = doc["transition"].as<int>() * 1000;
         }
 
         if (doc.containsKey("brightness"))
@@ -131,14 +144,14 @@ namespace FCLIB::HA
             scene.mode = SceneMode::MODE_OFF;
             this->lastBoolState = false;
         }
-        renderer->setSceneState(scene, transitionSeconds);
+        renderer->setSceneState(scene, transitionMsecs);
         Event::trigger(EventType::CHANGE_EVENT, this);
         this->publishState();
     }
 
     void LightStrip::subscribe(Mqtt *mqtt)
     {
-
+        log.debug("LightStrip subscribe");
         mqtt->subscribe(baseTopic() + "/command", [this](const char *payload)
                         { this->onCommand(payload); });
     }

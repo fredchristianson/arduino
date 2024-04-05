@@ -25,6 +25,7 @@ namespace FCLIB
         this->mode = other.mode;
         this->color = other.color;
         this->brightness = other.brightness;
+
         return *this;
     }
 }

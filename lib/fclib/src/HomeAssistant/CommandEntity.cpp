@@ -4,15 +4,13 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    CommandEntity::CommandEntity(const char *name, Device *device, ComponentType type) : Entity(name, device, type)
+    CommandEntity::CommandEntity(const char *name, ComponentType type) : Entity(name, type)
     {
         log.setModuleName("HA::CommandEntity");
-        device->add(this);
     }
 
     CommandEntity::~CommandEntity()
     {
-        device->remove(this);
     }
 
     void CommandEntity::setupCommandTopics(JsonDocument &doc)
@@ -22,7 +20,7 @@ namespace FCLIB::HA
 
     void CommandEntity::onCommand(const char *payload)
     {
-        log.always("got command: %s", payload);
+        log.debug("got command: %s", payload);
     }
 
     void CommandEntity::subscribe(Mqtt *mqtt)

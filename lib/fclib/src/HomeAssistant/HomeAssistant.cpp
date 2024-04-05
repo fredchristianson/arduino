@@ -75,6 +75,7 @@ namespace FCLIB::HA
         for (int eidx = 0; eidx < device->entities.size(); eidx++)
         {
             Entity *entity = device->entities[eidx];
+            log.debug("publish entity %d %x %s", eidx, entity, entity->getUniqueName());
             publishEntityConfig(entity);
             entity->subscribe(mqtt);
             entity->publishState();
@@ -82,7 +83,7 @@ namespace FCLIB::HA
     }
     void HomeAssistant::publishEntityConfig(Entity *entity)
     {
-
+        log.debug("publish config");
         String ename = entity->getComponentName();
         String topic = "homeassistant/" + ename + "/" + entity->id + "/config";
         JsonDocument doc;
@@ -100,6 +101,7 @@ namespace FCLIB::HA
         JsonObject devObject = doc["device"].to<JsonObject>();
         entity->device->getJson(devObject);
         mqtt->send(topic, doc);
+        log.debug("config sent");
     }
 
     void HomeAssistant::publishState(const char *topic, JsonDocument &payload)

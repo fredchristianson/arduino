@@ -95,14 +95,14 @@ namespace FCLIB
 
     void Mqtt::handleMessage(String &topic, String &message)
     {
-        log.never("handle message: %s", topic.c_str());
+        log.debug("handle message: %s", topic.c_str());
         for (int i = 0; i < subscribers.size(); i++)
         {
             Subscriber *sub = subscribers[i];
-            log.never("\tcheck subscriber: %lx %s ", sub, sub->topic.c_str());
+            log.debug("\tcheck subscriber: %lx %s ", sub, sub->topic.c_str());
             if (topic.equals(subscribers[i]->topic))
             {
-                log.never("\t\tcallback");
+                log.debug("\t\tcallback");
                 subscribers[i]->callback(message.c_str());
             }
         }
@@ -110,10 +110,10 @@ namespace FCLIB
 
     void Mqtt::subscribe(const char *topic, MqttCallback callback)
     {
-        log.never("subscribe to: %s", topic);
+        log.debug("subscribe to: %s", topic);
         Subscriber *sub = new Subscriber(topic, callback);
         subscribers.add(sub);
         pubSubClient.subscribe(topic);
-        log.never("subscriber topic: %lx %s", sub, sub->topic.c_str());
+        log.debug("subscriber topic: %lx %s", sub, sub->topic.c_str());
     }
 }

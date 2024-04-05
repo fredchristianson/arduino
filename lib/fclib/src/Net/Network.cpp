@@ -34,7 +34,7 @@ namespace FCLIB
     {
         log.debug("network setup");
         deviceName = config->get("device_name", "FCLIB_DEVICE");
-        log.always("deviceName: %s", deviceName.c_str());
+        log.debug("deviceName: %s", deviceName.c_str());
         ConfigSection *wifi = config->getSection("wifi");
 
         resetWifi = wifi->get("reset", false);

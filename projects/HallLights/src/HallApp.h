@@ -19,11 +19,11 @@ public:
 
 protected:
     void onLedPinChange(int pin);
+    void onMotionPinChange(int pin);
     void onLedCountChange(int count);
     void onMotionChange(Event *event);
     void onLightStateChange(Event *event);
     virtual void setupComplete();
-    HW::Motion motion;
     // HW::Led led;
 
     HA::HomeAssistant *ha;
@@ -32,7 +32,9 @@ protected:
     HA::LightStrip *haLight;
     HA::Number *haLedCount;
     HA::Number *haLedPin;
+    HA::Number *haMotionPin;
     NeoPixelStrip *ledStrip;
+    HW::Motion motion;
     HomeAssistantSceneRenderer renderer;
     EventListener listener;
 };

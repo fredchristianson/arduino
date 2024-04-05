@@ -34,6 +34,7 @@ void HallApp::setupComplete()
     motion.setPin(hardwareConfig->get("motion_pin", 4));
     int ledCount = hardwareConfig->get("led_count", 7);
     int ledPin = hardwareConfig->get("led_pin", 5);
+    int motionPin = hardwareConfig->get("motion_pin", 4);
     NeoPixelStrip *strip = new NeoPixelStrip(ledPin,
                                              ledCount,
                                              hardwareConfig->get("led_brightness", 50));
@@ -43,10 +44,19 @@ void HallApp::setupComplete()
     String deviceName = getConfig()->get("device_name", "FCLIB Device");
     ha = new HA::HomeAssistant(Network::getMqtt());
     haDevice = ha->createDevice(deviceName.c_str());
-    haMotion = new HA::MotionSensor(haDevice, &motion, "Motion Sensor");
-    haLight = new HA::LightStrip(haDevice, &renderer, "LedStrip");
-    haLedCount = new HA::Number(haDevice, "LED Count", 0, 900, ledCount);
-    haLedPin = new HA::Number(haDevice, "LED Strip Pin", 0, 16, ledPin);
+    haMotion = new HA::MotionSensor(&motion, "Motion Sensor");
+    log.debug("create HA::LightStrip");
+    haLight = new HA::LightStrip(&renderer, "LedStrip");
+    log.debug("created HA::LightStrip %x", haLight);
+    haLedCount = new HA::Number("LED Count", 0, 900, ledCount);
+    haLedPin = new HA::Number("LED Strip Pin", 0, 16, ledPin);
+    haMotionPin = new HA::Number("Motion Pin", 0, 16, motionPin);
+    haDevice->add(haMotion);
+    haDevice->add(haLight);
+    haDevice->add(haLedCount);
+
+    haDevice->add(haLedPin);
+    haDevice->add(haMotionPin);
     renderer.setStrip(this->ledStrip);
     ha->publishConfig();
 
@@ -57,13 +67,16 @@ void HallApp::setupComplete()
                     { this->onLedCountChange(haLedCount->asInt()); });
     listener.handle(EventType::CHANGE_EVENT, haLedPin, [this](Event *event)
                     { this->onLedPinChange(haLedCount->asInt()); });
+    listener.handle(EventType::CHANGE_EVENT, haMotionPin, [this](Event *event)
+                    { this->onMotionPinChange(haMotionPin->asInt()); });
 
     listener.handleChange(config, [this, config, hardwareConfig](Event *event)
                           {
-               this->log.always("save config");
+               this->log.debug("save config");
                config->save(); });
     listener.handleChange(haLight, [this](Event *event)
                           { this->onLightStateChange(event); });
+    renderer.start();
 }
 
 void HallApp::doTask()
@@ -99,4 +112,12 @@ void HallApp::onLedPinChange(int pin)
     ConfigSection *hardwareConfig = config->getSection("hardware");
     hardwareConfig->set("led_pin", pin);
     ledStrip->setPin(pin);
+}
+
+void HallApp::onMotionPinChange(int pin)
+{
+    Config *config = getConfig();
+    ConfigSection *hardwareConfig = config->getSection("hardware");
+    hardwareConfig->set("motion_pin", pin);
+    motion.setPin(pin);
 }

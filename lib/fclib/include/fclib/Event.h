@@ -27,6 +27,7 @@ namespace FCLIB
         DISCONNECTED = 201,
 
         TASK_CREATED = 300,
+        TASK_DONE = 301,
 
         ANY = 0xFFFF
     };

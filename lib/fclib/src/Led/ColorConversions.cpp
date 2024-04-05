@@ -116,14 +116,17 @@ Color::HSV Color::RGBToHSV(const RGB &rgb)
 
 // approximate RGB values for kelvin 2000-6500 (mired 500-150)
 const Color::RGB approxMiredToColorRGB[8] = {
-    Color::RGB(0xff, 0x8c, 0x19),
-    Color::RGB(0xff, 0xb8, 0x6f),
-    Color::RGB(0xff, 0xd3, 0xa5),
-    Color::RGB(0xff, 0xe6, 0xcf),
-    Color::RGB(0xff, 0xf3, 0xf0),
-    Color::RGB(0xf4, 0xf2, 0xff),
+
+    Color::RGB(0xd6, 0xdf, 0xff),
     Color::RGB(0xe2, 0xe7, 0xff),
-    Color::RGB(0xd6, 0xdf, 0xff)};
+    Color::RGB(0xf4, 0xf2, 0xff),
+    Color::RGB(0xff, 0xf3, 0xf0),
+    Color::RGB(0xff, 0xe6, 0xcf),
+    Color::RGB(0xff, 0xd3, 0xa5),
+    Color::RGB(0xff, 0xb8, 0x6f),
+    Color::RGB(0xff, 0x8c, 0x19)
+
+};
 
 int rgbDiff(const Color::RGB &a, const Color::RGB &b)
 {
@@ -148,19 +151,19 @@ Color::RGB Color::TempToRGB(const Temp &temp)
 {
     const Color::RGB *rgb = &approxMiredToColorRGB[0];
     uint16 mired = temp.mireds();
-    if (mired < 150)
-    {
-        rgb = &approxMiredToColorRGB[7];
-    }
-    else if (mired > 500)
+    if (mired < 183)
     {
         rgb = &approxMiredToColorRGB[0];
     }
+    else if (mired > 460)
+    {
+        rgb = &approxMiredToColorRGB[7];
+    }
     else
     {
-        uint16 pos = mired - 150;
-        uint16 span = 43;
-        uint16 idx = pos / span;
+        uint16 pos = mired - 140;
+        uint16 span = 45;
+        uint16 idx = round(1.0 * pos / span);
         // todo: find gradient between entries
         rgb = &approxMiredToColorRGB[idx];
     }

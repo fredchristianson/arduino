@@ -140,7 +140,7 @@ namespace FCLIB
 
         virtual bool save()
         {
-            log.always("Derivfed class did not implement save()");
+            log.debug("Derivfed class did not implement save()");
             return true;
         } // derived classes may save
 

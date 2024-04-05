@@ -4,7 +4,7 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    Switch::Switch(Device *device, HW::InputPinComponent *hardware, const char *name) : Entity(name == NULL ? "Button" : name, device, ComponentType::SWITCH)
+    Switch::Switch(HW::InputPinComponent *hardware, const char *name) : Entity(name == NULL ? "Button" : name, ComponentType::SWITCH)
     {
         log.setModuleName("HA::Switch");
         log.debug("Switch created 0x%lx", hardware);

@@ -4,7 +4,7 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    Number::Number(Device *device, const char *name, float minval, float maxval, float val) : CommandEntity(name == NULL ? "Number" : name, device, ComponentType::NUMBER)
+    Number::Number(const char *name, float minval, float maxval, float val) : CommandEntity(name == NULL ? "Number" : name, ComponentType::NUMBER)
     {
         log.setModuleName("HA::Number");
         // this->deviceClass = "distance";
@@ -37,7 +37,7 @@ namespace FCLIB::HA
 
     void Number::onCommand(const char *payload)
     {
-        log.always("got command: %s", payload);
+        log.debug("got command: %s", payload);
         String text(payload);
         text.trim();
         if (text.length() == 0)

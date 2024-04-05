@@ -112,12 +112,12 @@ namespace FCLIB
         int diff = endTime - startTime;
         if (diff > maxQueueTime)
         {
-            log.always("max queue time: %d", diff);
+            log.debug("max queue time: %d", diff);
             maxQueueTime = diff;
         }
         // if (diff > 10)
         // {
-        //     log.always("%d tasks took msecs: %d", cnt, diff);
+        //     log.debug("%d tasks took msecs: %d", cnt, diff);
         // }
     }
 }

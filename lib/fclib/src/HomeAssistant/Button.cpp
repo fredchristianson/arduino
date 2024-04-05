@@ -4,7 +4,7 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    Button::Button(Device *device, const char *name) : Entity(name == NULL ? "Button" : name, device, ComponentType::BUTTON)
+    Button::Button(const char *name) : Entity(name == NULL ? "Button" : name, ComponentType::BUTTON)
     {
         deviceClass = "button";
         componentName = "binary_sensor";

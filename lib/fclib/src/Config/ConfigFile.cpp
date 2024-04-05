@@ -105,7 +105,7 @@ namespace FCLIB
 
     bool ConfigFile::save()
     {
-        log.always("Save config: %s", this->filePath.c_str());
+        log.debug("Save config: %s", this->filePath.c_str());
         return this->save(this->filePath.c_str());
     }
 }

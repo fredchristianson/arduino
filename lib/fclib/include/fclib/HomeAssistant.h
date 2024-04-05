@@ -8,6 +8,7 @@
 #include "fclib/Event.h"
 #include "fclib/Render.h"
 #include "fclib/List.h"
+#include "Throttle.h"
 using namespace FCLIB;
 
 namespace FCLIB::HA
@@ -31,7 +32,7 @@ namespace FCLIB::HA
     class Entity
     {
     public:
-        Entity(const char *name, Device *device, ComponentType type);
+        Entity(const char *name, ComponentType type);
         virtual ~Entity();
 
         virtual const char *getComponentName() { return componentName.c_str(); }
@@ -73,7 +74,7 @@ namespace FCLIB::HA
     class CommandEntity : public Entity
     {
     public:
-        CommandEntity(const char *name, Device *device, ComponentType type);
+        CommandEntity(const char *name, ComponentType type);
         ~CommandEntity();
         virtual void setupCommandTopics(JsonDocument &doc);
         virtual void onCommand(const char *payload);
@@ -83,7 +84,7 @@ namespace FCLIB::HA
     class Button : public Entity
     {
     public:
-        Button(Device *device, const char *name = "Button");
+        Button(const char *name = "Button");
         virtual ~Button();
         const char *getComponentName() override { return "button"; }
     };
@@ -92,7 +93,7 @@ namespace FCLIB::HA
     class BinarySensor : public Entity
     {
     public:
-        BinarySensor(Device *device, HW::InputPinComponent *binary, const char *name = "Binary Sensor");
+        BinarySensor(HW::InputPinComponent *binary, const char *name = "Binary Sensor");
         virtual ~BinarySensor();
         const char *getComponentName() override { return "binary_sensor"; }
 
@@ -103,7 +104,7 @@ namespace FCLIB::HA
     class MotionSensor : public BinarySensor
     {
     public:
-        MotionSensor(Device *device, HW::Motion *binary, const char *name = "Motion Sensor");
+        MotionSensor(HW::Motion *binary, const char *name = "Motion Sensor");
         virtual ~MotionSensor();
 
     protected:
@@ -116,7 +117,7 @@ namespace FCLIB::HA
     class Switch : public Entity
     {
     public:
-        Switch(Device *device, HW::InputPinComponent *binary, const char *name = "Switch");
+        Switch(HW::InputPinComponent *binary, const char *name = "Switch");
         virtual ~Switch();
         const char *getComponentName() override { return "switch"; }
 
@@ -129,7 +130,7 @@ namespace FCLIB::HA
     class Led : public Entity
     {
     public:
-        Led(Device *device, HW::OutputPinComponent *led, const char *name = "LED");
+        Led(HW::OutputPinComponent *led, const char *name = "LED");
         virtual ~Led();
         const char *getComponentName() override { return "light"; }
         virtual void updateState(const char *payload);
@@ -142,23 +143,25 @@ namespace FCLIB::HA
     class LightStrip : public CommandEntity
     {
     public:
-        LightStrip(Device *device, HomeAssistantSceneRenderer *renderer, const char *name = "LED Strip");
+        LightStrip(HomeAssistantSceneRenderer *renderer, const char *name = "LED Strip");
         virtual ~LightStrip();
         const char *getComponentName() override { return "light"; }
         virtual void setupCommandTopics(JsonDocument &doc);
         virtual void setupCapabilities(JsonDocument &doc);
         virtual void subscribe(Mqtt *mqtt);
         virtual void publishState() override;
+        virtual void publishTransitionState();
 
     protected:
         void onCommand(const char *payload);
         HomeAssistantSceneRenderer *renderer;
+        Throttle publishThrottle;
     };
 
     class Number : public CommandEntity
     {
     public:
-        Number(Device *device, const char *name, float min, float max, float val);
+        Number(const char *name, float min, float max, float val);
         virtual ~Number();
         virtual void publishState() override;
         virtual void setupCapabilities(JsonDocument &doc);

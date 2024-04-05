@@ -4,7 +4,7 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    Led::Led(Device *device, HW::OutputPinComponent *hardware, const char *name) : Entity(name == NULL ? "Button" : name, device, ComponentType::LIGHT)
+    Led::Led(HW::OutputPinComponent *hardware, const char *name) : Entity(name == NULL ? "Button" : name, ComponentType::LIGHT)
     {
         log.setModuleName("HA::Led");
         this->hardware = hardware;

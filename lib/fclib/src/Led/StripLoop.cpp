@@ -5,7 +5,6 @@ using namespace FCLIB;
 FCLIB::StripLoop::StripLoop(LedStrip *base) : StripModifier(base)
 {
     LOG.setModuleName("StripLoop");
-    LOG.always("Loop base length %d", base->length());
 }
 
 int FCLIB::StripLoop::modifyPosition(int pos)

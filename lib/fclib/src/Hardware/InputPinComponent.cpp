@@ -10,7 +10,7 @@ namespace FCLIB::HW
     InputPinComponent::InputPinComponent() : PinComponent()
     {
         log.setModuleName("InputPinComponent");
-        log.always("----- InputPinComponent 0x%lx", this);
+        log.debug("----- InputPinComponent 0x%lx", this);
         currentState = 0;
         lastStateChangeMsecs = 0;
         debounceMsecs = DEBOUNCE_MSECS;
@@ -25,13 +25,13 @@ namespace FCLIB::HW
 
     bool InputPinComponent::setupPin()
     {
-        log.always("setup pin %d  0x%lx", pin, this);
+        log.debug("setup pin %d  0x%lx", pin, this);
         if (pin < 0)
         {
             return false;
         }
 
-        log.always("\tinput");
+        log.debug("\tinput");
         pinMode(pin, INPUT);
         currentState = digitalRead(pin);
         debounceState = currentState;

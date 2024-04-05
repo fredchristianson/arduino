@@ -4,7 +4,7 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    MotionSensor::MotionSensor(Device *device, HW::Motion *hardware, const char *name) : BinarySensor(device, hardware, name)
+    MotionSensor::MotionSensor(HW::Motion *hardware, const char *name) : BinarySensor(hardware, name)
     {
         deviceClass = "motion";
         events.handle(EventType::MOTION_START_EVENT, hardware, [this](Event *)

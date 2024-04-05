@@ -23,6 +23,8 @@ namespace FCLIB::HA
 
     void Device::add(Entity *entity)
     {
+        log.debug("add entity: %x %s", entity, entity->getUniqueName());
+        entity->device = this;
         entity->componentTypeIndex = 0;
         for (int i = 0; i < entities.size(); i++)
         {
