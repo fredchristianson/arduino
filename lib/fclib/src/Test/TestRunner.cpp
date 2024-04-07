@@ -1,6 +1,8 @@
 #include "fclib/Test.h"
 #include "fclib/System.h"
 #include "fclib/File.h"
+#include "fclib/Event.h"
+#include "fclib/Task.h"
 
 using namespace FCLIB;
 using namespace FCLIB::TEST;
@@ -9,6 +11,9 @@ const char *testRunnerDivider = "===============================================
 const char *testSuiteDivider = "--------------------------------------------------------------";
 TestRunner::TestRunner(const char *name, Logger &logger) : log(logger)
 {
+    // make sure singletons created for mem leak detecting
+    EventManager::processEvents();
+    TaskQueue::process();
     Board *board = Board::get();
     log.info(String(40, '=').c_str());
 

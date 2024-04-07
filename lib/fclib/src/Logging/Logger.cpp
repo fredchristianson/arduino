@@ -16,6 +16,11 @@ long lastErrorTime = 0;
 ILogDestination *dest = new LogSerialDestination();
 ILogFormatter *formatter = new LogDefaultFormatter();
 
+void Logger::setDefaultLevel(LogLevel level)
+{
+    FCLIB::setDefaultLoggerLevel(level);
+}
+
 Logger::Logger(const char *moduleName, LogLevel level)
 {
     this->setModuleName(moduleName);

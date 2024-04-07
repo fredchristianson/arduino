@@ -32,6 +32,8 @@ namespace FCLIB
             bool notNull(void *val, const char *testMessage, ResultType errorType = FAIL);
             bool null(void *val, const char *testMessage, ResultType errorType = FAIL);
             bool test(bool isSuccess, const char *testMessage, ResultType errorType = FAIL) { return equal(isSuccess, true, testMessage, errorType); }
+            bool isTrue(bool isSuccess, const char *testMessage, ResultType errorType = FAIL) { return equal(isSuccess, true, testMessage, errorType); }
+            bool isFalse(bool isSuccess, const char *testMessage, ResultType errorType = FAIL) { return notEqual(isSuccess, true, testMessage, errorType); }
 
             bool isSuccess() const { return type != FAIL; }
             bool isFail() const { return type == FAIL; }

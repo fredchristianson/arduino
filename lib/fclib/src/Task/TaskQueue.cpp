@@ -82,21 +82,21 @@ namespace FCLIB
         for (int i = 0; i < tasks.size(); i++)
         {
             Task *task = tasks[i];
-            log.never("Check task %d %x", i, task);
+            log.debug("Check task %d %x", i, task);
 
             TaskStatus status = task->updateStatus();
-            log.never("\tstatus %d", status);
+            log.debug("\tstatus %d", status);
             if (status == TASK_READY)
             {
-                log.never("Run task 0x%lx", task);
+                log.debug("Run task 0x%lx", task);
                 task->doTask();
             }
             else if (status == TASK_COMPLETE)
             {
-                log.never("delete task %x", task);
+                log.debug("delete task %x", task);
                 tasks.remove(task);
                 delete task;
-                log.never("deleted.  size=%d", tasks.size());
+                log.debug("deleted.  size=%d", tasks.size());
                 i--;
             }
         }

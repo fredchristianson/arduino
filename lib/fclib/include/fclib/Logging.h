@@ -27,6 +27,8 @@ namespace FCLIB
     class Logger
     {
     public:
+        static void setDefaultLevel(LogLevel level);
+
         static void setModuleLevel(const char *moduleName, LogLevel level);
         static Logger &create(const char *moduleName, LogLevel level = DEFAULT_LEVEL) { return *(new Logger(moduleName, level)); }
 

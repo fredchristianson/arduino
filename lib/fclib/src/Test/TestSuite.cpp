@@ -19,6 +19,7 @@ TestSuite::~TestSuite()
 
 bool TestSuite::run()
 {
+
     log->info("\tRunning test suite %s", name.c_str());
     prepare();
     runTests();

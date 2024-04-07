@@ -64,8 +64,8 @@ namespace FCLIB
                 {
                     return (T *)getAt(i);
                 }
-                return NULL;
             }
+            return NULL;
         }
 
         void removeIf(TestCallback<T *> match)
@@ -78,6 +78,15 @@ namespace FCLIB
                     i--;
                 }
             }
+        }
+
+        void deleteAll()
+        {
+            for (uint16 i = 0; i < size(); i++)
+            {
+                delete getAt(i);
+            }
+            clear();
         }
     };
     namespace TEST

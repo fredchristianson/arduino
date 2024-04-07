@@ -48,18 +48,14 @@ namespace FCLIB
         {
             return NULL;
         }
-        void *result = NULL;
-        if (index + 1 < used)
-        {
+        void *result = items[index];
 
-            result = items[index];
-            // memcpy isn't working.  copy each pointer
-            for (int i = index; i + 1 < used; i++)
-            {
-                items[i] = items[i + 1];
-            }
-            // memcpy(items + index * LIST_ITEM_PTR_SIZE, items + (index + 1) * LIST_ITEM_PTR_SIZE, (used - index) * LIST_ITEM_PTR_SIZE);
+        // memcpy isn't working.  copy each pointer
+        for (int i = index; i + 1 < used; i++)
+        {
+            items[i] = items[i + 1];
         }
+        // memcpy(items + index * LIST_ITEM_PTR_SIZE, items + (index + 1) * LIST_ITEM_PTR_SIZE, (used - index) * LIST_ITEM_PTR_SIZE);
         used -= 1;
         return result;
     }

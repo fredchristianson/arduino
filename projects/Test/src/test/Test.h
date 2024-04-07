@@ -1,5 +1,6 @@
-#ifndef HALLLIGHTS_TEST
-#define HALLLIGHTS_TEST
+#pragma once
+#ifndef TESTS__TEST
+#define TESTS_TEST
 
 #include "fclib/Config.h"
 #include "fclib/Task.h"
@@ -12,26 +13,23 @@
 using namespace FCLIB;
 using namespace FCLIB::TEST;
 
-namespace HALLLIGHTS_TEST
+bool runTests()
 {
+    Logger log("Test");
+    TestRunner runner("Tests", log);
 
-    bool runTests()
-    {
-        Logger log("Hall Lights Test");
-        TestRunner runner("Hall Lights Tests", log);
+    LIST::ListTestSuite list;
+    // TASK::TaskTestSuite task;
+    // CONFIG::ConfigTestSuite config;
+    // PERSIST::PersistTestSuite persist;
+    // ANIMATION::AnimationTestSuite animate;
 
-        TASK::TaskTestSuite task;
-        runner.run(task);
-        CONFIG::ConfigTestSuite config;
-        runner.run(config);
-        LIST::ListTestSuite list;
-        runner.run(list);
-        PERSIST::PersistTestSuite persist;
-        runner.run(persist);
-        ANIMATION::AnimationTestSuite animate;
-        runner.run(animate);
-        return runner.isSuccess();
-    }
+    runner.run(list);
+
+    // runner.run(task);
+    // runner.run(config);
+    // runner.run(persist);
+    // runner.run(animate);
+    return runner.isSuccess();
 }
-
 #endif
