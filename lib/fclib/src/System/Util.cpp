@@ -36,6 +36,18 @@ namespace FCLIB
             }
             return strcmp(s1, s2) == 0;
         }
+        bool equalIgnoreCase(const char *s1, const char *s2)
+        {
+            if (s1 == s2)
+            {
+                return true;
+            }
+            if ((s1 == NULL && s2 != NULL) || (s1 != NULL && s2 == NULL))
+            {
+                return false;
+            }
+            return strcasecmp(s1, s2) == 0;
+        }
 
         bool equalAny(const char *s1, const char *match1, const char *match2 = NULL, const char *match3 = NULL, const char *match4 = NULL)
         {

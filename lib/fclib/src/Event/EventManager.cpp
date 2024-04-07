@@ -7,7 +7,7 @@ namespace FCLIB
     /* EventManager Static */
     /***********************/
 
-    EventManager *singletonEventManager;
+    EventManager *singletonEventManager = NULL;
 
     EventManager *EventManager::get()
     {
@@ -45,6 +45,8 @@ namespace FCLIB
 
     EventManager::~EventManager()
     {
+        events->forEach([](Event *event)
+                        { delete event; });
     }
     void EventManager::addListener(EventListener *listener)
     {

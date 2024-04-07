@@ -6,7 +6,7 @@ using namespace FCLIB;
 
 namespace FCLIB
 {
-    Persist::Persist() : log("Persist")
+    Persist::Persist() : log("Persist", DEBUG_LEVEL)
     {
         load("/persist.ini");
         listener.handle(EventType::CHANGE_EVENT, this, [this](Event *event)
@@ -14,11 +14,11 @@ namespace FCLIB
     }
     Persist::~Persist()
     {
+        log.debug("~Persist()");
     }
 
     void Persist::persistChanges()
     {
-        log.info("persistChanges");
         save("/persist.ini");
     }
 
@@ -27,9 +27,17 @@ namespace FCLIB
     {
         if (singleton == NULL)
         {
+            Logger log("Persist static");
+            log.never("Create Persist singleton");
             singleton = new Persist();
         }
         return singleton;
+    }
+
+    void Persist::freeMemory()
+    {
+        delete singleton;
+        singleton = NULL;
     }
 
     void Persist::store()

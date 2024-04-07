@@ -7,6 +7,11 @@ using namespace FCLIB;
 namespace FCLIB
 {
     Logger confLogger("ConfigValue");
+
+    ConfigValue::~ConfigValue()
+    {
+    }
+
     void ConfigValue::set(const char *value)
     {
         setChanged(!this->stringValue.equals(value));
@@ -27,7 +32,10 @@ namespace FCLIB
             {
                 confLogger.never("section change %x %x", this->section, this->section->getConfig());
                 Event::trigger(EventType::CHANGE_EVENT, this->section, this);
-                Event::trigger(EventType::CHANGE_EVENT, this->section->getConfig(), this);
+                if (this->section->getConfig() != NULL)
+                {
+                    Event::trigger(EventType::CHANGE_EVENT, this->section->getConfig(), this);
+                }
             }
         }
         else
@@ -40,99 +48,103 @@ namespace FCLIB
         setChanged(intValue != value);
         this->intValue = value;
         this->type = INT_TYPE;
-        setChanged(changed);
     }
     void ConfigValue::set(float value)
     {
         setChanged(value != floatValue);
         this->floatValue = value;
         this->type = FLOAT_TYPE;
-        setChanged(changed);
     }
     void ConfigValue::set(bool value)
     {
         setChanged(value != boolValue);
         this->boolValue = value;
         this->type = BOOL_TYPE;
-        setChanged(changed);
     }
 
-    const String &ConfigValue::toString()
+    const char *ConfigValue::toString() const
     {
+        String sval = "";
         switch (type)
         {
         case STRING_TYPE:
+            sval = stringValue;
             break;
         case INT_TYPE:
-            stringValue = String(intValue);
+            sval = String(intValue);
             break;
         case FLOAT_TYPE:
-            stringValue = String(floatValue);
+            sval = String(floatValue);
             break;
         case BOOL_TYPE:
-            stringValue = boolValue ? "True" : "False";
+            sval = boolValue ? "True" : "False";
             break;
         }
-        return stringValue;
+        String *sv = (String *)&stringValue;
+        *sv = sval;
+        return stringValue.c_str();
     }
 
     int ConfigValue::toInt()
     {
+        int val = 0;
         switch (type)
         {
         case STRING_TYPE:
-            intValue = atoi(stringValue.c_str());
+            val = atoi(stringValue.c_str());
             break;
         case INT_TYPE:
-            // have it
+            val = intValue;
             break;
         case FLOAT_TYPE:
-            intValue = floatValue;
+            val = floatValue;
             break;
         case BOOL_TYPE:
-            intValue = boolValue ? 1 : 0;
+            val = boolValue ? 1 : 0;
             break;
         }
-        return intValue;
+        return val;
     }
 
     float ConfigValue::toFloat()
     {
+        float val = 0;
         switch (type)
         {
         case STRING_TYPE:
-            floatValue = atof(stringValue.c_str());
+            val = atof(stringValue.c_str());
             break;
         case INT_TYPE:
-            floatValue = intValue;
+            val = intValue;
             break;
         case FLOAT_TYPE:
-            // have it
+            val = floatValue;
             break;
         case BOOL_TYPE:
-            floatValue = boolValue ? 1 : 0;
+            val = boolValue ? 1 : 0;
             break;
         }
-        return floatValue;
+        return val;
     }
 
     bool ConfigValue::toBool()
     {
+        bool val = false;
         switch (type)
         {
         case STRING_TYPE:
-            boolValue = !(stringValue.length() == 0 || stringValue.equalsIgnoreCase("false") || stringValue.equals("0"));
+            val = !(stringValue.length() == 0 || stringValue.equalsIgnoreCase("false") || stringValue.equals("0"));
             break;
         case INT_TYPE:
-            boolValue = intValue != 0;
+            val = intValue != 0;
             break;
         case FLOAT_TYPE:
-            boolValue = floatValue != 0;
+            val = floatValue != 0;
             break;
         case BOOL_TYPE:
-            // have it
+            val = boolValue;
             break;
         }
-        return boolValue;
+        return val;
     }
 }

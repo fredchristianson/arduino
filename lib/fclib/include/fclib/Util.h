@@ -13,6 +13,7 @@ namespace FCLIB
         bool startsWith(const char *var, const char *prefix);
 
         bool equal(const char *s1, const char *s2);
+        bool equalIgnoreCase(const char *s1, const char *s2);
 
         bool equalAny(const char *s1, const char *match1, const char *match2 = NULL, const char *match3 = NULL, const char *match4 = NULL);
 

@@ -16,10 +16,13 @@ namespace FCLIB
     }
     ListBase::~ListBase()
     {
+        // Logger log("ListBase");
+        // log.showMemory("free list items");
         free(items);
+        // log.showMemory("\tfreed list items");
     }
 
-    uint16 ListBase::size()
+    uint16 ListBase::size() const
     {
         return used;
     }
@@ -56,7 +59,7 @@ namespace FCLIB
                 items[i] = items[i + 1];
             }
             // memcpy(items + index * LIST_ITEM_PTR_SIZE, items + (index + 1) * LIST_ITEM_PTR_SIZE, (used - index) * LIST_ITEM_PTR_SIZE);
-                }
+        }
         used -= 1;
         return result;
     }
@@ -73,7 +76,9 @@ namespace FCLIB
             void **newItems = (void **)malloc(capacity * LIST_ITEM_PTR_SIZE);
             memcpy(newItems, items, used * LIST_ITEM_PTR_SIZE);
             memset(newItems + used * LIST_ITEM_PTR_SIZE, 0, (capacity - used) * LIST_ITEM_PTR_SIZE);
+            Logger log("ListBase");
             free(items);
+
             items = newItems;
         }
         items[used++] = item;

@@ -1,0 +1,42 @@
+Processing nodemcuv2 (platform: espressif8266; board: nodemcuv2; framework: arduino)
+--------------------------------------------------------------------------------
+Library Manager: Installing adafruit/NeoPixel @ ^1.12.0
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif8266/nodemcuv2.html
+PLATFORM: Espressif 8266 (4.2.1) > NodeMCU 1.0 (ESP-12E Module)
+HARDWARE: ESP8266 80MHz, 80KB RAM, 4MB Flash
+PACKAGES: 
+ - framework-arduinoespressif8266 @ 3.30102.0 (3.1.2) 
+ - tool-esptool @ 1.413.0 (4.13) 
+ - tool-esptoolpy @ 1.30000.201119 (3.0.0) 
+ - toolchain-xtensa @ 2.100300.220621 (10.3.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ deep, Compatibility ~ soft
+Found 42 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- fclib @ 0.0.1
+Building in release mode
+Compiling .pio\build\nodemcuv2\libd04\FastLED\FastLED.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\bitswap.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\colorpalettes.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\colorutils.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\hsv2rgb.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\lib8tion.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\noise.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\platforms.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\platforms\esp\32\clockless_rmt_esp32.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\power_mgt.cpp.o
+Compiling .pio\build\nodemcuv2\libd04\FastLED\wiring.cpp.o
+Compiling .pio\build\nodemcuv2\src\main.cpp.o
+Generating LD script .pio\build\nodemcuv2\ld\local.eagle.app.v6.common.ld
+Compiling .pio\build\nodemcuv2\libd74\SoftwareSerial\SoftwareSerial.cpp.o
+Compiling .pio\build\nodemcuv2\lib7f7\SPI\SPI.cpp.o
+Compiling .pio\build\nodemcuv2\lib48f\fclib\App\App.cpp.o
+Compiling .pio\build\nodemcuv2\lib48f\fclib\Led\Color.cpp.o
+Compiling .pio\build\nodemcuv2\lib48f\fclib\Led\CompositeStrip.cpp.o
+Compiling .pio\build\nodemcuv2\lib48f\fclib\Led\LedStrip.cpp.o
+Compiling .pio\build\nodemcuv2\lib48f\fclib\Led\Matrix\Matrix.cpp.o
+Compiling .pio\build\nodemcuv2\lib48f\fclib\Led\NeoPixelStrip.cpp.o
+Compiling .pio\build\nodemcuv2\lib48f\fclib\Led\StripLength.cpp.o
+Compiling .pio\build\nodemcuv2\lib48f\fclib\Led\StripLoop.cpp.o

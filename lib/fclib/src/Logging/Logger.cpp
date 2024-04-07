@@ -3,6 +3,7 @@
 #include "fclib/System.h"
 #include "fclib/Logging.h"
 #include "fclib/Config.h"
+#include "fclib/Util.h"
 #include "./Formatter.h"
 #include "./Destination.h"
 
@@ -314,19 +315,20 @@ LogLevel getLogLevel(const String &text)
 void FCLIB::configureLogging(ConfigSection *config)
 {
     Logger log("Logger Conf", WARN_LEVEL);
-    for (int i = 0; i < config->values.size(); i++)
+    const List<ConfigValue> values = config->getValues();
+    for (int i = 0; i < values.size(); i++)
     {
-        ConfigValue *value = config->values[i];
+        const ConfigValue *value = values[i];
         LogLevel level = getLogLevel(value->toString());
-        if (value->name.equalsIgnoreCase("default"))
+        if (Util::equalIgnoreCase(value->getName(), "default"))
         {
-            log.debug("default: %s", value->toString().c_str());
+            log.debug("default: %s", value->toString());
             setDefaultLoggerLevel(level);
         }
         else
         {
-            log.debug("%s: %s", value->name.c_str(), value->toString().c_str());
-            setModuleLoggerLevel(value->name.c_str(), level);
+            log.debug("%s: %s", value->getName(), value->toString());
+            setModuleLoggerLevel(value->getName(), level);
         }
     }
 }

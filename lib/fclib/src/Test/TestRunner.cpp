@@ -32,7 +32,7 @@ TestRunner::~TestRunner()
     long endMemory = board->getFreeHeap();
     if (startMemory != endMemory)
     {
-        log.error("Memory leak: %d bytes", endMemory - startMemory);
+        log.error("Memory leak: %d bytes", startMemory - endMemory);
     }
     log.info(testRunnerDivider);
 }

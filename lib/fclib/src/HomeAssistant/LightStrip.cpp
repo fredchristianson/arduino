@@ -56,7 +56,7 @@ namespace FCLIB::HA
         }
         else if (color.getType() == ColorType::TEMP)
         {
-            log.debug("publich temp: %d", color.toTemp().mireds());
+            log.debug("publish temp: %d", color.toTemp().mireds());
             doc["color"] = "color_temp";
             doc["color_temp"] = color.toTemp().mireds();
         }

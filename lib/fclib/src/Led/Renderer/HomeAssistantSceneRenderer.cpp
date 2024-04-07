@@ -30,7 +30,9 @@ namespace FCLIB
 
     void HomeAssistantSceneRenderer::saveState(SceneState &state)
     {
+        log.showMemory("Before psersist");
         Persist::set("hascene", "brightness", state.brightness);
+        log.showMemory("After  psersist");
         Color::RGB rgb = state.color.toRGB();
         Persist::set("hascene", "r", rgb.red());
         Persist::set("hascene", "g", rgb.green());
@@ -90,27 +92,28 @@ namespace FCLIB
     void HomeAssistantSceneRenderer::startTransition()
     {
         start();
-        log.always("start transition: %d %d,%d,%d %d-%d %d", transition.to.color.getType(),
-                   transition.to.color.toRGB().red(),
-                   transition.to.color.toRGB().green(),
-                   transition.to.color.toRGB().blue(),
-                   transition.from.brightness,
-                   transition.to.brightness,
-                   transition.transistionMsecs);
-        animateColor.onChange([this](const Color &newColor)
-                              { 
-                                Color::RGB rgb = newColor.toRGB();
-                               // this->log.always("new color RGB %d,%d,%d",rgb.red(),rgb.green(),rgb.blue());
-                                Event::trigger(EventType::CHANGE_EVENT, this);
+        log.never("start transition: %d %d,%d,%d %d-%d %d", transition.to.color.getType(),
+                  transition.to.color.toRGB().red(),
+                  transition.to.color.toRGB().green(),
+                  transition.to.color.toRGB().blue(),
+                  transition.from.brightness,
+                  transition.to.brightness,
+                  transition.transistionMsecs);
+        /*   animateColor.onChange([this](const Color &newColor)
+                                 {
+                                   Color::RGB rgb = newColor.toRGB();
+                                  // this->log.never("new color RGB %d,%d,%d",rgb.red(),rgb.green(),rgb.blue());
+                                   Event::trigger(EventType::CHANGE_EVENT, this);
 
-                                this->currentState.color = newColor; })
-            .startColor(transition.from.color)
-            .endColor(transition.to.color)
-            .msecs(transition.transistionMsecs, AnimationTimeType::SET)
-            .run();
+                                   this->currentState.color = newColor; })
+               .startColor(transition.from.color)
+               .endColor(transition.to.color)
+               .msecs(transition.transistionMsecs, AnimationTimeType::SET)
+               .run();
+
         animateBrightness.onChange([this](int val)
                                    {
-           // this->log.always("brightness change %d", val);
+           // this->log.never("brightness change %d", val);
             this->currentState.brightness = val;
             Event::trigger(EventType::CHANGE_EVENT, this); })
             .start(transition.from.brightness)
@@ -126,8 +129,32 @@ namespace FCLIB
             {
                 stop();
             } else {
-            this->saveState(this->currentState); 
+            this->saveState(this->currentState);
             } })
+            .run();
+*/
+        animateBrightness.onChange([this](int val)
+                                   {
+            // this->log.never("brightness change %d", val);
+            this->currentState.brightness = val;
+            Event::trigger(EventType::CHANGE_EVENT, this); })
+            .onDone([this]()
+                    {
+            // log.debug("transition done");
+            this->currentState = this->transition.to;
+            Event::trigger(EventType::TASK_DONE, this);
+
+            if (this->currentState.mode == SceneMode::MODE_OFF)
+            {
+                stop();
+            }
+            else
+            {
+                this->saveState(this->currentState);
+            } })
+            .start(transition.from.brightness)
+            .end(transition.to.brightness)
+            .msecs(transition.transistionMsecs)
             .run();
         currentState.mode = SceneMode::MODE_TRANSITION;
     }

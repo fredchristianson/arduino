@@ -14,7 +14,7 @@ namespace FCLIB
         ListBase(uint16 initSize = 20);
         virtual ~ListBase();
 
-        uint16 size();
+        uint16 size() const;
         bool contains(void *item) const;
         sint16 indexOf(void *item) const;
         void *removeAt(uint16 index);
@@ -45,7 +45,9 @@ namespace FCLIB
             return old;
         }
         T *getAt(uint16 index) { return (T *)get_item_at(index); }
+        const T *getAt(uint16 index) const { return (T *)get_item_at(index); }
         T *operator[](uint16 index) { return getAt(index); }
+        const T *operator[](uint16 index) const { return getAt(index); }
         void forEach(Callback<T *> callback)
         {
             for (int i = 0; i < size(); i++)

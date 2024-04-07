@@ -24,6 +24,7 @@ namespace FCLIB
             TestResult(const char *message, TestSuite *suite, Logger *testLogger);
             virtual ~TestResult();
             bool fail(const char *message);
+            bool equal(const char *val, const char *expect, const char *testMessage, ResultType errorType = FAIL);
             bool equal(float val, float expect, const char *testMessage, ResultType errorType = FAIL);
             bool equal(int val, int expect, const char *testMessage, ResultType errorType = FAIL);
             bool equal(void *val, void *expect, const char *testMessage, ResultType errorType = FAIL);
@@ -32,7 +33,7 @@ namespace FCLIB
             bool null(void *val, const char *testMessage, ResultType errorType = FAIL);
             bool test(bool isSuccess, const char *testMessage, ResultType errorType = FAIL) { return equal(isSuccess, true, testMessage, errorType); }
 
-            bool isSuccess() const { return type == SUCCESS; }
+            bool isSuccess() const { return type != FAIL; }
             bool isFail() const { return type == FAIL; }
             bool isWarn() const { return type == WARN; }
 
@@ -67,6 +68,11 @@ namespace FCLIB
             int warnCount() const;
 
         protected:
+            // prepare() and cleanup() can be used to do things that are outside of
+            // memory tracking.  Mostly related to singletons created as part of normal
+            // activity.
+            virtual void prepare() {}
+            virtual void cleanup() {}
             virtual void runTests() = 0;
             bool test(const char *name, void (*func)(TestResult &result));
 

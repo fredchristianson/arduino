@@ -95,13 +95,16 @@ namespace FCLIB
     }
     AnimationBase &AnimationBase::run()
     {
+
         if (task != NULL)
         {
+            log.never("end task %x", task);
             task->end();
         }
         task = Task::repeat([this]()
                             { this->update(); })
                    ->delayMsecs(1);
+
         animator.restart();
         return *this;
     }

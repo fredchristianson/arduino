@@ -31,8 +31,11 @@ void TestResult::failure(const char *message, ResultType err)
 void TestResult::warning(const char *message)
 {
     log->info("\t\t\tWarning: %s", message);
-
-    this->type = WARN;
+    // if test already failed, to change to warn level
+    if (this->type != FAIL)
+    {
+        this->type = WARN;
+    }
     // this->message = message;
 }
 
@@ -70,6 +73,29 @@ bool TestResult::equal(float val, float expect, const char *testMessage, ResultT
     }
 }
 
+bool TestResult::equal(const char *val, const char *expect, const char *testMessage, ResultType errType)
+{
+    if (val == expect)
+    {
+        this->success(testMessage);
+        return true;
+    }
+    else if (val == NULL || expect == NULL)
+    {
+        this->failure(testMessage, errType);
+        return errType != ResultType::FAIL;
+    }
+    else if (strcmp(val, expect) != 0)
+    {
+        this->failure(testMessage, errType);
+        return errType != ResultType::FAIL;
+    }
+    else
+    {
+        this->success(testMessage);
+        return true;
+    }
+}
 bool TestResult::equal(void *val, void *expect, const char *testMessage, ResultType errType)
 {
     if (val != expect)

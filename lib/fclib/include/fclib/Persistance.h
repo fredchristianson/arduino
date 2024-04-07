@@ -10,6 +10,10 @@ namespace FCLIB
     class Persist : public ConfigFile
     {
     public:
+        // get()/freeMemory() mainly for testing.
+        static Persist *get();
+        static void freeMemory(); // mainly for tests to free any allocated memory
+
         static String get(const char *owner, const char *name, const char *defaultValue);
 
         static int get(const char *owner, const char *name, int defaultValue);
@@ -24,6 +28,7 @@ namespace FCLIB
         static void set(const char *owner, const char *name, bool value);
 
         static void store(); // usually should not need this but can force a save
+
     private:
         Persist();
         virtual ~Persist();
@@ -31,9 +36,27 @@ namespace FCLIB
         void persistChanges();
 
         static Persist *singleton;
-        static Persist *get();
         EventListener listener;
         Logger log;
     };
+
+    namespace TEST
+    {
+        namespace PERSIST
+        {
+            class PersistTestSuite : public TestSuite
+            {
+            public:
+                PersistTestSuite();
+                virtual ~PersistTestSuite();
+
+            protected:
+                virtual void runTests() override;
+                virtual void prepare();
+                virtual void cleanup();
+                // void run();
+            };
+        }
+    }
 }
 #endif

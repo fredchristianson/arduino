@@ -42,8 +42,18 @@ namespace FCLIB
         virtual TaskStatus updateStatus() = 0;
         virtual void doTask() { action->doTask(); };
 
-        void setStatus(TaskStatus status) { this->status = status; }
-        void end() { this->status = TASK_COMPLETE; }
+        void setStatus(TaskStatus status)
+        {
+            if (this->status != TASK_COMPLETE)
+            {
+                this->status = status;
+            }
+        }
+        void end()
+        {
+            this->status = TASK_COMPLETE;
+            log.debug("task %x complete", this);
+        }
 
     protected:
         Task(TaskAction *action);
@@ -131,7 +141,6 @@ namespace FCLIB
         static void process();
         static TaskQueue *singleton;
         static TaskQueue *get();
-        static void destroy(); // only for tests
 
         void runTasks();
         uint16 size() { return tasks.size(); }

@@ -1,6 +1,6 @@
 #include "fclib/Config.h"
 #include "fclib/File.h"
-#include "Config.h"
+#include "fclib/Util.h"
 
 using namespace FCLIB;
 
@@ -15,6 +15,7 @@ namespace FCLIB
         for (int i = 0; i < this->sections.size(); i++)
         {
             ConfigSection *val = this->sections[i];
+            log.never("delete section %s", val->getName());
             delete val;
         }
     }
@@ -23,7 +24,7 @@ namespace FCLIB
     {
         for (int i = 0; i < sections.size(); i++)
         {
-            if (sections[i]->name.equalsIgnoreCase(name))
+            if (Util::equalIgnoreCase(sections[i]->getName(), name))
             {
                 return sections[i];
             }
@@ -34,6 +35,7 @@ namespace FCLIB
 
     ConfigSection *Config::createSection(const char *name)
     {
+        log.info("Create new section: %s", name);
         ConfigSection *section = new ConfigSection(this, name);
         sections.add(section);
         return section;

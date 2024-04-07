@@ -22,14 +22,6 @@ namespace FCLIB
         return singleton;
     }
 
-    void TaskQueue::destroy()
-    {
-        if (singleton != NULL)
-        {
-            delete singleton;
-        }
-        singleton = NULL;
-    }
     void TaskQueue::process()
     {
         if (singleton == NULL)

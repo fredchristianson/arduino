@@ -54,17 +54,24 @@ namespace FCLIB
             this->changed = false;
         }
 
+        virtual ~ConfigValue();
+
         void set(const char *value);
         void set(int value);
         void set(float value);
         void set(bool value);
 
-        const String &toString();
+        const char *toString() const;
         int toInt();
         float toFloat();
         bool toBool();
         bool isChanged() const { return changed; }
 
+        const char *getName() const { return name.c_str(); }
+        void clearChanged() { this->changed = false; }
+        void setSection(ConfigSection *s) { this->section = s; }
+
+    private:
         String name;
         ValueType type;
 
@@ -77,10 +84,11 @@ namespace FCLIB
         ConfigSection *section;
     };
 
-    struct ConfigSection
+    class ConfigSection
     {
+    public:
         ConfigSection(Config *config, const char *name);
-        ~ConfigSection();
+        virtual ~ConfigSection();
         void set(const char *name, const char *value);
         void set(const char *name, int value);
         void set(const char *name, float value);
@@ -96,13 +104,16 @@ namespace FCLIB
 
         void addValue(ConfigValue *value);
         bool isChanged();
-        String name;
-        List<ConfigValue> values;
-        Logger log;
+        const char *getName() const { return name.c_str(); }
         void clearChanged();
         Config *getConfig() { return config; }
 
+        const List<ConfigValue> getValues() const { return values; }
+
     private:
+        String name;
+        List<ConfigValue> values;
+        Logger log;
         void removeValue(ConfigValue *val);
         Config *config;
     };

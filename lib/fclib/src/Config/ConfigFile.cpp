@@ -37,11 +37,12 @@ namespace FCLIB
 
     FCLIB::ConfigFile::~ConfigFile()
     {
+        log.never("~ConfigFile");
     }
 
     bool FCLIB::ConfigFile::load(const char *filePath)
     {
-        log.debug("Load", filePath);
+        log.always("Load", filePath);
         this->filePath = filePath;
         FileReader reader(filePath);
         if (!reader.isOpen())
@@ -52,29 +53,35 @@ namespace FCLIB
         ConfigSection *section = getSection("default", true);
         while (reader.readLine(line))
         {
-            log.debug("\tgot line: %s", line.c_str());
+            log.always("\tgot line: %s", line.c_str());
             line.trim();
             if (line.startsWith("#"))
             {
-                log.debug("ignore comment");
+                log.always("ignore comment");
             }
             else if (line.startsWith("["))
             {
                 String sectionName = line.substring(1, line.length() - 1);
+                if (sectionName.length() == 0)
+                {
+                    sectionName = "unnamed";
+                }
                 section = getSection(sectionName.c_str(), true);
-                log.debug("Config Section: %s", sectionName.c_str());
+                log.always("Config Section: %s", sectionName.c_str());
             }
             else
             {
                 ConfigValue *value = parseLine(line);
                 if (value != NULL)
                 {
-                    log.debug("\t\tName: '%s'    Value: '%s'  Section: ['%s']", value->name.c_str(), value->toString().c_str(), section->name.c_str());
+                    log.always("\t\tName: '%s'    Value: '%s'  Section: ['%s']", value->getName(), value->toString(), section->getName());
                     section->addValue(value);
                 }
             }
         }
+        log.always("clear changes");
         clearChanged();
+        log.always("load complete");
         return true;
     }
 
@@ -85,13 +92,14 @@ namespace FCLIB
         {
             ConfigSection *section = sections.getAt(i);
             String line = "[";
-            line.concat(section->name);
+            line.concat(section->getName());
             line.concat("]");
             writer.writeLine(line);
-            for (int j = 0; j < section->values.size(); j++)
+            const List<ConfigValue> values = section->getValues();
+            for (int j = 0; j < values.size(); j++)
             {
-                ConfigValue *val = section->values[j];
-                line = val->name;
+                const ConfigValue *val = values[j];
+                line = val->getName();
                 line += "=";
                 line += val->toString();
                 writer.writeLine(line);

@@ -8,7 +8,6 @@ namespace FCLIB::TEST::ANIMATION
 {
     void testFloatAnimation(TestResult &result)
     {
-        TaskQueue::get();
         // wdt_disable();
         AnimateFloat a(0, 10);
 
@@ -23,7 +22,6 @@ namespace FCLIB::TEST::ANIMATION
         TaskQueue::process();
 
         result.equal(a.value(), 10.0, "end value correct");
-        TaskQueue::destroy();
     }
 
     void testCallbacks(TestResult &result)
@@ -44,7 +42,6 @@ namespace FCLIB::TEST::ANIMATION
         result.test(changeCallback, "got changeCallback");
         result.test(doneCallback, "got doneCallback");
         result.equal(a.value(), 10000, "final value correct");
-        TaskQueue::destroy();
     }
 
     void testRestart(TestResult &result)
@@ -60,7 +57,6 @@ namespace FCLIB::TEST::ANIMATION
         }
 
         result.equal(a.value(), 10000, "final value correct");
-        TaskQueue::destroy();
     }
 
     AnimationTestSuite::AnimationTestSuite() : TestSuite("AnimationTestSuite")

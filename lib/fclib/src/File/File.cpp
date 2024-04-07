@@ -33,6 +33,7 @@ FCLIB::FileReader::FileReader(const char *path) : FileBase(path)
 
 FCLIB::FileReader::~FileReader()
 {
+    delete buffer;
     file.close();
 }
 

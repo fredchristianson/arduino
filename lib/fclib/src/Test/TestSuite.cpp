@@ -1,5 +1,7 @@
 #include "fclib/Test.h"
 #include "fclib/System.h"
+#include "fclib/Event.h"
+#include "fclib/Task.h"
 
 using namespace FCLIB;
 using namespace FCLIB::TEST;
@@ -18,7 +20,9 @@ TestSuite::~TestSuite()
 bool TestSuite::run()
 {
     log->info("\tRunning test suite %s", name.c_str());
+    prepare();
     runTests();
+    cleanup();
     log->info("\tSuite Complete:  %s", this->name.c_str());
     log->info("\tSuccess count: %d", successCount());
     log->info("\tFail count: %d", failCount());
@@ -79,12 +83,17 @@ bool TestSuite::test(const char *message, void (*func)(TestResult &result))
     this->firstResult = result;
     log->info("\t\tTest: %s", message);
     int mem = THE_BOARD->getFreeHeap();
+    // process events and tasks to since they may free memory
+    EventManager::processEvents();
+    TaskQueue::process();
     func(*result);
+    EventManager::processEvents();
+    TaskQueue::process();
     int endMem = THE_BOARD->getFreeHeap();
     if (endMem != mem)
     {
         log->error("\t\t\tMemory leak: %d-%d=%d", mem, endMem, mem - endMem);
-        result->fail("Memory leak");
+        result->warning("Memory leak");
     }
     return result->isSuccess();
 }

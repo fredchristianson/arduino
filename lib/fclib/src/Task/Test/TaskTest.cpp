@@ -31,7 +31,6 @@ int TestTask::deleteCount = 0;
 void testQueueCreate(TestResult &result)
 {
     TaskQueue::get();
-    TaskQueue::destroy();
     result.success("TaskQueue created");
 }
 
@@ -39,9 +38,9 @@ void testQueueAdd(TestResult &result)
 {
     TestAction action;
     TaskQueue *queue = TaskQueue::get();
-    new TestTask(&action);
+    Task *t = new TestTask(&action);
     result.equal(1, queue->size(), "task added to queue");
-    TaskQueue::destroy();
+    t->end();
 }
 
 void testQueueRemove(TestResult &result)
@@ -53,7 +52,6 @@ void testQueueRemove(TestResult &result)
     task->end();
     queue->runTasks(); // should delete completed task
     result.equal(1, TestTask::deleteCount, "task deleted");
-    TaskQueue::destroy();
 }
 
 TaskTestSuite::TaskTestSuite() : TestSuite("TaskTestSuite")

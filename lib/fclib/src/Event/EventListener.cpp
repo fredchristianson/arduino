@@ -15,12 +15,12 @@ namespace FCLIB
 
     EventHandler *EventListener::handle(EventType type, EventHandlerCallback handler)
     {
-        Logger log("Event::trigger");
-        log.debug("create event");
+        Logger log("EventListener");
+        log.debug("create handler");
         EventHandler *ehandler = new EventHandler(type, NULL, handler);
-        log.debug("queue avent");
+        log.never("handler=%x", ehandler);
         handlers.add(ehandler);
-        log.debug("event added");
+        log.debug("handler added");
         return ehandler;
     }
     EventListener::EventListener()
@@ -29,6 +29,11 @@ namespace FCLIB
     }
     EventListener::~EventListener()
     {
+        handlers.forEach([](EventHandler *h)
+                         { 
+                            Logger log("~EventListener");
+                            log.never("delete handler %x",h);
+                            delete h; });
         EventManager::remove(this);
     }
 
