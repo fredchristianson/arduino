@@ -8,7 +8,7 @@ namespace FCLIB::HA
     {
         log.setModuleName("HA::LightStrip");
         log.setLevel(DEBUG_LEVEL);
-        publishThrottle.setMaxFrequency(250, TIME_MSECS);
+        publishThrottle.setMaxFrequency(1000, TIME_MSECS);
         this->renderer = render;
         this->deviceClass = "light";
         componentName = "light";

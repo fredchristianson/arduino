@@ -24,7 +24,7 @@ namespace FCLIB
     void ConfigValue::setChanged(bool isChanged)
     {
         changed = isChanged;
-        if (changed)
+        if (changed && EventManager::hasListener(EventType::CHANGE_EVENT))
         {
             confLogger.never(" change %lx", this->section);
             Event::trigger(EventType::CHANGE_EVENT, this, this);
@@ -48,6 +48,10 @@ namespace FCLIB
         setChanged(intValue != value);
         this->intValue = value;
         this->type = INT_TYPE;
+    }
+    void ConfigValue::set(double value)
+    {
+        set((float)value);
     }
     void ConfigValue::set(float value)
     {

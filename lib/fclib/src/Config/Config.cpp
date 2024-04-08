@@ -12,12 +12,7 @@ namespace FCLIB
 
     Config::~Config()
     {
-        for (int i = 0; i < this->sections.size(); i++)
-        {
-            ConfigSection *val = this->sections[i];
-            log.never("delete section %s", val->getName());
-            delete val;
-        }
+        sections.deleteAll();
     }
 
     ConfigSection *Config::getSection(const char *name, bool createIfNeeded)
@@ -41,24 +36,28 @@ namespace FCLIB
         return section;
     }
 
-    String Config::get(const char *name, const char *defaultValue)
+    const char *Config::get(const char *name, const char *defaultValue)
     {
         return get("default", name, defaultValue);
     }
 
-    String Config::get(const char *sectionName, const char *name, const char *defaultValue)
+    const char *Config::get(const char *sectionName, const char *name, const char *defaultValue)
     {
         ConfigSection *section = getSection(sectionName);
         ConfigValue *value = NULL;
         if (section != NULL)
         {
+            log.debug("get section value [%s]%s", section->getName(), name);
             value = section->getValue(name);
         }
         if (value == NULL)
         {
+            log.debug("get default value");
             section = getSection("default");
             value = section->getValue(name);
         }
+        log.conditional(value == NULL, DEBUG_LEVEL, "no value, use default %s", defaultValue);
+        log.conditional(value != NULL, DEBUG_LEVEL, "return value %s", value->toString());
         return value == NULL ? defaultValue : value->toString();
     }
 
@@ -165,7 +164,9 @@ namespace FCLIB
     {
         for (int i = 0; i < sections.size(); i++)
         {
+            log.never("clear changed %s", sections[i]->getName());
             sections[i]->clearChanged();
+            log.never("\tsection cleared");
         }
     }
 }

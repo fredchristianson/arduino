@@ -42,7 +42,7 @@ namespace FCLIB
 
     bool FCLIB::ConfigFile::load(const char *filePath)
     {
-        log.always("Load", filePath);
+        log.never("Load", filePath);
         this->filePath = filePath;
         FileReader reader(filePath);
         if (!reader.isOpen())
@@ -53,11 +53,11 @@ namespace FCLIB
         ConfigSection *section = getSection("default", true);
         while (reader.readLine(line))
         {
-            log.always("\tgot line: %s", line.c_str());
+            log.never("\tgot line: %s", line.c_str());
             line.trim();
             if (line.startsWith("#"))
             {
-                log.always("ignore comment");
+                log.never("ignore comment");
             }
             else if (line.startsWith("["))
             {
@@ -67,38 +67,41 @@ namespace FCLIB
                     sectionName = "unnamed";
                 }
                 section = getSection(sectionName.c_str(), true);
-                log.always("Config Section: %s", sectionName.c_str());
+                log.never("Config Section: %s", sectionName.c_str());
             }
             else
             {
                 ConfigValue *value = parseLine(line);
                 if (value != NULL)
                 {
-                    log.always("\t\tName: '%s'    Value: '%s'  Section: ['%s']", value->getName(), value->toString(), section->getName());
+                    log.never("\t\tName: '%s'    Value: '%s'  Section: ['%s']", value->getName(), value->toString(), section->getName());
                     section->addValue(value);
                 }
             }
         }
-        log.always("clear changes");
+        log.never("clear changes");
         clearChanged();
-        log.always("load complete");
+        log.never("load complete");
         return true;
     }
 
     bool ConfigFile::save(const char *filePath)
     {
+        log.never("save file %s", filePath);
         FileWriter writer(filePath);
         for (int i = 0; i < sections.size(); i++)
         {
             ConfigSection *section = sections.getAt(i);
+            log.never("save section 0x%lx %s", section, section->getName());
             String line = "[";
             line.concat(section->getName());
             line.concat("]");
             writer.writeLine(line);
-            const List<ConfigValue> values = section->getValues();
-            for (int j = 0; j < values.size(); j++)
+            for (int j = 0; j < section->valueCount(); j++)
             {
-                const ConfigValue *val = values[j];
+                const ConfigValue *val = section->getValueAt(j);
+                log.conditional(val, ALWAYS_LEVEL, "save value 0x%lx %s=%s", val, val->getName(), val->toString());
+                log.conditional(val == NULL, ALWAYS_LEVEL, "value is NULL");
                 line = val->getName();
                 line += "=";
                 line += val->toString();
@@ -106,8 +109,9 @@ namespace FCLIB
             }
             writer.writeLine("");
         }
+        log.never("clearChanged()");
         clearChanged();
-
+        log.never("save done");
         return true;
     }
 

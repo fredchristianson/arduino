@@ -49,4 +49,10 @@ namespace FCLIB
             } });
     }
 
+    bool EventListener::hasHandler(EventType type)
+    {
+        EventHandler *handler = handlers.first([type](EventHandler *h)
+                                               { return h->match(type); });
+        return handler != NULL;
+    }
 }

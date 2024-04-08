@@ -59,6 +59,7 @@ namespace FCLIB
         void set(const char *value);
         void set(int value);
         void set(float value);
+        void set(double value);
         void set(bool value);
 
         const char *toString() const;
@@ -108,7 +109,8 @@ namespace FCLIB
         void clearChanged();
         Config *getConfig() { return config; }
 
-        const List<ConfigValue> getValues() const { return values; }
+        uint16 valueCount() const { return values.size(); }
+        ConfigValue *getValueAt(uint16 i) { return values.getAt(i); }
 
     private:
         String name;
@@ -126,8 +128,8 @@ namespace FCLIB
 
         ConfigSection *getSection(const char *name, bool createIfNeeded = false);
 
-        String get(const char *name, const char *defaultValue = NULL);
-        String get(const char *section, const char *name, const char *defaultValue);
+        const char *get(const char *name, const char *defaultValue = NULL);
+        const char *get(const char *section, const char *name, const char *defaultValue);
 
         int get(const char *name, int defaultValue = 0);
         int get(const char *section, const char *name, int defaultValue);
@@ -189,7 +191,8 @@ namespace FCLIB
 
             protected:
                 virtual void runTests() override;
-                void run();
+                void prepare() override;
+                void cleanup() override;
             };
         }
     }

@@ -17,6 +17,18 @@ namespace FCLIB
         }
         return singletonEventManager;
     }
+
+    bool EventManager::hasListener(EventType type)
+    {
+        if (singletonEventManager == NULL)
+        {
+            return NULL;
+        }
+        EventListener *found = singletonEventManager->listeners.first([type](EventListener *listener)
+                                                                      { return listener->hasHandler(type); });
+        return found != NULL;
+    }
+
     void EventManager::add(EventListener *listener)
     {
         get()->addListener(listener);

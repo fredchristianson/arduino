@@ -132,8 +132,24 @@ FCLIB::FileSystem::FileSystem()
         singletonFileSysetem = this;
     }
 }
+FCLIB::FileSystem::~FileSystem()
+{
+}
 
 bool FCLIB::FileSystem::isMounted() const
 {
     return this->mounted;
+}
+
+bool FCLIB::FileSystem::remove(const char *path)
+{
+    return LittleFS.remove(path);
+}
+
+void FCLIB::FileSystem::unmount()
+{
+
+    LittleFS.end();
+    delete singletonFileSysetem;
+    singletonFileSysetem = NULL;
 }

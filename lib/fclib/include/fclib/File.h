@@ -3,6 +3,7 @@
 #include <WString.h>
 #include <LittleFS.h>
 #include "fclib/Logging.h"
+#include "fclib/Test.h"
 
 namespace FCLIB
 {
@@ -17,6 +18,7 @@ namespace FCLIB
         void format();
 
         bool isMounted() const;
+        bool remove(const char *path);
 
     protected:
         FileSystem();
@@ -48,6 +50,11 @@ namespace FCLIB
 
         void close();
         bool isOpen() { return this->file; }
+        bool remove()
+        {
+            close();
+            return FileSystem::get()->remove(path.c_str());
+        }
 
     protected:
         File file;
@@ -81,5 +88,36 @@ namespace FCLIB
 
     private:
     };
+
+    class FileAppender : public FileWriter
+    {
+    public:
+        FileAppender(const char *path) : FileWriter(path, true) {}
+        virtual ~FileAppender() {}
+    };
+
+    namespace TEST
+    {
+        namespace FILE
+        {
+            class FileTestSuite : public TestSuite
+            {
+            public:
+                FileTestSuite();
+                virtual ~FileTestSuite();
+
+            protected:
+                virtual void runTests() override;
+                void prepare() override
+                {
+                    FileSystem::get();
+                }
+                void cleanup() override
+                {
+                    FileSystem::get()->unmount();
+                }
+            };
+        }
+    }
 }
 #endif

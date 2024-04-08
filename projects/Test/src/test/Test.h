@@ -9,6 +9,7 @@
 #include "fclib/List.h"
 #include "fclib/Animation.h"
 #include "fclib/Persistance.h"
+#include "fclib/File.h"
 
 using namespace FCLIB;
 using namespace FCLIB::TEST;
@@ -19,15 +20,17 @@ bool runTests()
     TestRunner runner("Tests", log);
 
     LIST::ListTestSuite list;
+    TEST::FILE::FileTestSuite file;
+    CONFIG::ConfigTestSuite config;
     // TASK::TaskTestSuite task;
-    // CONFIG::ConfigTestSuite config;
     // PERSIST::PersistTestSuite persist;
     // ANIMATION::AnimationTestSuite animate;
 
     runner.run(list);
-
+    runner.run(file);
+    runner.run(config);
     // runner.run(task);
-    // runner.run(config);
+    //
     // runner.run(persist);
     // runner.run(animate);
     return runner.isSuccess();

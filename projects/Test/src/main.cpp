@@ -16,7 +16,7 @@ bool testsPass = true;
 
 void setup()
 {
-    Logger::setDefaultLevel(DEBUG_LEVEL);
+    Logger::setDefaultLevel(INFO_LEVEL);
 
     int test = 0;
     logger->info("stack %lx", &test);

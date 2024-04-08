@@ -83,7 +83,7 @@ namespace FCLIB
     class AnimateInt : public AnimationBase
     {
     public:
-        AnimateInt(int start = 0, int end = 100, Calculate<float> easing = Ease::linear) : AnimationBase(start, end, easing) {}
+        AnimateInt(int start = 0, int end = 100, Calculate<float> easing = Ease::linear) : AnimationBase(start, end, easing) { callback = NULL; }
         virtual ~AnimateInt() {}
 
         AnimateInt &onChange(Callback<int> callback)
@@ -111,7 +111,7 @@ namespace FCLIB
     class AnimateFloat : public AnimationBase
     {
     public:
-        AnimateFloat(float start = 0, float end = 100, Calculate<float> easing = Ease::linear) : AnimationBase(start, end, easing) {}
+        AnimateFloat(float start = 0, float end = 100, Calculate<float> easing = Ease::linear) : AnimationBase(start, end, easing) { callback = NULL; }
         virtual ~AnimateFloat() {}
         AnimateFloat &onChange(Callback<float> callback)
         {

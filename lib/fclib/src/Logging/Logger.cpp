@@ -320,10 +320,9 @@ LogLevel getLogLevel(const String &text)
 void FCLIB::configureLogging(ConfigSection *config)
 {
     Logger log("Logger Conf", WARN_LEVEL);
-    const List<ConfigValue> values = config->getValues();
-    for (int i = 0; i < values.size(); i++)
+    for (int i = 0; i < config->valueCount(); i++)
     {
-        const ConfigValue *value = values[i];
+        const ConfigValue *value = config->getValueAt(i);
         LogLevel level = getLogLevel(value->toString());
         if (Util::equalIgnoreCase(value->getName(), "default"))
         {

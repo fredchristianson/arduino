@@ -43,7 +43,7 @@ namespace FCLIB
         friend EventManager;
         friend EventListener;
 
-        virtual bool match(EventType type, const void *sender);
+        virtual bool match(EventType type, const void *sender = NULL);
         virtual void handle(Event *);
 
         EventType type;
@@ -61,6 +61,8 @@ namespace FCLIB
         EventHandler *handle(EventType type, EventHandlerCallback callback);
         EventHandler *handleChange(EventHandlerCallback callback) { return handle(EventType::CHANGE_EVENT, callback); }
         EventHandler *handleChange(void *sender, EventHandlerCallback callback) { return handle(EventType::CHANGE_EVENT, sender, callback); }
+
+        bool hasHandler(EventType type);
 
     private:
         friend EventManager;
@@ -112,7 +114,7 @@ namespace FCLIB
         static void remove(EventListener *listener);
         static void add(Event *event);
         static void processEvents();
-
+        static bool hasListener(EventType type);
         static EventManager *get();
 
     private:

@@ -16,21 +16,23 @@ namespace FCLIB
     ConfigSection::~ConfigSection()
     {
         log.never("~ConfigSection() %s", name);
-        for (int i = 0; i < this->values.size(); i++)
-        {
-            ConfigValue *val = this->values[i];
-            log.never("delete value %s", val->getName());
-            delete val;
-        }
+        values.deleteAll();
     }
 
     void ConfigSection::clearChanged()
     {
+        log.never("clearChanged() section 0x%lx", this);
         for (int i = 0; i < this->values.size(); i++)
         {
+            log.never("call clearChanged val %d of %d", i, this->values.size());
             ConfigValue *val = this->values[i];
+            log.conditional(val == NULL, ALWAYS_LEVEL, "val is NULL");
+            log.never("value 0x%lx", val);
+            log.never("\tname=%s", val->getName());
             val->clearChanged();
+            log.never("value cleared");
         }
+        log.debug("all cleared");
     }
 
     ConfigValue *ConfigSection::getValue(const char *name)

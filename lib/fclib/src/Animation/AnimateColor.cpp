@@ -6,6 +6,8 @@ namespace FCLIB
 {
     AnimateColor::AnimateColor(float start, float end, Calculate<float> easing) : AnimationBase(start, end, easing)
     {
+        this->callback = NULL;
+        this->doneCallback = NULL;
     }
 
     bool AnimateColor::update()
@@ -42,7 +44,7 @@ namespace FCLIB
             current = Color::fromMired(m);
             change = old.mireds() != m;
         }
-        if (change)
+        if (change && callback != NULL)
         {
             callback(current);
         }

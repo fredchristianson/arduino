@@ -99,17 +99,14 @@ namespace FCLIB
                   transition.from.brightness,
                   transition.to.brightness,
                   transition.transistionMsecs);
-        /*   animateColor.onChange([this](const Color &newColor)
-                                 {
+        animateColor.onChange([this](const Color &newColor)
+                              {
                                    Color::RGB rgb = newColor.toRGB();
-                                  // this->log.never("new color RGB %d,%d,%d",rgb.red(),rgb.green(),rgb.blue());
-                                   Event::trigger(EventType::CHANGE_EVENT, this);
-
                                    this->currentState.color = newColor; })
-               .startColor(transition.from.color)
-               .endColor(transition.to.color)
-               .msecs(transition.transistionMsecs, AnimationTimeType::SET)
-               .run();
+            .startColor(transition.from.color)
+            .endColor(transition.to.color)
+            .msecs(transition.transistionMsecs, AnimationTimeType::SET)
+            .run();
 
         animateBrightness.onChange([this](int val)
                                    {
@@ -132,30 +129,7 @@ namespace FCLIB
             this->saveState(this->currentState);
             } })
             .run();
-*/
-        animateBrightness.onChange([this](int val)
-                                   {
-            // this->log.never("brightness change %d", val);
-            this->currentState.brightness = val;
-            Event::trigger(EventType::CHANGE_EVENT, this); })
-            .onDone([this]()
-                    {
-            // log.debug("transition done");
-            this->currentState = this->transition.to;
-            Event::trigger(EventType::TASK_DONE, this);
 
-            if (this->currentState.mode == SceneMode::MODE_OFF)
-            {
-                stop();
-            }
-            else
-            {
-                this->saveState(this->currentState);
-            } })
-            .start(transition.from.brightness)
-            .end(transition.to.brightness)
-            .msecs(transition.transistionMsecs)
-            .run();
         currentState.mode = SceneMode::MODE_TRANSITION;
     }
     void HomeAssistantSceneRenderer::turnOn(int transitionSeconds)
