@@ -118,15 +118,19 @@ Color::HSV Color::RGBToHSV(const RGB &rgb)
 const Color::RGB approxMiredToColorRGB[8] = {
 
     Color::RGB(0xd6, 0xdf, 0xff),
-    Color::RGB(0xe2, 0xe7, 0xff),
-    Color::RGB(0xf4, 0xf2, 0xff),
-    Color::RGB(0xff, 0xf3, 0xf0),
-    Color::RGB(0xff, 0xe6, 0xcf),
-    Color::RGB(0xff, 0xd3, 0xa5),
-    Color::RGB(0xff, 0xb8, 0x6f),
+    Color::RGB(0xe2, 0xe7, 0xef),
+    Color::RGB(0xf4, 0xf2, 0xdf),
+    Color::RGB(0xff, 0xf3, 0xb0),
+    Color::RGB(0xff, 0xe6, 0xaf),
+    Color::RGB(0xff, 0xd3, 0x8f),
+    Color::RGB(0xff, 0xb8, 0x4f),
     Color::RGB(0xff, 0x8c, 0x19)
 
 };
+
+// mired values below these values use the approxMiredToColorRGB at the same index
+const uint16 miredToIndex[8] = {
+    140, 160, 180, 210, 280, 340, 410, 490};
 
 int rgbDiff(const Color::RGB &a, const Color::RGB &b)
 {
@@ -139,35 +143,27 @@ Color::Temp Color::RGBToTemp(const RGB &rgb)
     const Color::RGB *match = &approxMiredToColorRGB[0];
     int diff = rgbDiff(rgb, *match);
     int idx = 0;
+    uint16 mireds = 140;
     while (idx < 7 && rgbDiff(rgb, approxMiredToColorRGB[idx + 1]) < diff)
     {
         idx++;
+        mireds = miredToIndex[idx];
         diff = rgbDiff(rgb, approxMiredToColorRGB[idx + 1]);
     }
-    return idx * 43 + 150;
+    return mireds;
 }
 
 Color::RGB Color::TempToRGB(const Temp &temp)
 {
-    const Color::RGB *rgb = &approxMiredToColorRGB[0];
+    Logger log("TempToRGB");
     uint16 mired = temp.mireds();
-    if (mired < 183)
+    int idx = 0;
+    while (idx < 8 && mired >= miredToIndex[idx + 1])
     {
-        rgb = &approxMiredToColorRGB[0];
+        idx++;
     }
-    else if (mired > 460)
-    {
-        rgb = &approxMiredToColorRGB[7];
-    }
-    else
-    {
-        uint16 pos = mired - 140;
-        uint16 span = 45;
-        uint16 idx = round(1.0 * pos / span);
-        // todo: find gradient between entries
-        rgb = &approxMiredToColorRGB[idx];
-    }
-    return *rgb;
+    log.debug("mired %d  %d", mired, idx);
+    return approxMiredToColorRGB[idx];
 }
 Color::HSV Color::TempToHSV(const Temp &temp)
 {

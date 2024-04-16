@@ -56,15 +56,17 @@ namespace FCLIB
         EventManager::add(event);
         log.debug("event added");
     }
-        void Event::trigger(EventType type, void *sender, const EventData_t& data)
+    void Event::trigger(EventType type, void *sender, const EventData_t &data)
     {
         Logger log("Event::trigger");
-        log.debug("create event - copy data");
+        log.never("create event - copy data");
         Event *event = new Event(type, sender);
+        log.never("copy data");
         event->data = data;
-        log.debug("queue avent");
+        log.never("\tcopied");
+        log.never("queue avent");
         EventManager::add(event);
-        log.debug("event added");
+        log.never("event added");
     }
 
     Event::Event(EventType type, void *sender)

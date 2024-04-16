@@ -138,7 +138,7 @@ namespace FCLIB
         virtual void fill(const Color &color, LedOp_t op = DEFOP);
 
         virtual void setBase(LedStrip *base);
-        void setBrightness(uint8);
+        void setBrightness(uint8) override;
 
     protected:
         LedStrip *baseStrip;
@@ -227,6 +227,7 @@ namespace FCLIB
         void show() override;
         virtual void clear();
         virtual void fill(const Color &color, LedOp_t op = DEFOP);
+        void setBrightness(uint8);
 
     protected:
         LedStrip *orig;

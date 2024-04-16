@@ -17,7 +17,7 @@ namespace FCLIB::HW
     {
     }
 
-    bool Motion::isDetected() { return getState(); }
+    bool Motion::isDetected() const { return getState() != 0; }
 
     void Motion::onHigh()
     {
@@ -33,6 +33,7 @@ namespace FCLIB::HW
 
     MultiMotion::MultiMotion() : log("MultiMotion")
     {
+        hasMotion = false;
     }
 
     MultiMotion::~MultiMotion()
@@ -46,16 +47,44 @@ namespace FCLIB::HW
             log.error("Invalid pin %d", pin);
             return;
         }
+        removePin(pin);
         Motion *m = new Motion();
         m->setPin(pin);
         motion.add(m);
-        listener.handleChange(m, [this](Event *event)
-                              { Event::trigger(event->getType(), this, event->getData()); });
+        listener.handleChange([this](Event *event)
+                              { this->updateState(); });
     }
 
-    bool MultiMotion::isDetected()
+    void MultiMotion::updateState()
     {
-        return motion.any([this](Motion *motion)
+        bool now = isDetected();
+        if (now != hasMotion)
+        {
+            hasMotion = now;
+            Event::trigger(now ? EventType::MOTION_START_EVENT : EventType::MOTION_STOP_EVENT, this, now);
+        }
+    }
+    void MultiMotion::removeAll()
+    {
+        motion.deleteAll();
+    }
+    void MultiMotion::removePin(int8 pin)
+    {
+        if (pin < 0)
+        {
+            log.error("Invalid pin %d", pin);
+            return;
+        }
+        motion.removeIf([pin, this](const Motion *m)
+                        { return m->getPin() == pin; },
+                        [pin, this](Motion *m)
+                        { this->listener.removeSender(m);
+                        delete m; });
+    }
+
+    bool MultiMotion::isDetected() const
+    {
+        return motion.any([this](const Motion *motion)
                           { this->log.debug("check motion pin %d %d", motion->getPin(), motion->isDetected()); 
                           return motion->isDetected(); });
     }

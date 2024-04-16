@@ -28,6 +28,12 @@ FCLIB::MirrorStrip::~MirrorStrip()
 {
 }
 
+void FCLIB::MirrorStrip::setBrightness(uint8 b)
+{
+    orig->setBrightness(b);
+    copy->setBrightness(b);
+}
+
 void FCLIB::MirrorStrip::set(int pos, const Color &color, LedOp_t op)
 {
     orig->set(pos, color, op);

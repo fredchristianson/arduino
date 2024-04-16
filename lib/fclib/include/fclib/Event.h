@@ -56,6 +56,7 @@ namespace FCLIB
         friend EventListener;
 
         virtual bool match(EventType type, const void *sender = NULL);
+        virtual bool match(const void *sender = NULL) { return match(EventType::ANY, sender); }
         virtual void handle(Event *);
 
         EventType type;
@@ -77,6 +78,7 @@ namespace FCLIB
         EventHandler *handleChange(void *sender, EventHandlerCallback callback) { return handle(EventType::CHANGE_EVENT, sender, callback); }
 
         bool hasHandler(EventType type);
+        void removeSender(void *sender);
 
     private:
         friend EventManager;

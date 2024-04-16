@@ -17,7 +17,7 @@ namespace FCLIB
     {
         Logger log("EventListener");
         log.debug("create handler");
-        EventHandler *ehandler = new EventHandler(type,  handler);
+        EventHandler *ehandler = new EventHandler(type, handler);
         log.never("handler=%x", ehandler);
         handlers.add(ehandler);
         log.debug("handler added");
@@ -54,5 +54,11 @@ namespace FCLIB
         EventHandler *handler = handlers.first([type](EventHandler *h)
                                                { return h->match(type); });
         return handler != NULL;
+    }
+
+    void EventListener::removeSender(void *sender)
+    {
+        handlers.removeIf([sender](EventHandler *handler)
+                          { return handler->match(EventType::ANY, sender); });
     }
 }

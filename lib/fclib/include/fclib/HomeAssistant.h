@@ -93,37 +93,37 @@ namespace FCLIB::HA
     class BinarySensor : public Entity
     {
     public:
-        BinarySensor(HW::InputPinComponent *binary, const char *name = "Binary Sensor");
+        BinarySensor(HW::IBinarySensor *binary, const char *name = "Binary Sensor");
         virtual ~BinarySensor();
         const char *getComponentName() override { return "binary_sensor"; }
 
     protected:
-        HW::InputPinComponent *hardware;
+        HW::IBinarySensor *hardware;
     };
 
     class MotionSensor : public BinarySensor
     {
     public:
-        MotionSensor(HW::Motion *binary, const char *name = "Motion Sensor");
+        MotionSensor(HW::IMotion *binary, const char *name = "Motion Sensor");
         virtual ~MotionSensor();
 
     protected:
         void onMotionStart();
         void onMotionStop();
-        HW::Motion motionSensor;
+        HW::IMotion *motionSensor;
     };
 
     // Switch is a binary device that can send and receive state
     class Switch : public Entity
     {
     public:
-        Switch(HW::InputPinComponent *binary, const char *name = "Switch");
+        Switch(HW::IBinarySensor *binary, const char *name = "Switch");
         virtual ~Switch();
         const char *getComponentName() override { return "switch"; }
 
     protected:
         void onHardwareChange();
-        HW::InputPinComponent *hardware;
+        HW::IBinarySensor *hardware;
     };
 
     // a light that can be turned on/off by HA
@@ -182,7 +182,7 @@ namespace FCLIB::HA
         virtual const char *getName() { return name.c_str(); }
         friend Entity;
         friend HomeAssistant;
-        void add(Entity *entity);
+        Device &add(Entity *entity);
         void remove(Entity *entity);
 
     private:

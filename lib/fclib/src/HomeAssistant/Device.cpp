@@ -1,5 +1,4 @@
 #include "fclib/HomeAssistant.h"
-#include "fclib/HomeAssistant.h"
 #include "fclib/System.h"
 #include "fclib/App.h"
 
@@ -21,7 +20,7 @@ namespace FCLIB::HA
     {
     }
 
-    void Device::add(Entity *entity)
+    Device &Device::add(Entity *entity)
     {
         log.debug("add entity: %x %s", entity, entity->getUniqueName());
         entity->device = this;
@@ -45,6 +44,7 @@ namespace FCLIB::HA
             entity->id = HomeAssistant::nameToId(entity->name + "_" + this->boardId);
         }
         entities.add(entity);
+        return *this;
     }
 
     void Device::remove(Entity *entity)

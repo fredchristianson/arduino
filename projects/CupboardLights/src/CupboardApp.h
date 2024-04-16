@@ -7,6 +7,7 @@
 #include "fclib/Hardware.h"
 #include "fclib/HomeAssistant.h"
 #include "fclib/LedStrip.h"
+#include "fclib/Render.h"
 
 using namespace FCLIB;
 
@@ -27,6 +28,17 @@ protected:
     NeoPixelStrip strip2;
     MirrorStrip strips;
     EventListener listener;
+    HA::HomeAssistant *ha;
+    HA::Device *device;
+    HA::LightStrip *haLight;
+    HA::MotionSensor *haMotion;
+    HA::Number *motion1Pin;
+    HA::Number *motion2Pin;
+    HA::Number *led1Pin;
+    HA::Number *led2Pin;
+    HA::Number *led1Count;
+    HA::Number *led2Count;
+    HomeAssistantSceneRenderer haRenderer;
 };
 
 #endif

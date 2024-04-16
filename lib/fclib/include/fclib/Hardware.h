@@ -12,6 +12,12 @@ namespace FCLIB
     namespace HW // Hardware
     {
 
+        class IBinarySensor
+        {
+        public:
+            virtual bool isOn() const = 0;
+            virtual bool isOff() const = 0;
+        };
         /* Implementations */
         class ComponentBase
         {
@@ -43,7 +49,7 @@ namespace FCLIB
             InputPinComponent();
             virtual ~InputPinComponent();
 
-            int getState();
+            virtual int getState() const;
 
         protected:
             void doTask() override;
@@ -90,10 +96,10 @@ namespace FCLIB
         protected:
         };
 
-        class IMotion : public IEventSource
+        class IMotion : public IEventSource, public IBinarySensor
         {
         public:
-            virtual bool isDetected() = 0;
+            virtual bool isDetected() const = 0;
         };
         class Motion : public InputPinComponent, public IMotion
         {
@@ -101,7 +107,9 @@ namespace FCLIB
             Motion();
             virtual ~Motion();
 
-            bool isDetected() override;
+            bool isDetected() const override;
+            bool isOn() const override { return getState() != 0; }
+            bool isOff() const override { return getState() == 0; }
 
         protected:
             virtual void onHigh();
@@ -114,12 +122,18 @@ namespace FCLIB
             MultiMotion();
             virtual ~MultiMotion();
             void addPin(int8 pin);
-            bool isDetected() override;
+            void removePin(int8 pin);
+            void removeAll();
+            bool isDetected() const override;
+            bool isOn() const override { return isDetected() != 0; }
+            bool isOff() const override { return isDetected() == 0; }
 
         protected:
+            void updateState();
             List<Motion> motion;
             Logger log;
             EventListener listener;
+            bool hasMotion;
         };
 
         class Led : public OutputPinComponent

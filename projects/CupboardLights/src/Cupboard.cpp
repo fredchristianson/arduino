@@ -12,7 +12,16 @@ using namespace FCLIB;
 CupboardApp::CupboardApp()
 {
     log.setModuleName("CupboardApp");
-
+    log.setLevel(DEBUG_LEVEL);
+    device = NULL;
+    haLight = NULL;
+    haMotion = NULL;
+    motion1Pin = NULL;
+    motion2Pin = NULL;
+    led1Pin = NULL;
+    led2Pin = NULL;
+    led1Count = NULL;
+    led2Count = NULL;
     log.showMemory("CupboardApp Created");
 }
 
@@ -38,6 +47,21 @@ void CupboardApp::setupComplete()
     strips.setOrig(&strip1);
     strips.setCopy(&strip2);
     log.showMemory("setup listeners");
+
+    ha = new HA::HomeAssistant(Network::getMqtt());
+    device = ha->createDevice("Kitchen Cupboard Lights");
+    haLight = new HA::LightStrip(&haRenderer, "Kitchen Cupboard Lights");
+    haMotion = new HA::MotionSensor(&motion);
+    motion1Pin = new HA::Number("Left Motion Pin", 0, 16, config->get("motion1", "pin", -1));
+    motion2Pin = new HA::Number("Right Motion Pin", 0, 16, config->get("motion2", "pin", -1));
+    led1Pin = new HA::Number("Left led Pin", 0, 16, config->get("led1", "pin", -1));
+    led2Pin = new HA::Number("Right led Pin", 0, 16, config->get("led2", "pin", -1));
+    led1Count = new HA::Number("Left led Count", 0, 16, config->get("led1", "led_count", 10));
+    led2Count = new HA::Number("Right led Count", 0, 16, config->get("led2", "led_count", 15));
+    device->add(haLight).add(haMotion).add(motion1Pin).add(motion2Pin).add(led1Pin).add(led2Pin).add(led1Count).add(led2Count);
+    ha->publishConfig();
+
+    haRenderer.setStrip(&strips);
     listener.handle(EventType::CHANGE_EVENT, &motion, [this](Event *event)
                     { this->onMotionChange(event); });
 
@@ -49,11 +73,6 @@ void CupboardApp::setupComplete()
 
 void CupboardApp::doTask()
 {
-
-    GradientRenderer solid(Color::fromRGB(255, 0, 120), Color::fromRGB(0, 255, 0));
-    solid.draw(strips);
-
-    strips.show();
 }
 
 void CupboardApp::onMotionChange(Event *event)

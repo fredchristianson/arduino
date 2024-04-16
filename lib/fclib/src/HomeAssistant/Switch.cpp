@@ -4,7 +4,7 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    Switch::Switch(HW::InputPinComponent *hardware, const char *name) : Entity(name == NULL ? "Button" : name, ComponentType::SWITCH)
+    Switch::Switch(HW::IBinarySensor *hardware, const char *name) : Entity(name == NULL ? "Button" : name, ComponentType::SWITCH)
     {
         log.setModuleName("HA::Switch");
         log.debug("Switch created 0x%lx", hardware);
@@ -23,7 +23,7 @@ namespace FCLIB::HA
 
     void Switch::onHardwareChange()
     {
-        bool isSet = hardware->getState() != 0;
+        bool isSet = hardware->isOn();
         setBoolState(isSet);
     }
 }

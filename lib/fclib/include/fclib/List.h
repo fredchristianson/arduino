@@ -68,7 +68,7 @@ namespace FCLIB
             return NULL;
         }
 
-        bool any(BoolCallback<T *> match)
+        bool any(BoolCallback<T *> match) const
         {
             for (uint16 i = 0; i < size(); i++)
             {
@@ -80,12 +80,16 @@ namespace FCLIB
             return false;
         }
 
-        void removeIf(BoolCallback<T *> match)
+        void removeIf(BoolCallback<T *> match, Callback<T *> onRemove = NULL)
         {
             for (uint16 i = 0; i < size(); i++)
             {
                 if (match((T *)getAt(i)))
                 {
+                    if (onRemove != NULL)
+                    {
+                        onRemove((T *)getAt(i));
+                    }
                     removeAt(i);
                     i--;
                 }

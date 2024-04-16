@@ -41,7 +41,7 @@ namespace FCLIB::HW
             ->delayMsecs(5);
         return true;
     }
-    int InputPinComponent::getState()
+    int InputPinComponent::getState() const
     {
         // return digitalRead(pin);
         return currentState;

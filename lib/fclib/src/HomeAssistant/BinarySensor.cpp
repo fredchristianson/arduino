@@ -4,7 +4,7 @@ using namespace FCLIB;
 
 namespace FCLIB::HA
 {
-    BinarySensor::BinarySensor(HW::InputPinComponent *hardware, const char *name) : Entity(name == NULL ? "Button" : name, ComponentType::BINARY_SENSOR)
+    BinarySensor::BinarySensor(HW::IBinarySensor *hardware, const char *name) : Entity(name == NULL ? "Button" : name, ComponentType::BINARY_SENSOR)
     {
         this->hardware = hardware;
         deviceClass = "Running";
