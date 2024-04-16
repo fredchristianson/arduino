@@ -56,7 +56,7 @@ namespace FCLIB
             };
         };
 
-        T *first(TestCallback<T *> match)
+        T *first(BoolCallback<T *> match)
         {
             for (uint16 i = 0; i < size(); i++)
             {
@@ -68,7 +68,19 @@ namespace FCLIB
             return NULL;
         }
 
-        void removeIf(TestCallback<T *> match)
+        bool any(BoolCallback<T *> match)
+        {
+            for (uint16 i = 0; i < size(); i++)
+            {
+                if (match((T *)getAt(i)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void removeIf(BoolCallback<T *> match)
         {
             for (uint16 i = 0; i < size(); i++)
             {

@@ -10,7 +10,7 @@ namespace FCLIB
     using Callback = std::function<void(T)>;
 
     template <typename T>
-    using TestCallback = std::function<bool(T)>;
+    using BoolCallback = std::function<bool(T)>;
 
     template <typename T>
     using Calculate = std::function<T(T)>;

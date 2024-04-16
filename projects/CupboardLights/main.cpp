@@ -7,12 +7,12 @@
 #include "test/Test.h"
 #endif
 #include "fclib/System.h"
-#include "./CupboardApp.h"
+#include "./HallApp.h"
 
 using namespace FCLIB;
 
 FCLIB::Logger *logger = new FCLIB::Logger("main", INFO_LEVEL);
-CupboardApp app;
+HallApp hallApp;
 ConfigFile config;
 bool testsPass = true;
 
@@ -35,7 +35,7 @@ void setup()
 
     logger->debug("Load config");
     config.load("/config.ini");
-    app.setup(&config);
+    hallApp.setup(&config);
 }
 
 void loop()
@@ -43,6 +43,6 @@ void loop()
 
     if (testsPass)
     {
-        app.loop();
+        hallApp.loop();
     }
 }

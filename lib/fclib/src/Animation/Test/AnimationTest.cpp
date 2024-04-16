@@ -24,7 +24,7 @@ namespace FCLIB::TEST::ANIMATION
         result.equal(a.value(), 10.0, "end value correct");
     }
 
-    void testCallbacks(TestResult &result)
+    void BoolCallbacks(TestResult &result)
     {
         TaskQueue::get();
         AnimateInt a(0, 10000);
@@ -70,7 +70,7 @@ namespace FCLIB::TEST::ANIMATION
     void AnimationTestSuite::runTests()
     {
         test("Float animation", testFloatAnimation);
-        test("Callbacks", testCallbacks);
+        test("Callbacks", BoolCallbacks);
         test("Restart", testRestart);
     }
 }

@@ -32,10 +32,22 @@ namespace FCLIB
         ANY = 0xFFFF
     };
 
+    class IEventSource
+    {
+    public:
+        virtual bool match(const void *sender) const
+        {
+            return sender == getTriggerSender();
+        }
+        virtual const void *getTriggerSender() const { return this; }
+    };
+
     class EventHandler
     {
 
     private:
+        EventHandler(EventType type, EventHandlerCallback handler);
+        EventHandler(EventType type, IEventSource *sender, EventHandlerCallback handler);
         EventHandler(EventType type, void *sender, EventHandlerCallback handler);
         virtual ~EventHandler();
 
@@ -48,7 +60,9 @@ namespace FCLIB
 
         EventType type;
         void *sender;
+        bool senderIsEventSource;
         EventHandlerCallback handler;
+        Logger log;
     };
 
     class EventListener
@@ -73,6 +87,16 @@ namespace FCLIB
     union EventData_t
     {
         EventData_t() { memset(this, 0, sizeof(EventData_t)); }
+        EventData_t(const EventData_t &other)
+        {
+            memcpy(this, &other, sizeof(EventData_t));
+        }
+
+        const EventData_t operator=(const EventData_t &other)
+        {
+            memcpy(this, &other, sizeof(EventData_t));
+            return *this;
+        }
         bool boolValue;
         int intValue;
         float floatValue;
@@ -88,9 +112,11 @@ namespace FCLIB
         static void trigger(EventType type, void *sender, int intVal);
         static void trigger(EventType type, void *sender, float floatVal);
         static void trigger(EventType type, void *sender, void *custom);
+        static void trigger(EventType type, void *sender, const EventData_t &data);
 
         const EventType getType() const { return this->type; }
         const void *getSender() const { return this->sender; }
+        const EventData_t &getData() { return data; }
         int getId();
         void setAllowMultiple(bool allow = true) { this->mayHaveMultiple = allow; }
         bool isMultipleAllowed() { return this->mayHaveMultiple; }

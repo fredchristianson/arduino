@@ -5,12 +5,31 @@ using namespace FCLIB;
 
 namespace FCLIB
 {
-
-    EventHandler::EventHandler(EventType type, void *sender, EventHandlerCallback handler)
+    EventHandler::EventHandler(EventType type, 
+     EventHandlerCallback handler) : log("EventHandler")
     {
+        log.debug("handler for any source");
+        this->type = type;
+        this->sender = NULL;
+        this->handler = handler;
+        this->senderIsEventSource = false;
+    }
+    EventHandler::EventHandler(EventType type, IEventSource *sender, EventHandlerCallback handler): log("EventHandler")
+    {
+        log.debug("handler for IEventSource");
         this->type = type;
         this->sender = sender;
         this->handler = handler;
+        this->senderIsEventSource = true;
+    }
+    EventHandler::EventHandler(EventType type, void *sender, EventHandlerCallback handler): log("EventHandler")
+    {
+        log.debug("handler for sender that is not IEventSource");
+
+        this->type = type;
+        this->sender = sender;
+        this->handler = handler;
+        this->senderIsEventSource = false;
     }
 
     EventHandler::~EventHandler()
@@ -22,6 +41,10 @@ namespace FCLIB
         if (this->type != EventType::ANY && this->type != type)
         {
             return false;
+        }
+        if (this->senderIsEventSource)
+        {
+            return ((IEventSource *)sender)->match(sender);
         }
         if (this->sender != NULL && this->sender != sender)
         {

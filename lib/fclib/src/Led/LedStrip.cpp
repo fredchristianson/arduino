@@ -1,5 +1,15 @@
 #include "../../include/fclib/LedStrip.h"
 
+NullStrip *NullStrip::singleton;
+NullStrip *NullStrip::get()
+{
+    if (singleton == NULL)
+    {
+        singleton = new NullStrip();
+    }
+    return singleton;
+}
+
 FCLIB::LedStrip::LedStrip(uint16 count) : LOG("LedStrip")
 {
     this->count = count;

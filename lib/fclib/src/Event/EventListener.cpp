@@ -17,7 +17,7 @@ namespace FCLIB
     {
         Logger log("EventListener");
         log.debug("create handler");
-        EventHandler *ehandler = new EventHandler(type, NULL, handler);
+        EventHandler *ehandler = new EventHandler(type,  handler);
         log.never("handler=%x", ehandler);
         handlers.add(ehandler);
         log.debug("handler added");

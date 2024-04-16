@@ -30,9 +30,10 @@ namespace FCLIB
     class SolidRenderer : public LedRenderer
     {
     public:
-        SolidRenderer(const Color &color);
+        SolidRenderer(const Color &color = Color::RGB::WHITE);
         virtual ~SolidRenderer();
         void draw(LedStrip &strip, LedOp_t op = DEFOP) override;
+        void setColor(const Color &color) { this->color = color; }
 
     protected:
         Color color;

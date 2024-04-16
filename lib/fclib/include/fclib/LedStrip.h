@@ -64,7 +64,7 @@ namespace FCLIB
     class NeoPixelStrip : public LedStrip
     {
     public:
-        NeoPixelStrip(uint8_t pin, uint16 count, uint8 brightness = 100);
+        NeoPixelStrip(uint8_t pin = -1, uint16 count = 0, uint8 brightness = 100);
         virtual ~NeoPixelStrip();
 
         virtual void set(int pos, const Color &color, LedOp_t op = DEFOP);
@@ -89,6 +89,24 @@ namespace FCLIB
         Adafruit_NeoPixel *controller;
     };
 
+    class NullStrip : public LedStrip
+    {
+    public:
+        static NullStrip *get();
+        NullStrip() {}
+        virtual ~NullStrip() {}
+
+        virtual void set(int pos, const Color &color, LedOp_t op = DEFOP) {}
+
+        virtual void show() override {}
+
+        virtual void clear() override {}
+        virtual void fill(const Color &color, LedOp_t op = DEFOP) override {}
+
+    private:
+        static NullStrip *singleton;
+    };
+
     class CompositeStrip : public LedStrip
     {
     public:
@@ -102,6 +120,7 @@ namespace FCLIB
 
         void add(LedStrip *component);
         void setBrightness(uint8);
+        void show() override;
 
     private:
         List<LedStrip> strips;
@@ -196,20 +215,22 @@ namespace FCLIB
         int pixelCount;
     };
 
-    class StripMirror : public StripModifier
+    class MirrorStrip : public LedStrip
     {
     public:
-        StripMirror(LedStrip *base = NULL);
-        virtual ~StripMirror();
+        MirrorStrip(LedStrip *orig = NULL, LedStrip *copy = NULL);
+        virtual ~MirrorStrip();
 
         virtual void set(int pos, const Color &color, LedOp_t op = DEFOP);
-
+        MirrorStrip &setOrig(LedStrip *orig);
+        MirrorStrip &setCopy(LedStrip *copy);
+        void show() override;
         virtual void clear();
         virtual void fill(const Color &color, LedOp_t op = DEFOP);
 
-        void setBase(LedStrip *base);
-
     protected:
+        LedStrip *orig;
+        LedStrip *copy;
     };
 }
 #endif //_FCLIB_LED_H_

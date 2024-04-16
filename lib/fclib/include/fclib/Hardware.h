@@ -30,6 +30,7 @@ namespace FCLIB
             virtual ~PinComponent();
 
             void setPin(int8 pin);
+            int8 getPin() const { return pin; }
 
         protected:
             virtual bool setupPin() = 0;
@@ -89,17 +90,36 @@ namespace FCLIB
         protected:
         };
 
-        class Motion : public InputPinComponent
+        class IMotion : public IEventSource
+        {
+        public:
+            virtual bool isDetected() = 0;
+        };
+        class Motion : public InputPinComponent, public IMotion
         {
         public:
             Motion();
             virtual ~Motion();
 
-            bool isDetected();
+            bool isDetected() override;
 
         protected:
             virtual void onHigh();
             virtual void onLow();
+        };
+
+        class MultiMotion : public IMotion
+        {
+        public:
+            MultiMotion();
+            virtual ~MultiMotion();
+            void addPin(int8 pin);
+            bool isDetected() override;
+
+        protected:
+            List<Motion> motion;
+            Logger log;
+            EventListener listener;
         };
 
         class Led : public OutputPinComponent

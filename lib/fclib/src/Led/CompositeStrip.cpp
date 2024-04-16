@@ -67,4 +67,11 @@ namespace FCLIB
             strips[i]->setBrightness(brightness);
         }
     }
+    void CompositeStrip::show()
+    {
+        for (int i = 0; i < strips.size(); i++)
+        {
+            strips[i]->show();
+        }
+    }
 }
