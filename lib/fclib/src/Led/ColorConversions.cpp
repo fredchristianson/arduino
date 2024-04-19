@@ -155,14 +155,12 @@ Color::Temp Color::RGBToTemp(const RGB &rgb)
 
 Color::RGB Color::TempToRGB(const Temp &temp)
 {
-    Logger log("TempToRGB");
     uint16 mired = temp.mireds();
     int idx = 0;
     while (idx < 8 && mired >= miredToIndex[idx + 1])
     {
         idx++;
     }
-    log.debug("mired %d  %d", mired, idx);
     return approxMiredToColorRGB[idx];
 }
 Color::HSV Color::TempToHSV(const Temp &temp)

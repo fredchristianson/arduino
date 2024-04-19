@@ -36,7 +36,7 @@ namespace FCLIB
         List(uint16 initSize = 20) : ListBase(initSize) {}
         virtual ~List() {}
 
-        void add(T *item) { insert_item(item); }
+        void add(T *item) { insert_item((void *)item); }
         void remove(T *item) { remove_item(item); }
         T *remove(uint16 index)
         {
@@ -53,6 +53,14 @@ namespace FCLIB
             for (int i = 0; i < size(); i++)
             {
                 callback((T *)getAt(i));
+            };
+        };
+
+        void forEach(Callback<T *> callback) const
+        {
+            for (int i = 0; i < size(); i++)
+            {
+                callback((const T *)getAt(i));
             };
         };
 

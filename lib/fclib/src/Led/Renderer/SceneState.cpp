@@ -11,6 +11,7 @@ namespace FCLIB
     {
         mode = SceneMode::MODE_OFF;
         brightness = 0;
+        ledCount = -1;
     }
 
     SceneState::SceneState(const SceneState &other)
@@ -18,6 +19,8 @@ namespace FCLIB
         this->mode = other.mode;
         this->color = other.color;
         this->brightness = other.brightness;
+        this->effect = other.effect;
+        this->ledCount = other.ledCount;
     }
 
     SceneState &SceneState::operator=(const SceneState &other)
@@ -25,7 +28,8 @@ namespace FCLIB
         this->mode = other.mode;
         this->color = other.color;
         this->brightness = other.brightness;
-
+        this->ledCount = other.ledCount;
+        this->effect = other.effect;
         return *this;
     }
 }

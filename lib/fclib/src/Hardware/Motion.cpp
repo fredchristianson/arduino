@@ -85,7 +85,6 @@ namespace FCLIB::HW
     bool MultiMotion::isDetected() const
     {
         return motion.any([this](const Motion *motion)
-                          { this->log.debug("check motion pin %d %d", motion->getPin(), motion->isDetected()); 
-                          return motion->isDetected(); });
+                          { return motion->isDetected(); });
     }
 }

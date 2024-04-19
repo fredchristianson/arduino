@@ -99,6 +99,8 @@ namespace FCLIB
         SceneMode mode;
         Color color;
         uint8 brightness;
+        String effect;
+        int ledCount;
     };
 
     struct SceneTransistion
@@ -134,7 +136,7 @@ namespace FCLIB
         Task *task;
     };
 
-    class HomeAssistantSceneRenderer : public SceneRenderer
+    class HomeAssistantSceneRenderer : public SceneRenderer, public IEventSource
     {
     public:
         HomeAssistantSceneRenderer(LedStrip *strip = NULL);
@@ -145,6 +147,7 @@ namespace FCLIB
 
         void turnOn(int transitionSeconds);
         void turnOff(int transitionSeconds);
+        const List<const char> &getEffects() const;
 
     protected:
         SceneState currentState;
@@ -155,6 +158,9 @@ namespace FCLIB
         void startTransition();
         AnimateColor animateColor;
         AnimateInt animateBrightness;
+        AnimateInt ledLength;
+        List<const char> effects;
+        String lastEffect;
     };
 
     class CompositeSceneRenderer : public SceneRenderer

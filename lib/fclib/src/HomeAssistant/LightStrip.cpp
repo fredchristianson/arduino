@@ -17,6 +17,7 @@ namespace FCLIB::HA
                       { this->publishTransitionState(); });
         events.handle(EventType::TASK_DONE, render, [this](const Event *event)
                       { this->publishState(); });
+        log.always("listen for TASK_DONE %x",render);
     }
 
     LightStrip::~LightStrip()
@@ -33,7 +34,7 @@ namespace FCLIB::HA
 
         SceneState scene = renderer->getSceneState();
         Color color = scene.color;
-        log.never("publish LightStrip state");
+        log.always("publish LightStrip state %d", scene.mode);
         JsonDocument doc;
         doc["state"] = scene.mode != SceneMode::MODE_OFF ? "ON" : "OFF";
         doc["brightness"] = scene.brightness;
@@ -70,13 +71,16 @@ namespace FCLIB::HA
     }
     void LightStrip::setupCapabilities(JsonDocument &doc)
     {
-        // doc["effect"] = true;
-        // doc["effect_list"] = JsonArray();
-        // doc["effect_list"].add("effect1");
-        // doc["effect_list"].add("effect1");
-        // doc["effect_list"].add("effect2");
-        // doc["effect_list"].add("effect3");
-
+        const List<const char> &effects = renderer->getEffects();
+        if (effects.size() > 0)
+        {
+            doc["effect"] = true;
+            doc["effect_list"] = JsonArray();
+            for (int i = 0; i < effects.size(); i++)
+            {
+                doc["effect_list"].add(effects[i]);
+            }
+        }
         doc["brightness"] = true;
         doc["brightness_value_template"] = "{{ value_json.brightness }}";
         doc["rgb_value_template"] = "{{ value_json.rgb }}";
@@ -130,6 +134,10 @@ namespace FCLIB::HA
         {
             int temp = doc["color_temp"].as<int>();
             scene.color = Color::fromMired(temp);
+        }
+        if (doc.containsKey("effect"))
+        {
+            scene.effect = doc["effect"].as<const char *>();
         }
 
         if (state.equals("ON"))
