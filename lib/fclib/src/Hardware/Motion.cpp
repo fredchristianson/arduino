@@ -51,7 +51,7 @@ namespace FCLIB::HW
         Motion *m = new Motion();
         m->setPin(pin);
         motion.add(m);
-        listener.handleChange([this](Event *event)
+        listener.handleChange(m, [this](Event *event)
                               { this->updateState(); });
     }
 
@@ -61,7 +61,9 @@ namespace FCLIB::HW
         if (now != hasMotion)
         {
             hasMotion = now;
+            log.always("motion changed %s", hasMotion ? "detected" : " clear");
             Event::trigger(now ? EventType::MOTION_START_EVENT : EventType::MOTION_STOP_EVENT, this, now);
+            Event::trigger(EventType::CHANGE_EVENT, this, now);
         }
     }
     void MultiMotion::removeAll()

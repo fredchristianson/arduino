@@ -31,11 +31,15 @@ CupboardApp::~CupboardApp()
 
 void CupboardApp::setupComplete()
 {
+    Network::getMqtt()->startLogger("log/cupboard", DEBUG_LEVEL);
+    log.info("==================================");
+    log.info("Cupboard App Starting");
+    log.info("==================================");
     Task::onLoop([this]()
                  { this->doTask(); });
     Task::repeat([this]()
                  { this->log.showMemory(); })
-        ->delaySeconds(5);
+        ->delaySeconds(30);
 
     Config *config = getConfig();
     motion.addPin(config->get("motion1", "pin", -1));
@@ -67,30 +71,39 @@ void CupboardApp::setupComplete()
 
     listener.handleChange(config, [this, config](Event *event)
                           {
-               this->log.debug("save config");
-               config->save(); });
+        this->log.debug("save config");
+        config->save(); });
 
     listener.handleChange(motion1Pin, [this, config](Event *event)
-                          { config->set( "pin", motion1Pin->asInt(),"motion1");
-                          this->motion.removeAll();
-                          motion.addPin(config->get("motion1", "pin", -1));
-                            motion.addPin(config->get("motion2", "pin", -1)); });
+                          {
+        config->set("pin", motion1Pin->asInt(), "motion1");
+        this->motion.removeAll();
+        motion.addPin(config->get("motion1", "pin", -1));
+        motion.addPin(config->get("motion2", "pin", -1)); });
     listener.handleChange(motion2Pin, [this, config](Event *event)
-                          { config->set( "pin", motion2Pin->asInt(),"motion2");
-                          this->motion.removeAll();
-                          motion.addPin(config->get("motion1", "pin", -1));
-                            motion.addPin(config->get("motion2", "pin", -1)); });
+                          {
+        config->set("pin", motion2Pin->asInt(), "motion2");
+        this->motion.removeAll();
+        motion.addPin(config->get("motion1", "pin", -1));
+        motion.addPin(config->get("motion2", "pin", -1)); });
     listener.handleChange(led1Pin, [this, config](Event *event)
-                          { config->set("pin", led1Pin->asInt(), "led1");
-                          strip1.setPin(led1Pin->asInt()); });
+                          {
+        config->set("pin", led1Pin->asInt(), "led1");
+        strip1.setPin(led1Pin->asInt()); });
     listener.handleChange(led2Pin, [this, config](Event *event)
-                          { config->set("pin", led2Pin->asInt(), "led2"); strip2.setPin(led2Pin->asInt()); });
+                          {
+        config->set("pin", led2Pin->asInt(), "led2");
+        strip2.setPin(led2Pin->asInt()); });
     listener.handleChange(led1Count, [this, config](Event *event)
-                          { config->set("led_count", led1Count->asInt(), "led1");
-                          strip1.setCount(led1Count->asInt()); });
+                          {
+        config->set("led_count", led1Count->asInt(), "led1");
+        strip1.setCount(led1Count->asInt()); });
     listener.handleChange(led2Count, [this, config](Event *event)
-                          { config->set("led_count", led2Count->asInt(), "led2");
-                          strip2.setCount(led2Count->asInt()); });
+                          {
+        config->set("led_count", led2Count->asInt(), "led2");
+        strip2.setCount(led2Count->asInt()); });
+    haRenderer.turnOff(0);
+    haRenderer.start();
 }
 
 void CupboardApp::doTask()
@@ -99,6 +112,6 @@ void CupboardApp::doTask()
 
 void CupboardApp::onMotionChange(Event *event)
 {
-    log.always("handle event 0x%lx %d", event, event->getType());
+    // log.always("handle event 0x%lx %d", event, event->getType());
     log.always("Motion %s detected.", motion.isDetected() ? " is " : " is not ");
 }

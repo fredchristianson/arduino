@@ -4,6 +4,7 @@
 #include <Esp.h>
 #include "fclib/Persistance.h"
 #include "fclib/Event.h"
+#include "fclib/Loop.h"
 
 namespace FCLIB
 {
@@ -12,7 +13,7 @@ namespace FCLIB
     {
         wdt_enable(WDTO_4S); // enable watchdog timer
         THE_APP = this;
-        this->THE_BOARD = THE_BOARD;
+        this->THE_BOARD = Board::get();
         this->running = false;
     }
 
@@ -28,6 +29,7 @@ namespace FCLIB
 
     void App::loop()
     {
+        LoopTime::startLoop();
         if (running)
         {
             this->beforeLoop();
@@ -35,6 +37,7 @@ namespace FCLIB
             this->runTasks();
             this->afterLoop();
         }
+        LoopTime::endLoop();
     }
 
     void App::beforeLoop() {}
@@ -80,6 +83,7 @@ namespace FCLIB
         if (success)
         {
             setupComplete();
+            Event::trigger(EventType::APP_INITIALIZATION_DONE, this);
         }
         // set to startupFail to false if things run ok for 20 seconds
         Task::once([this]()
@@ -124,6 +128,49 @@ namespace FCLIB
         return config;
     }
 
+    void LoopTime::startLoop()
+    {
+        LoopTime::startMSecs = THE_BOARD->currentMsecs();
+        LoopTime::loggedOver = false; // not logged for this loop
+    }
+
+    void LoopTime::endLoop()
+    {
+        if (LoopTime::over())
+        {
+            Logger log("LoopTime");
+            log.error("Loop took to long: %dmsecs  (%d allowed)", (THE_BOARD->currentMsecs() - startMSecs), maxMSecs);
+        }
+    }
+
+    bool LoopTime::over()
+    {
+        if (startMSecs == 0)
+        {
+            return false; // starting up - no loop yet.
+        }
+        bool isOver = (THE_BOARD->currentMsecs() - startMSecs) > maxMSecs;
+        if (isOver && !LoopTime::loggedOver)
+        {
+            LoopTime::loggedOver = true;
+            Logger log("LoopTime");
+            log.error("Loop taking too much time: %dmsecs  (%d allowed)", (THE_BOARD->currentMsecs() - startMSecs), maxMSecs);
+        }
+        return isOver;
+    }
+
+    void LoopTime::check(const char *msg)
+    {
+        if (startMSecs > 0 && LoopTime::over())
+        {
+            Logger log("List");
+            log.warn("%s took too long to process %d ", msg, (THE_BOARD->currentMsecs() - startMSecs));
+        }
+    }
+    unsigned long LoopTime::maxMSecs = 500;
+    unsigned long LoopTime::startMSecs = 0;
+    bool LoopTime::loggedOver = false;
+
     App *App::THE_APP;
-    Board *App::THE_BOARD;
+    Board *App::THE_BOARD = Board::get();
 }

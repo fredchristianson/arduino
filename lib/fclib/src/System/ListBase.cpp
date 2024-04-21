@@ -33,13 +33,14 @@ namespace FCLIB
 
     sint16 ListBase::indexOf(void *item) const
     {
-        for (int i = 0; i < used; i++)
+        for (int i = 0; i < used && LoopTime::ok(); i++)
         {
             if (items[i] == item)
             {
                 return i;
             }
         }
+        LoopTime::check("ListBase::indexOf");
         return -1;
     }
     void *ListBase::removeAt(uint16 index)
@@ -51,12 +52,14 @@ namespace FCLIB
         void *result = items[index];
 
         // memcpy isn't working.  copy each pointer
-        for (int i = index; i + 1 < used; i++)
+        for (int i = index; i + 1 < used && LoopTime::ok(); i++)
         {
             items[i] = items[i + 1];
         }
         // memcpy(items + index * LIST_ITEM_PTR_SIZE, items + (index + 1) * LIST_ITEM_PTR_SIZE, (used - index) * LIST_ITEM_PTR_SIZE);
         used -= 1;
+        LoopTime::check("ListBase::removeAt");
+
         return result;
     }
     void ListBase::clear()
@@ -82,7 +85,7 @@ namespace FCLIB
 
     void ListBase::remove_item(void *item)
     {
-        for (int i = 0; i < used; i++)
+        for (int i = 0; i < used && LoopTime::ok(); i++)
         {
             if (items[i] == item)
             {
@@ -90,6 +93,7 @@ namespace FCLIB
                 return;
             }
         }
+        LoopTime::check("ListBase::remove_item");
     }
     void *ListBase::get_item_at(uint16 index) const
     {

@@ -25,7 +25,7 @@ namespace FCLIB::HA
         log.debug("add entity: %x %s", entity, entity->getUniqueName());
         entity->device = this;
         entity->componentTypeIndex = 0;
-        for (int i = 0; i < entities.size(); i++)
+        for (int i = 0; i < entities.size() && LoopTime::ok(); i++)
         {
             if (entity->type == entities[i]->type)
             {
@@ -49,7 +49,7 @@ namespace FCLIB::HA
 
     void Device::remove(Entity *entity)
     {
-        for (int i = 0; i < entities.size(); i++)
+        for (int i = 0; i < entities.size() && LoopTime::ok(); i++)
         {
             if (entities[i] == entity)
             {

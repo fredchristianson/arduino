@@ -78,11 +78,13 @@ namespace FCLIB
 
         bool connect();
 
-        void send(String topic, JsonDocument &doc);
-        void send(String topic, const char *);
+        void send(String topic, JsonDocument &doc, bool noLog = false);
+        void send(String topic, const char *, bool noLog = false);
 
         void subscribe(const char *topic, MqttCallback callback);
         void subscribe(const String &topic, MqttCallback callback) { subscribe(topic.c_str(), callback); }
+
+        void startLogger(const char *topic, LogLevel level);
 
     protected:
         void checkConnection();
@@ -112,7 +114,20 @@ namespace FCLIB
             MqttCallback callback;
         };
 
-        List<Subscriber> subscribers;
+        class LogDestination : public ILogDestination
+        {
+        public:
+            LogDestination(Mqtt *mqtt, const char *topic, LogLevel level);
+            virtual void write(int level, const char *message) const;
+
+        protected:
+            String topic;
+            int level;
+            Mqtt *mqtt;
+        };
+
+        List<Subscriber>
+            subscribers;
     };
 
     class Network

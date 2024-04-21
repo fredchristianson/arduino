@@ -13,7 +13,14 @@ using namespace FCLIB::Util;
 char lastErrorMessage[100];
 long lastErrorTime = 0;
 
-ILogDestination *dest = new LogSerialDestination();
+List<ILogDestination> logDestinations;
+
+ILogDestination *serialDest = new LogSerialDestination();
+
+ILogDestination::ILogDestination()
+{
+    logDestinations.add(this);
+}
 ILogFormatter *formatter = new LogDefaultFormatter();
 
 void Logger::setDefaultLevel(LogLevel level)
@@ -33,11 +40,7 @@ Logger::~Logger()
 
 void Logger::write(int level, const char *message, va_list args) const
 {
-    if (dest == NULL)
-    {
-        Serial.println("no Log dest");
-        return;
-    }
+
     if (!shouldLog(level, message))
     {
         return;
@@ -49,10 +52,8 @@ void Logger::write(int level, const char *message, va_list args) const
         output = formatter->format(this->moduleName.c_str(), level, message, args);
     }
 
-    if (dest)
-    {
-        dest->write(output);
-    }
+    logDestinations.forEach([output, level](ILogDestination *dest)
+                            { dest->write(level, output); });
 }
 
 void Logger::write(int level, const char *message, ...) const
@@ -320,7 +321,7 @@ LogLevel getLogLevel(const String &text)
 void FCLIB::configureLogging(ConfigSection *config)
 {
     Logger log("Logger Conf", WARN_LEVEL);
-    for (int i = 0; i < config->valueCount(); i++)
+    for (int i = 0; i < config->valueCount() && LoopTime::ok(); i++)
     {
         const ConfigValue *value = config->getValueAt(i);
         LogLevel level = getLogLevel(value->toString());

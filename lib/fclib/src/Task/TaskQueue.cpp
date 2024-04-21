@@ -61,6 +61,7 @@ namespace FCLIB
         log.never("delete queued Task");
                         delete task; 
                         log.never("task deleted"); });
+        LoopTime::check("TaskQueue::~TaskQueue()");
         log.never("queue deleted");
     }
 
@@ -79,7 +80,7 @@ namespace FCLIB
     {
         int startTime = THE_BOARD->currentMsecs();
         int cnt = tasks.size();
-        for (int i = 0; i < tasks.size(); i++)
+        for (int i = 0; i < tasks.size() && LoopTime::ok(); i++)
         {
             Task *task = tasks[i];
             log.debug("Check task %d %x", i, task);
@@ -100,6 +101,8 @@ namespace FCLIB
                 i--;
             }
         }
+        LoopTime::check("TaskQueue::runTasks()");
+
         int endTime = THE_BOARD->currentMsecs();
         int diff = endTime - startTime;
         if (diff > maxQueueTime)

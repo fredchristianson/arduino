@@ -9,48 +9,50 @@
 #include <cstdio>
 #include <string.h>
 #include <stdarg.h>
+#include "fclib/Logging.h"
 
-namespace FCLIB {
-class ILogDestination {
-    public:
-        virtual void write(const char * message)const=0;
-};
+namespace FCLIB
+{
 
-class LogSerialDestination : public ILogDestination {
+    class LogSerialDestination : public ILogDestination
+    {
     public:
-        LogSerialDestination() {
+        LogSerialDestination()
+        {
             initialize();
         }
 
-        void write(const char* message) const override {
-            if (message == NULL) {
+        void write(int level, const char *message) const override
+        {
+            if (message == NULL)
+            {
                 return;
             }
             Serial.println(message);
             Serial.flush();
         }
+
     private:
         static bool m_serialInitialized;
         static void initialize();
-};
+    };
 
-bool LogSerialDestination::m_serialInitialized = false;
-void LogSerialDestination::initialize() {
-    if (!m_serialInitialized)
+    bool LogSerialDestination::m_serialInitialized = false;
+    void LogSerialDestination::initialize()
     {
-        Serial.begin(115200);
+        if (!m_serialInitialized)
+        {
+            Serial.begin(115200);
 
-        while(!Serial){
-            yield();
-            
+            while (!Serial)
+            {
+                yield();
+            }
+            Serial.printf("\nSerial Logger Running\n--------------\n");
+
+            m_serialInitialized = true;
         }
-        Serial.printf("\nSerial Logger Running\n--------------\n");
-                
-        m_serialInitialized = true;
     }
-}
-
-
 
 }
 #endif

@@ -17,7 +17,10 @@ namespace FCLIB::HA
                       { this->publishTransitionState(); });
         events.handle(EventType::TASK_DONE, render, [this](const Event *event)
                       { this->publishState(); });
-        log.always("listen for TASK_DONE %x",render);
+        log.always("listen for TASK_DONE %x", render);
+        Task::repeat([this]()
+                     { this->publishState(); })
+            ->delayMinutes(1);
     }
 
     LightStrip::~LightStrip()
@@ -76,7 +79,7 @@ namespace FCLIB::HA
         {
             doc["effect"] = true;
             doc["effect_list"] = JsonArray();
-            for (int i = 0; i < effects.size(); i++)
+            for (int i = 0; i < effects.size() && LoopTime::ok(); i++)
             {
                 doc["effect_list"].add(effects[i]);
             }

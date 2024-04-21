@@ -63,7 +63,7 @@ namespace FCLIB::HA
     void HomeAssistant::publishConfig()
     {
         log.info("publish entities");
-        for (int didx = 0; didx < devices.size(); didx++)
+        for (int didx = 0; didx < devices.size() && LoopTime::ok(); didx++)
         {
             Device *device = devices[didx];
             publishDeviceConfig(device);
@@ -72,7 +72,7 @@ namespace FCLIB::HA
 
     void HomeAssistant::publishDeviceConfig(Device *device)
     {
-        for (int eidx = 0; eidx < device->entities.size(); eidx++)
+        for (int eidx = 0; eidx < device->entities.size() && LoopTime::ok(); eidx++)
         {
             Entity *entity = device->entities[eidx];
             log.debug("publish entity %d %x %s", eidx, entity, entity->getUniqueName());

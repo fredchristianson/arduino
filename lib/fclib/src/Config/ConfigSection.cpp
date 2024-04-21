@@ -22,7 +22,7 @@ namespace FCLIB
     void ConfigSection::clearChanged()
     {
         log.never("clearChanged() section 0x%lx", this);
-        for (int i = 0; i < this->values.size(); i++)
+        for (int i = 0; i < this->values.size() && LoopTime::ok(); i++)
         {
             log.never("call clearChanged val %d of %d", i, this->values.size());
             ConfigValue *val = this->values[i];
@@ -32,12 +32,14 @@ namespace FCLIB
             val->clearChanged();
             log.never("value cleared");
         }
+        LoopTime::check("ConfigSection::clearChanged()");
+
         log.debug("all cleared");
     }
 
     ConfigValue *ConfigSection::getValue(const char *name)
     {
-        for (int i = 0; i < values.size(); i++)
+        for (int i = 0; i < values.size() && LoopTime::ok(); i++)
         {
             ConfigValue *val = values[i];
             if (Util::equalIgnoreCase(val->getName(), name))
@@ -45,6 +47,8 @@ namespace FCLIB
                 return val;
             }
         }
+        LoopTime::check("ConfigSection::getValue()");
+
         return NULL;
     }
 
@@ -90,14 +94,20 @@ namespace FCLIB
 
     void ConfigSection::addValue(ConfigValue *value)
     {
+        log.always("add value");
         value->setSection(this);
         ConfigValue *val = this->getValue(value->getName());
+        log.always("current %x", val);
+
         if (val != NULL)
         {
+            log.always("remove");
             removeValue(val);
+            log.always("\tremoved");
         }
-        log.debug("Add config value: %s=%s  [%s]", value->getName(), value->toString(), this->name.c_str());
+        log.always("Add config value: %s=%s  [%s]", value->getName(), value->toString(), this->name.c_str());
         this->values.add(value);
+        log.always("added");
     }
 
     void ConfigSection::deleteValue(const char *value)
@@ -112,7 +122,7 @@ namespace FCLIB
     void ConfigSection::removeValue(ConfigValue *val)
     {
         int i = 0;
-        while (i < values.size())
+        while (i < values.size() && LoopTime::ok())
         {
             if (values[i] == val)
             {
@@ -124,6 +134,7 @@ namespace FCLIB
                 i++;
             }
         }
+        LoopTime::check("ConfigSection::removeValue()");
     }
 
     void ConfigSection::set(const char *name, const char *newValue)
@@ -203,7 +214,7 @@ namespace FCLIB
 
     bool ConfigSection::isChanged()
     {
-        for (int i = 0; i < values.size(); i++)
+        for (int i = 0; i < values.size() && LoopTime::ok(); i++)
         {
             ConfigValue *val = values[i];
             if (val->isChanged())
@@ -211,6 +222,8 @@ namespace FCLIB
                 return true;
             }
         }
+        LoopTime::check("ConfigSection::isChanged()");
+
         return false;
     }
 }

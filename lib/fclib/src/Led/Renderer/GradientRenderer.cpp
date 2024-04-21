@@ -41,7 +41,7 @@ void FCLIB::GradientRenderer::drawRGB(Color::RGB start, Color::RGB end, LedStrip
     float stepG = diffG / count;
     float stepB = diffB / count;
     Color::RGB pixel;
-    for (uint i = 0; i < count; i++)
+    for (uint i = 0; i < count && LoopTime::ok(); i++)
     {
         pixel.red(start.red() + i * stepR);
         pixel.green(start.green() + i * stepG);
@@ -49,6 +49,7 @@ void FCLIB::GradientRenderer::drawRGB(Color::RGB start, Color::RGB end, LedStrip
         Color color(pixel);
         strip.set(i, color, op);
     }
+    LoopTime::check("GradientRenderer::drawRGB");
 }
 
 void FCLIB::GradientRenderer::drawHSV(Color::HSV start, Color::HSV end, LedStrip &strip, LedOp_t op)
@@ -71,7 +72,7 @@ void FCLIB::GradientRenderer::drawHSV(Color::HSV start, Color::HSV end, LedStrip
     float stepV = diffV / count;
     Color::HSV pixel;
     LOG.never("HSV gradient steps %f %f %f", stepH, stepS, stepV);
-    for (uint i = 0; i < count; i++)
+    for (uint i = 0; i < count && LoopTime::ok(); i++)
     {
         pixel.hue(start.hue() + i * stepH);
         pixel.saturation(start.saturation() + i * stepS);
@@ -79,4 +80,5 @@ void FCLIB::GradientRenderer::drawHSV(Color::HSV start, Color::HSV end, LedStrip
         Color color(pixel);
         strip.set(i, color, op);
     }
+    LoopTime::check("GradientRenderer::drawHSV");
 }

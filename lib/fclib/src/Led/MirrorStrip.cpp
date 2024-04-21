@@ -43,10 +43,11 @@ void FCLIB::MirrorStrip::set(int pos, const Color &color, LedOp_t op)
         float ratio = 1.0 * copy->length() / orig->length();
         float start = ratio * pos;
         float end = ratio * (pos + 1);
-        for (int i = start; i < end; i++)
+        for (int i = start; i < end && LoopTime::ok(); i++)
         {
             copy->set(i, color, op);
         }
+        LoopTime::check("MirrorStrip::set");
     }
 }
 void FCLIB::MirrorStrip::clear()

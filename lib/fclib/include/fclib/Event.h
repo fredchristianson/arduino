@@ -28,7 +28,7 @@ namespace FCLIB
 
         TASK_CREATED = 300,
         TASK_DONE = 301,
-
+        APP_INITIALIZATION_DONE = 500,
         ANY = 0xFFFF
     };
 

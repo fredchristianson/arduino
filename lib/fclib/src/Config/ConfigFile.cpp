@@ -42,7 +42,7 @@ namespace FCLIB
 
     bool FCLIB::ConfigFile::load(const char *filePath)
     {
-        log.never("Load", filePath);
+        log.always("Load %s", filePath);
         this->filePath = filePath;
         FileReader reader(filePath);
         if (!reader.isOpen())
@@ -51,13 +51,14 @@ namespace FCLIB
         }
         String line;
         ConfigSection *section = getSection("default", true);
-        while (reader.readLine(line))
+        log.always("got section %x", section);
+        while (reader.readLine(line) && LoopTime::ok())
         {
-            log.never("\tgot line: %s", line.c_str());
+            log.always("\tgot line: %s", line.c_str());
             line.trim();
             if (line.startsWith("#"))
             {
-                log.never("ignore comment");
+                log.always("ignore comment");
             }
             else if (line.startsWith("["))
             {
@@ -67,19 +68,19 @@ namespace FCLIB
                     sectionName = "unnamed";
                 }
                 section = getSection(sectionName.c_str(), true);
-                log.never("Config Section: %s", sectionName.c_str());
+                log.always("Config Section: %s", sectionName.c_str());
             }
             else
             {
                 ConfigValue *value = parseLine(line);
                 if (value != NULL)
                 {
-                    log.never("\t\tName: '%s'    Value: '%s'  Section: ['%s']", value->getName(), value->toString(), section->getName());
+                    log.always("\t\tName: '%s'    Value: '%s'  Section: %x ['%s']", value->getName(), value->toString(), section, section->getName());
                     section->addValue(value);
                 }
             }
         }
-        log.never("clear changes");
+        log.always("clear changes");
         clearChanged();
         log.never("load complete");
         return true;
@@ -87,9 +88,10 @@ namespace FCLIB
 
     bool ConfigFile::save(const char *filePath)
     {
+        return true;
         log.never("save file %s", filePath);
         FileWriter writer(filePath);
-        for (int i = 0; i < sections.size(); i++)
+        for (int i = 0; i < sections.size() && LoopTime::ok(); i++)
         {
             ConfigSection *section = sections.getAt(i);
             log.never("save section 0x%lx %s", section, section->getName());
@@ -97,7 +99,7 @@ namespace FCLIB
             line.concat(section->getName());
             line.concat("]");
             writer.writeLine(line);
-            for (int j = 0; j < section->valueCount(); j++)
+            for (int j = 0; j < section->valueCount() && LoopTime::ok(); j++)
             {
                 const ConfigValue *val = section->getValueAt(j);
                 log.conditional(val, ALWAYS_LEVEL, "save value 0x%lx %s=%s", val, val->getName(), val->toString());
@@ -109,6 +111,7 @@ namespace FCLIB
             }
             writer.writeLine("");
         }
+        LoopTime::check("ConfigFile::save()");
         log.never("clearChanged()");
         clearChanged();
         log.never("save done");

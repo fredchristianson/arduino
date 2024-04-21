@@ -17,14 +17,16 @@ namespace FCLIB
 
     ConfigSection *Config::getSection(const char *name, bool createIfNeeded)
     {
-        for (int i = 0; i < sections.size(); i++)
+        for (int i = 0; i < sections.size() && LoopTime::ok(); i++)
         {
             if (Util::equalIgnoreCase(sections[i]->getName(), name))
             {
                 return sections[i];
             }
         }
+        LoopTime::check("Config::getSection");
         ConfigSection *section = createSection(name);
+        log.always("return section %x", section);
         return section;
     }
 
@@ -33,6 +35,7 @@ namespace FCLIB
         log.info("Create new section: %s", name);
         ConfigSection *section = new ConfigSection(this, name);
         sections.add(section);
+        log.always("section created");
         return section;
     }
 
@@ -150,23 +153,25 @@ namespace FCLIB
 
     bool Config::isChanged()
     {
-        for (int i = 0; i < sections.size(); i++)
+        for (int i = 0; i < sections.size() && LoopTime::ok(); i++)
         {
             if (sections[i]->isChanged())
             {
                 return true;
             }
         }
+        LoopTime::check("Config::isChanged");
         return false;
     }
 
     void Config::clearChanged()
     {
-        for (int i = 0; i < sections.size(); i++)
+        for (int i = 0; i < sections.size() && LoopTime::ok(); i++)
         {
             log.never("clear changed %s", sections[i]->getName());
             sections[i]->clearChanged();
             log.never("\tsection cleared");
         }
+        LoopTime::check("Config::clearChanges");
     }
 }

@@ -59,6 +59,7 @@ namespace FCLIB
     {
         events->forEach([](Event *event)
                         { delete event; });
+        LoopTime::check("EventManager::~EventManager()");
     }
     void EventManager::addListener(EventListener *listener)
     {
@@ -77,13 +78,15 @@ namespace FCLIB
 
     bool EventManager::hasListener(EventListener *listener)
     {
-        for (int i = 0; i < listeners.size(); i++)
+        for (int i = 0; i < listeners.size() && LoopTime::ok(); i++)
         {
             if (listener == listeners.getAt(i))
             {
                 return true;
             }
         }
+        LoopTime::check("EventManager::hasListener()");
+
         return false;
     }
 
@@ -97,6 +100,7 @@ namespace FCLIB
                                  { return event->getType() == other->getType() && event->getSender() == other->getSender(); });
         }
         eventQueue->add(event);
+        LoopTime::check("EventManager::addEvent()");
     }
 
     void EventManager::process()
@@ -128,8 +132,12 @@ namespace FCLIB
                                                { 
                                                 log.never("send to listener %x",listener);
                                                 listener->processEvent(event); }); });
+        LoopTime::check("EventManager process events");
+
         cur->forEach([](Event *event)
                      { delete event; });
+        LoopTime::check("EventManager delete events");
+
         cur->clear();
     }
 }

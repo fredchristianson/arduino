@@ -1,0 +1,357 @@
+--- Terminal on /dev/cu.usbserial-0001 | 115200 8-N-1
+--- Available filters and text transformations: colorize, debug, default, direct, esp8266_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+ALWAYS-09:41:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:41:50 -     CupboardApp: Memory: stack=1600,  heap=18520, max block size=15704, fragmentation=15
+ALWAYS-09:42:18 -      HW::Motion: got motion
+ALWAYS-09:42:18 -     MultiMotion: motion changed detected
+ALWAYS-09:42:19 -     CupboardApp: Motion  is  detected.
+ INFO -09:42:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:42:23 -      HW::Motion: no motion
+ALWAYS-09:42:23 -     MultiMotion: motion changed  clear
+ALWAYS-09:42:23 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:42:29 -      HW::Motion: got motion
+ALWAYS-09:42:29 -     MultiMotion: motion changed detected
+ALWAYS-09:42:29 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:42:32 -      HW::Motion: no motion
+ALWAYS-09:42:32 -     MultiMotion: motion changed  clear
+ALWAYS-09:42:32 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:42:36 -      HW::Motion: got motion
+ALWAYS-09:42:36 -     MultiMotion: motion changed detected
+ALWAYS-09:42:36 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:42:38 -      HW::Motion: no motion
+ALWAYS-09:42:38 -     MultiMotion: motion changed  clear
+ALWAYS-09:42:38 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:42:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:42:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:43:05 -      HW::Motion: got motion
+ALWAYS-09:43:05 -     MultiMotion: motion changed detected
+ALWAYS-09:43:05 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:43:11 -      HW::Motion: no motion
+ALWAYS-09:43:11 -     MultiMotion: motion changed  clear
+ALWAYS-09:43:11 -     CupboardApp: Motion  is not  detected.
+ INFO -09:43:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:43:25 -      HW::Motion: got motion
+ALWAYS-09:43:25 -     MultiMotion: motion changed detected
+ALWAYS-09:43:25 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:43:27 -      HW::Motion: no motion
+ALWAYS-09:43:27 -     MultiMotion: motion changed  clear
+ALWAYS-09:43:27 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:43:45 -      HW::Motion: got motion
+ALWAYS-09:43:45 -     MultiMotion: motion changed detected
+ALWAYS-09:43:45 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:43:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:43:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:43:50 -      HW::Motion: no motion
+ALWAYS-09:43:50 -     MultiMotion: motion changed  clear
+ALWAYS-09:43:50 -     CupboardApp: Motion  is not  detected.
+ INFO -09:44:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:44:27 -      HW::Motion: got motion
+ALWAYS-09:44:27 -     MultiMotion: motion changed detected
+ALWAYS-09:44:27 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:44:31 -      HW::Motion: no motion
+ALWAYS-09:44:31 -     MultiMotion: motion changed  clear
+ALWAYS-09:44:31 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:44:40 -      HW::Motion: got motion
+ALWAYS-09:44:40 -     MultiMotion: motion changed detected
+ALWAYS-09:44:40 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:44:43 -      HW::Motion: no motion
+ALWAYS-09:44:43 -     MultiMotion: motion changed  clear
+ALWAYS-09:44:43 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:44:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:44:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ INFO -09:45:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:45:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:45:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:45:53 -      HW::Motion: got motion
+ALWAYS-09:45:53 -     MultiMotion: motion changed detected
+ALWAYS-09:45:53 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:45:57 -      HW::Motion: no motion
+ALWAYS-09:45:57 -     MultiMotion: motion changed  clear
+ALWAYS-09:45:57 -     CupboardApp: Motion  is not  detected.
+ INFO -09:46:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:46:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:46:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:47:04 -      HW::Motion: got motion
+ALWAYS-09:47:04 -     MultiMotion: motion changed detected
+ALWAYS-09:47:04 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:47:07 -      HW::Motion: no motion
+ALWAYS-09:47:07 -     MultiMotion: motion changed  clear
+ALWAYS-09:47:07 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:47:15 -      HW::Motion: got motion
+ALWAYS-09:47:15 -     MultiMotion: motion changed detected
+ALWAYS-09:47:15 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:47:17 -      HW::Motion: no motion
+ALWAYS-09:47:17 -     MultiMotion: motion changed  clear
+ALWAYS-09:47:17 -     CupboardApp: Motion  is not  detected.
+ INFO -09:47:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:47:21 -      HW::Motion: got motion
+ALWAYS-09:47:21 -     MultiMotion: motion changed detected
+ALWAYS-09:47:21 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:47:24 -      HW::Motion: no motion
+ALWAYS-09:47:24 -     MultiMotion: motion changed  clear
+ALWAYS-09:47:24 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:47:32 -      HW::Motion: got motion
+ALWAYS-09:47:32 -     MultiMotion: motion changed detected
+ALWAYS-09:47:32 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:47:42 -      HW::Motion: no motion
+ALWAYS-09:47:42 -     MultiMotion: motion changed  clear
+ALWAYS-09:47:42 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:47:45 -      HW::Motion: got motion
+ALWAYS-09:47:45 -     MultiMotion: motion changed detected
+ALWAYS-09:47:45 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:47:47 -      HW::Motion: no motion
+ALWAYS-09:47:47 -     MultiMotion: motion changed  clear
+ALWAYS-09:47:47 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:47:50 -  HA::LightStrip: publish LightStrip state 0
+ALWAYS-09:47:50 -      HW::Motion: got motion
+ALWAYS-09:47:50 -     MultiMotion: motion changed detected
+ALWAYS-09:47:50 -     CupboardApp: Motion  is  detected.
+ INFO -09:47:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:47:55 -      HW::Motion: no motion
+ALWAYS-09:47:55 -     MultiMotion: motion changed  clear
+ALWAYS-09:47:55 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:48:00 -      HW::Motion: got motion
+ALWAYS-09:48:00 -     MultiMotion: motion changed detected
+ALWAYS-09:48:00 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:48:02 -      HW::Motion: got motion
+ALWAYS-09:48:07 -      HW::Motion: no motion
+ALWAYS-09:48:08 -      HW::Motion: no motion
+ALWAYS-09:48:08 -     MultiMotion: motion changed  clear
+ALWAYS-09:48:08 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:48:11 -      HW::Motion: got motion
+ALWAYS-09:48:11 -     MultiMotion: motion changed detected
+ALWAYS-09:48:11 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:48:11 -      HW::Motion: got motion
+ALWAYS-09:48:18 -      HW::Motion: no motion
+ INFO -09:48:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:48:21 -      HW::Motion: no motion
+ALWAYS-09:48:21 -     MultiMotion: motion changed  clear
+ALWAYS-09:48:21 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:48:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:48:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ INFO -09:49:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:49:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:49:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:50:01 -      HW::Motion: got motion
+ALWAYS-09:50:01 -     MultiMotion: motion changed detected
+ALWAYS-09:50:01 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:50:01 -      HW::Motion: got motion
+ALWAYS-09:50:04 -      HW::Motion: no motion
+ALWAYS-09:50:15 -      HW::Motion: got motion
+ INFO -09:50:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:50:22 -      HW::Motion: no motion
+ALWAYS-09:50:25 -      HW::Motion: no motion
+ALWAYS-09:50:25 -     MultiMotion: motion changed  clear
+ALWAYS-09:50:25 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:50:26 -      HW::Motion: got motion
+ALWAYS-09:50:26 -     MultiMotion: motion changed detected
+ALWAYS-09:50:26 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:50:28 -      HW::Motion: got motion
+ALWAYS-09:50:30 -      HW::Motion: no motion
+ALWAYS-09:50:31 -      HW::Motion: no motion
+ALWAYS-09:50:31 -     MultiMotion: motion changed  clear
+ALWAYS-09:50:31 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:50:32 -      HW::Motion: got motion
+ALWAYS-09:50:32 -     MultiMotion: motion changed detected
+ALWAYS-09:50:32 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:50:34 -      HW::Motion: got motion
+ALWAYS-09:50:38 -      HW::Motion: no motion
+ALWAYS-09:50:38 -      HW::Motion: no motion
+ALWAYS-09:50:38 -     MultiMotion: motion changed  clear
+ALWAYS-09:50:38 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:50:42 -      HW::Motion: got motion
+ALWAYS-09:50:42 -     MultiMotion: motion changed detected
+ALWAYS-09:50:42 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:50:42 -      HW::Motion: got motion
+ALWAYS-09:50:49 -      HW::Motion: no motion
+ALWAYS-09:50:50 -  HA::LightStrip: publish LightStrip state 0
+ INFO -09:50:50 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:50:51 -      HW::Motion: got motion
+ALWAYS-09:50:56 -      HW::Motion: no motion
+ALWAYS-09:50:57 -      HW::Motion: no motion
+ALWAYS-09:50:57 -     MultiMotion: motion changed  clear
+ALWAYS-09:50:57 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:51:07 -      HW::Motion: got motion
+ALWAYS-09:51:07 -     MultiMotion: motion changed detected
+ALWAYS-09:51:07 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:51:13 -      HW::Motion: got motion
+ALWAYS-09:51:15 -      HW::Motion: no motion
+ALWAYS-09:51:18 -      HW::Motion: no motion
+ALWAYS-09:51:18 -     MultiMotion: motion changed  clear
+ALWAYS-09:51:18 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:51:20 -      HW::Motion: got motion
+ALWAYS-09:51:20 -     MultiMotion: motion changed detected
+ALWAYS-09:51:20 -     CupboardApp: Motion  is  detected.
+ INFO -09:51:20 -     CupboardApp: Memory: stack=1600,  heap=19192, max block size=18032, fragmentation=7
+ALWAYS-09:51:22 -      HW::Motion: got motion
+ALWAYS-09:51:23 -      HW::Motion: no motion
+ALWAYS-09:51:26 -      HW::Motion: no motion
+ALWAYS-09:51:26 -     MultiMotion: motion changed  clear
+ALWAYS-09:51:26 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:51:29 -      HW::Motion: got motion
+ALWAYS-09:51:29 -     MultiMotion: motion changed detected
+ALWAYS-09:51:29 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:51:30 -      HW::Motion: got motion
+ALWAYS-09:51:32 -      HW::Motion: no motion
+ALWAYS-09:51:33 -      HW::Motion: no motion
+ALWAYS-09:51:33 -     MultiMotion: motion changed  clear
+ALWAYS-09:51:33 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:51:37 -      HW::Motion: got motion
+ALWAYS-09:51:37 -     MultiMotion: motion changed detected
+ALWAYS-09:51:37 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:51:37 -      HW::Motion: got motion
+ALWAYS-09:51:40 -      HW::Motion: no motion
+ALWAYS-09:51:43 -      HW::Motion: no motion
+ALWAYS-09:51:43 -     MultiMotion: motion changed  clear
+
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 3424, room 16 
+tail 0
+chksum 0x2e
+load 0x3fff20b8, len 40, room 8 
+tail 0
+chksum 0x2b
+csum 0x2b
+v00079430
+~ld
+��␃�␒�o�r��N|�␌$␌�␄l ␂␜#���␃␄�|␃r�␂$�o�␌�o�␀␌$`␃��{�p��␜�␓�␄␄␌�
+Serial Logger Running
+--------------
+ INFO -00:00:00 -      ConfigFile: Create new section: default
+ INFO -00:00:00 -      ConfigFile: Create new section: hascene
+ INFO -00:00:00 -      ConfigFile: Create new section: app
+ INFO -00:00:00 -     CupboardApp: CupboardApp Created: stack=4100,  heap=35512, max block size=34992, fragmentation=2
+ INFO -00:00:00 -            main: stack 3fff1d00
+ INFO -00:00:00 -            main: setup: stack=3200,  heap=35424, max block size=34992, fragmentation=2
+ INFO -00:00:00 -      ConfigFile: Create new section: default
+ INFO -00:00:00 -      ConfigFile: Create new section: wifi
+ INFO -00:00:00 -      ConfigFile: Create new section: mqtt
+ INFO -00:00:00 -      ConfigFile: Create new section: ntp
+ INFO -00:00:00 -      ConfigFile: Create new section: motion1
+ INFO -00:00:00 -      ConfigFile: Create new section: motion2
+ INFO -00:00:00 -      ConfigFile: Create new section: led1
+ INFO -00:00:00 -      ConfigFile: Create new section: led2
+ INFO -00:00:00 -      ConfigFile: Create new section: logging
+ DEBUG-00:00:00 -     CupboardApp: setupLogging
+ INFO -00:00:00 -      ConfigFile: Create new section: default
+ INFO -00:00:00 -      ConfigFile: Create new section: levels
+ DEBUG-00:00:00 -         Network: network setup
+ DEBUG-00:00:00 -         Network: deviceName: Cupboard
+ DEBUG-00:00:00 -         Network: use mqtt 192.168.1.22 Cupboard device fred123
+ INFO -00:00:00 -         Network: Connect Network
+ INFO -00:00:00 -         Network: Connecting wifi
+ DEBUG-00:00:00 -         Network: params changed
+ INFO -00:00:00 -         Network: start wifi connect
+ DEBUG-00:00:00 -       WiFiSetup: Connect
+ DEBUG-00:00:04 -       WiFiSetup: 	connected success
+ INFO -00:00:04 -         Network: wifi connect done 1
+ DEBUG-00:00:04 -         Network: Update mqtt params: device device 192.168.1.22
+ DEBUG-00:00:04 -         Network: tz_offset: -300
+ INFO -00:00:04 -      TimeClient: Start NTTPClient tzoffset: -300
+ INFO -00:00:04 -      TimeClient: NTTPClient started
+ INFO -09:51:55 -            Mqtt: MQTT connect: 192.168.1.22 Cupboard device fred123
+ INFO -09:51:55 -     CupboardApp: ==================================
+ INFO -09:51:55 -     CupboardApp: Cupboard App Starting
+ INFO -09:51:55 -     CupboardApp: ==================================
+ DEBUG-09:51:55 - InputPinCompone: ----- InputPinComponent 0x3fff5684
+ DEBUG-09:51:55 -      HW::Motion: Motion 0x3fff5684
+ DEBUG-09:51:55 -      HW::Motion: setup pin 14  0x3fff5684
+ DEBUG-09:51:55 -      HW::Motion: 	input
+ DEBUG-09:51:55 - InputPinCompone: ----- InputPinComponent 0x3fff590c
+ DEBUG-09:51:55 -      HW::Motion: Motion 0x3fff590c
+ DEBUG-09:51:55 -      HW::Motion: setup pin 12  0x3fff590c
+ DEBUG-09:51:55 -      HW::Motion: 	input
+ INFO -09:51:55 -   NeoPixelStrip: Pin change to 4
+ INFO -09:51:55 -   NeoPixelStrip: 	Pin changed
+ INFO -09:51:55 -   NeoPixelStrip: Pin change to 5
+ INFO -09:51:55 -   NeoPixelStrip: 	Pin changed
+ INFO -09:51:55 -     CupboardApp: setup listeners: stack=2528,  heap=25520, max block size=25176, fragmentation=2
+ DEBUG-09:51:55 -   HomeAssistant: Create HomeAssistant
+ DEBUG-09:51:55 -      HA::Device: name: kitchen_cupboard_lights
+ DEBUG-09:51:55 -      HA::Device: board ID 98CDAC25FB00
+ DEBUG-09:51:55 -  HA::LightStrip: created HA:LightStrip 3fff6104
+ALWAYS-09:51:55 -  HA::LightStrip: listen for TASK_DONE 3ffeff14
+ DEBUG-09:51:55 -      HA::Device: add entity: 3fff6104 
+ DEBUG-09:51:55 -      HA::Device: add entity: 3fff63f4 
+ DEBUG-09:51:55 -      HA::Device: add entity: 3fff6644 
+ DEBUG-09:51:55 -      HA::Device: add entity: 3fff678c 
+ DEBUG-09:51:55 -      HA::Device: add entity: 3fff68fc 
+ DEBUG-09:51:55 -      HA::Device: add entity: 3fff6a44 
+ DEBUG-09:51:55 -      HA::Device: add entity: 3fff6ba4 
+ DEBUG-09:51:55 -      HA::Device: add entity: 3fff6d04 
+ INFO -09:51:55 -   HomeAssistant: publish entities
+ DEBUG-09:51:55 -   HomeAssistant: publish entity 0 3fff6104 Kitchen Cupboard Lights:0
+ DEBUG-09:51:55 -   HomeAssistant: publish config
+ DEBUG-09:51:55 -   HomeAssistant: config sent
+ DEBUG-09:51:55 -  HA::LightStrip: LightStrip subscribe
+ALWAYS-09:51:55 -  HA::LightStrip: publish LightStrip state 1
+ DEBUG-09:51:55 -   HomeAssistant: publish entity 1 3fff63f4 Motion Sensor:0
+ DEBUG-09:51:55 -   HomeAssistant: publish config
+ DEBUG-09:51:55 -   HomeAssistant: config sent
+ DEBUG-09:51:55 -   HomeAssistant: publish entity 2 3fff6644 Left Motion Pin:0
+ DEBUG-09:51:55 -   HomeAssistant: publish config
+ DEBUG-09:51:55 -   HomeAssistant: config sent
+ DEBUG-09:51:55 -   HomeAssistant: publish entity 3 3fff678c Right Motion Pin:1
+ DEBUG-09:51:55 -   HomeAssistant: publish config
+ DEBUG-09:51:55 -   HomeAssistant: config sent
+ DEBUG-09:51:55 -   HomeAssistant: publish entity 4 3fff68fc Left led Pin:2
+ DEBUG-09:51:55 -   HomeAssistant: publish config
+ DEBUG-09:51:55 -   HomeAssistant: config sent
+ DEBUG-09:51:55 -   HomeAssistant: publish entity 5 3fff6a44 Right led Pin:3
+ DEBUG-09:51:55 -   HomeAssistant: publish config
+ DEBUG-09:51:55 -   HomeAssistant: config sent
+ DEBUG-09:51:55 -   HomeAssistant: publish entity 6 3fff6ba4 Left led Count:4
+ DEBUG-09:51:55 -   HomeAssistant: publish config
+ DEBUG-09:51:55 -   HomeAssistant: config sent
+ DEBUG-09:51:55 -   HomeAssistant: publish entity 7 3fff6d04 Right led Count:5
+ DEBUG-09:51:55 -   HomeAssistant: publish config
+ DEBUG-09:51:55 -   HomeAssistant: config sent
+ WARN -09:51:55 - HomeAssistantSc: already rendering
+ DEBUG-09:51:55 -   HomeAssistant: MQTT connected 1 200
+ALWAYS-09:51:55 - HomeAssistantSc: Trigger task done 3ffeff14
+ALWAYS-09:51:55 -  HA::LightStrip: publish LightStrip state 0
+ALWAYS-09:51:56 -      HW::Motion: got motion
+ALWAYS-09:51:56 -     MultiMotion: motion changed detected
+ALWAYS-09:51:56 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:51:59 -      HW::Motion: no motion
+ALWAYS-09:51:59 -     MultiMotion: motion changed  clear
+ALWAYS-09:51:59 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:52:04 -      HW::Motion: got motion
+ALWAYS-09:52:04 -     MultiMotion: motion changed detected
+ALWAYS-09:52:04 -     CupboardApp: Motion  is  detected.
+ DEBUG-09:52:05 -     CupboardApp: Assuming startup was ok after 10 seconds.
+ALWAYS-09:52:07 -      HW::Motion: no motion
+ALWAYS-09:52:07 -     MultiMotion: motion changed  clear
+ALWAYS-09:52:07 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:52:15 -      HW::Motion: got motion
+ALWAYS-09:52:15 -     MultiMotion: motion changed detected
+ALWAYS-09:52:15 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:52:17 -      HW::Motion: no motion
+ALWAYS-09:52:17 -     MultiMotion: motion changed  clear
+ALWAYS-09:52:17 -     CupboardApp: Motion  is not  detected.
+ INFO -09:52:25 -     CupboardApp: Memory: stack=1832,  heap=19192, max block size=17488, fragmentation=9
+ALWAYS-09:52:28 -      HW::Motion: got motion
+ALWAYS-09:52:28 -     MultiMotion: motion changed detected
+ALWAYS-09:52:28 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:52:31 -      HW::Motion: no motion
+ALWAYS-09:52:31 -     MultiMotion: motion changed  clear
+ALWAYS-09:52:31 -     CupboardApp: Motion  is not  detected.
+ALWAYS-09:52:50 -      HW::Motion: got motion
+ALWAYS-09:52:51 -     MultiMotion: motion changed detected
+ALWAYS-09:52:51 -     CupboardApp: Motion  is  detected.
+ALWAYS-09:52:52 -      HW::Motion: no motion
+ALWAYS-09:52:53 -     MultiMotion: motion changed  clear
+ALWAYS-09:52:53 -     CupboardApp: Motion  is not  detected.
+ INFO -09:52:55 -     CupboardApp: Memory: stack=1832,  heap=19192, max block size=17488, fragmentation=9
+ALWAYS-09:52:55 -  HA::LightStrip: publish LightStrip state 0
+ALWAYS-09:53:24 -      HW::Motion: got motion
+ALWAYS-09:53:24 -     MultiMotion: motion changed detected
+ALWAYS-09:53:24 -     CupboardApp: Motion  is  detected.
+ INFO -09:53:25 -     CupboardApp: Memory: stack=1832,  heap=19192, max block size=17488, fragmentation=9
+ALWAYS-09:53:26 -      HW::Motion: no motion
+ALWAYS-09:53:26 -     MultiMotion: motion changed  clear
+ALWAYS-09:53:26 -     CupboardApp: Motion  is not  detected.

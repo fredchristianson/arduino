@@ -25,12 +25,13 @@ namespace FCLIB
     void CompositeSceneRenderer::runRenderers()
     {
 
-        for (int i = 0; i < renderers.size(); i++)
+        for (int i = 0; i < renderers.size() && LoopTime::ok(); i++)
         {
             log.debug("draw");
             renderers[i]
                 ->draw(*strip);
         }
+        LoopTime::check("CompositeSceneRenderer::runRenderers");
     }
 
 }

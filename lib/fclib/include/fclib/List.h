@@ -3,6 +3,7 @@
 #include <c_types.h>
 #include <fclib/Callable.h>
 #include "fclib/Test.h"
+#include "fclib/Loop.h"
 
 using namespace FCLIB;
 
@@ -50,47 +51,53 @@ namespace FCLIB
         const T *operator[](uint16 index) const { return getAt(index); }
         void forEach(Callback<T *> callback)
         {
-            for (int i = 0; i < size(); i++)
+            for (int i = 0; i < size() && LoopTime::ok(); i++)
             {
                 callback((T *)getAt(i));
             };
+            LoopTime::check("forEach");
         };
 
         void forEach(Callback<T *> callback) const
         {
-            for (int i = 0; i < size(); i++)
+            for (int i = 0; i < size() && LoopTime::ok(); i++)
             {
                 callback((const T *)getAt(i));
             };
+            LoopTime::check("forEach");
         };
 
         T *first(BoolCallback<T *> match)
         {
-            for (uint16 i = 0; i < size(); i++)
+            for (uint16 i = 0; i < size() && LoopTime::ok(); i++)
             {
                 if (match((T *)getAt(i)))
                 {
                     return (T *)getAt(i);
                 }
             }
+            LoopTime::check("first");
+
             return NULL;
         }
 
         bool any(BoolCallback<T *> match) const
         {
-            for (uint16 i = 0; i < size(); i++)
+            for (uint16 i = 0; i < size() && LoopTime::ok(); i++)
             {
                 if (match((T *)getAt(i)))
                 {
                     return true;
                 }
             }
+            LoopTime::check("any");
+
             return false;
         }
 
         void removeIf(BoolCallback<T *> match, Callback<T *> onRemove = NULL)
         {
-            for (uint16 i = 0; i < size(); i++)
+            for (uint16 i = 0; i < size() && LoopTime::ok(); i++)
             {
                 if (match((T *)getAt(i)))
                 {
@@ -102,16 +109,20 @@ namespace FCLIB
                     i--;
                 }
             }
+            LoopTime::check("removeIf");
         }
 
         void deleteAll()
         {
-            for (uint16 i = 0; i < size(); i++)
+            for (uint16 i = 0; i < size() && LoopTime::ok(); i++)
             {
                 delete getAt(i);
             }
+            LoopTime::check("deleteAll");
             clear();
         }
+
+    private:
     };
     namespace TEST
     {

@@ -1,0 +1,22 @@
+--- Terminal on /dev/cu.usbserial-0001 | 115200 8-N-1
+--- Available filters and text transformations: colorize, debug, default, direct, esp8266_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 3424, room 16 
+tail 0
+chksum 0x2e
+load 0x3fff20b8, len 40, room 8 
+tail 0
+chksum 0x2b
+csum 0x2b
+v00079c40
+~ld
+��␃�␒�o�r��o|�␌l␄�␌d ␃␜"�␛␂␄��2r�␂$�o�␌�o�␀␌l ␂�n�l�l2�␌␌␄�
+Serial Logger Running
+--------------
+ INFO -00:00:00 -      ConfigFile: Create new section: default
+ INFO -00:00:00 -      ConfigFile: Create new section: hascene

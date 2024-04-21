@@ -8,7 +8,8 @@ namespace FCLIB
 {
     Persist::Persist() : log("Persist", DEBUG_LEVEL)
     {
-        load("/persist.ini");
+        listener.handle(EventType::APP_INITIALIZATION_DONE, [this](Event *event)
+                        { load("/persist.ini"); });
         listener.handle(EventType::CHANGE_EVENT, this, [this](Event *event)
                         { this->persistChanges(); });
     }

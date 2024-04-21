@@ -23,6 +23,11 @@ namespace FCLIB
         pubSubClient.disconnect();
     }
 
+    void Mqtt::startLogger(const char *topic, LogLevel level)
+    {
+        new Mqtt::LogDestination(this, topic, level);
+    }
+
     // primary device if multiple presented to HA
     bool Mqtt::configure(const char *mqttServer, const char *deviceName, const char *user, const char *password, int port)
     {
@@ -73,18 +78,24 @@ namespace FCLIB
         return true;
     }
 
-    void Mqtt::send(String topic, JsonDocument &doc)
+    void Mqtt::send(String topic, JsonDocument &doc, bool noLog)
     {
         int len = measureJson(doc);
-        log.never("send: %s", topic.c_str());
+        if (!noLog)
+        {
+            log.always("send: %s", topic.c_str());
+        }
         pubSubClient.beginPublish(topic.c_str(), len, false);
         serializeJson(doc, pubSubClient);
         pubSubClient.endPublish();
     }
 
-    void Mqtt::send(String topic, const char *payload)
+    void Mqtt::send(String topic, const char *payload, bool noLog)
     {
-        log.never("sends: %s", topic.c_str());
+        if (!noLog)
+        {
+            log.always("sends: %s", topic.c_str());
+        }
         pubSubClient.publish(topic.c_str(), payload);
     }
 
@@ -95,17 +106,18 @@ namespace FCLIB
 
     void Mqtt::handleMessage(String &topic, String &message)
     {
-        log.debug("handle message: %s", topic.c_str());
-        for (int i = 0; i < subscribers.size(); i++)
+        log.always("handle message: %s", topic.c_str());
+        for (int i = 0; i < subscribers.size() && LoopTime::ok(); i++)
         {
             Subscriber *sub = subscribers[i];
-            log.debug("\tcheck subscriber: %lx %s ", sub, sub->topic.c_str());
+            log.always("\tcheck subscriber: %lx %s ", sub, sub->topic.c_str());
             if (topic.equals(subscribers[i]->topic))
             {
-                log.debug("\t\tcallback");
+                log.always("\t\tcallback");
                 subscribers[i]->callback(message.c_str());
             }
         }
+        LoopTime::check("Mqtt::handleMessage");
     }
 
     void Mqtt::subscribe(const char *topic, MqttCallback callback)

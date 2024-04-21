@@ -9,6 +9,7 @@
 #include "./Net.h"
 #include "./Logging.h"
 #include "./Task.h"
+#include "./Loop.h"
 
 namespace FCLIB
 {

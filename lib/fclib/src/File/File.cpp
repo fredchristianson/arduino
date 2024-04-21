@@ -39,23 +39,25 @@ FCLIB::FileReader::~FileReader()
 
 bool FCLIB::FileReader::readLine(String &line)
 {
-
+    log.never("readLine");
     line.clear();
     if (this->bufferPos < this->bufferLen)
     {
         int count = this->file.read((uint8_t *)this->buffer + this->bufferPos, this->bufferLen - this->bufferPos);
+        log.never("read %d bytes", count);
+
         if (count > 0)
         {
             this->bufferPos += count;
             this->buffer[this->bufferPos] = 0;
         }
     }
-    log.debug("Get line buffer:");
-    log.debug(this->buffer);
+    log.never("Get line buffer:");
+    log.never(this->buffer);
     char *pos = this->buffer;
     if (*pos == 0)
     {
-        log.debug("EOF");
+        log.never("EOF");
         return false; // EOF
     }
     while (*pos != 0 && *pos != '\r' && *pos != '\n')
@@ -74,7 +76,7 @@ bool FCLIB::FileReader::readLine(String &line)
     memcpy(this->buffer, pos, keepLen);
     this->buffer[keepLen] = 0;
     this->bufferPos = keepLen;
-    log.debug("Got line: %s", line.c_str());
+    log.never("Got line: %s", line.c_str());
     return true;
 }
 

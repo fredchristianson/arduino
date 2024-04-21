@@ -34,6 +34,7 @@ namespace FCLIB
                             Logger log("~EventListener");
                             log.never("delete handler %x",h);
                             delete h; });
+        LoopTime::check("~EventListener");
         EventManager::remove(this);
     }
 
@@ -47,6 +48,7 @@ namespace FCLIB
             {
                 handler->handle(event);
             } });
+        LoopTime::check("EventListener::processEvent");
     }
 
     bool EventListener::hasHandler(EventType type)

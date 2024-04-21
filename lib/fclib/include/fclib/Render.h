@@ -117,7 +117,7 @@ namespace FCLIB
     public:
         SceneRenderer(LedStrip *strip = NULL);
         ~SceneRenderer();
-        void setStrip(LedStrip *strip);
+        virtual void setStrip(LedStrip *strip);
         virtual void setBrightness(uint8 brightness);
 
         void start();
@@ -148,6 +148,7 @@ namespace FCLIB
         void turnOn(int transitionSeconds);
         void turnOff(int transitionSeconds);
         const List<const char> &getEffects() const;
+        void setStrip(LedStrip *strip) override;
 
     protected:
         SceneState currentState;

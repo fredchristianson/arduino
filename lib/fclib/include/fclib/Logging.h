@@ -24,6 +24,13 @@ namespace FCLIB
     void setDefaultLoggerLevel(LogLevel level);
     void configureLogging(ConfigSection *config);
 
+    class ILogDestination
+    {
+    public:
+        ILogDestination();
+        virtual void write(int level, const char *message) const = 0;
+    };
+
     class Logger
     {
     public:
