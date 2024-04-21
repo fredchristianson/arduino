@@ -43,6 +43,7 @@ void Logger::write(int level, const char *message, va_list args) const
 
     if (!shouldLog(level, message))
     {
+
         return;
     }
 
@@ -52,8 +53,10 @@ void Logger::write(int level, const char *message, va_list args) const
         output = formatter->format(this->moduleName.c_str(), level, message, args);
     }
 
-    logDestinations.forEach([output, level](ILogDestination *dest)
-                            { dest->write(level, output); });
+    for (int i = 0; i < logDestinations.size(); i++)
+    {
+        logDestinations[i]->write(level, output);
+    }
 }
 
 void Logger::write(int level, const char *message, ...) const
@@ -95,6 +98,7 @@ void Logger::error(const char *message, ...) const
 
 void Logger::always(const char *message, ...) const
 {
+
     va_list args;
     va_start(args, message);
     write(ALWAYS_LEVEL, message, args);

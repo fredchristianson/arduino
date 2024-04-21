@@ -128,6 +128,7 @@ namespace FCLIB
         return config;
     }
 
+    Logger loopTimeLog("LoopTime", DEBUG_LEVEL);
     void LoopTime::startLoop()
     {
         LoopTime::startMSecs = THE_BOARD->currentMsecs();
@@ -138,8 +139,8 @@ namespace FCLIB
     {
         if (LoopTime::over())
         {
-            Logger log("LoopTime");
-            log.error("Loop took to long: %dmsecs  (%d allowed)", (THE_BOARD->currentMsecs() - startMSecs), maxMSecs);
+            // Serial.println("endloop over time");
+            loopTimeLog.always("Loop took to long: %dmsecs  (%d allowed)", (THE_BOARD->currentMsecs() - startMSecs), LoopTime::maxMSecs);
         }
     }
 
@@ -149,25 +150,28 @@ namespace FCLIB
         {
             return false; // starting up - no loop yet.
         }
-        bool isOver = (THE_BOARD->currentMsecs() - startMSecs) > maxMSecs;
+        bool isOver = (THE_BOARD->currentMsecs() - startMSecs) > LoopTime::maxMSecs;
         if (isOver && !LoopTime::loggedOver)
         {
+            // Serial.println("LoopTime over time");
+
             LoopTime::loggedOver = true;
-            Logger log("LoopTime");
-            log.error("Loop taking too much time: %dmsecs  (%d allowed)", (THE_BOARD->currentMsecs() - startMSecs), maxMSecs);
+            loopTimeLog.error("Loop taking too much time: %d msecs  (%d allowed)", (THE_BOARD->currentMsecs() - startMSecs), LoopTime::maxMSecs);
         }
         return isOver;
     }
 
     void LoopTime::check(const char *msg)
     {
-        if (startMSecs > 0 && LoopTime::over())
+        if (startMSecs > 0 && LoopTime::over() && !LoopTime::loggedOver)
         {
-            Logger log("List");
-            log.warn("%s took too long to process %d ", msg, (THE_BOARD->currentMsecs() - startMSecs));
+            LoopTime::loggedOver = true;
+            // Serial.println("loop check over time");
+            // Serial.println(msg);
+            loopTimeLog.warn("%s took too long to process %d ", msg, (THE_BOARD->currentMsecs() - startMSecs));
         }
     }
-    unsigned long LoopTime::maxMSecs = 500;
+    unsigned long LoopTime::maxMSecs = 100;
     unsigned long LoopTime::startMSecs = 0;
     bool LoopTime::loggedOver = false;
 
