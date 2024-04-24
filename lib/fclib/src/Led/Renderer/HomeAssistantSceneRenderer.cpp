@@ -110,6 +110,7 @@ namespace FCLIB
     }
     void HomeAssistantSceneRenderer::startTransition()
     {
+        Event::trigger(EventType::SCENE_START_TRANSITION, this);
         int msecs = transition.transistionMsecs == 0 ? 10 : transition.transistionMsecs;
         start();
         String &effect = transition.to.effect;
@@ -173,9 +174,9 @@ namespace FCLIB
                         this->currentState.mode = this->transition.to.mode;
                         if (this->currentState.mode != SceneMode::MODE_OFF)
                         {
-
                         this->saveState(this->currentState);
-                        } })
+                        }
+                     Event::trigger(EventType::SCENE_END_TRANSITION, this); })
             .run();
 
         currentState.mode = SceneMode::MODE_TRANSITION;

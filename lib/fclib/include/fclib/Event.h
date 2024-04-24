@@ -23,6 +23,9 @@ namespace FCLIB
         MOTION_START_EVENT = 105,
         MOTION_STOP_EVENT = 106,
 
+        SCENE_START_TRANSITION = 120,
+        SCENE_END_TRANSITION = 120,
+
         CONNECTED = 200,
         DISCONNECTED = 201,
 
