@@ -26,7 +26,7 @@ namespace FCLIB
         {
             log.never("call clearChanged val %d of %d", i, this->values.size());
             ConfigValue *val = this->values[i];
-            log.conditional(val == NULL, ALWAYS_LEVEL, "val is NULL");
+            log.conditional(val == NULL, DEBUG_LEVEL, "val is NULL");
             log.never("value 0x%lx", val);
             log.never("\tname=%s", val->getName());
             val->clearChanged();
@@ -39,7 +39,7 @@ namespace FCLIB
 
     ConfigValue *ConfigSection::getValue(const char *name)
     {
-        for (int i = 0; i < values.size() && LoopTime::ok(); i++)
+        for (int i = 0; i < values.size(); i++)
         {
             ConfigValue *val = values[i];
             if (Util::equalIgnoreCase(val->getName(), name))
@@ -94,20 +94,20 @@ namespace FCLIB
 
     void ConfigSection::addValue(ConfigValue *value)
     {
-        log.always("add value");
+        log.never("add value");
         value->setSection(this);
         ConfigValue *val = this->getValue(value->getName());
-        log.always("current %x", val);
+        log.never("current %x", val);
 
         if (val != NULL)
         {
-            log.always("remove");
+            log.never("remove");
             removeValue(val);
-            log.always("\tremoved");
+            log.never("\tremoved");
         }
-        log.always("Add config value: %s=%s  [%s]", value->getName(), value->toString(), this->name.c_str());
+        log.never("Add config value: %s=%s  [%s]", value->getName(), value->toString(), this->name.c_str());
         this->values.add(value);
-        log.always("added");
+        log.never("added");
     }
 
     void ConfigSection::deleteValue(const char *value)
@@ -174,11 +174,11 @@ namespace FCLIB
 
     void ConfigSection::set(const char *name, int newValue)
     {
-        log.never("set %s=%d", name, newValue);
+        log.debug("set %s=%d", name, newValue);
         ConfigValue *val = this->getValue(name);
         if (val == NULL)
         {
-            log.never("add conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
+            log.debug("add conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
             val = new ConfigValue(this, name, newValue);
             addValue(val);
         }
@@ -186,11 +186,11 @@ namespace FCLIB
         {
             val->setSection(this);
 
-            log.never("replace conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
+            log.debug("replace conf value: [%s] %s=%d", this->name.c_str(), name, newValue);
 
             val->set(newValue);
         }
-        log.never("set done");
+        log.debug("set done");
     }
 
     void ConfigSection::set(const char *name, float newValue)

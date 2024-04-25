@@ -21,12 +21,12 @@ namespace FCLIB::HW
 
     void Motion::onHigh()
     {
-        log.always("got motion");
+        log.never("got motion");
         Event::trigger(EventType::MOTION_START_EVENT, this, true);
     }
     void Motion::onLow()
     {
-        log.always("no motion");
+        log.never("no motion");
 
         Event::trigger(EventType::MOTION_STOP_EVENT, this, true);
     }
@@ -61,7 +61,7 @@ namespace FCLIB::HW
         if (now != hasMotion)
         {
             hasMotion = now;
-            log.always("motion changed %s", hasMotion ? "detected" : " clear");
+            log.never("motion changed %s", hasMotion ? "detected" : " clear");
             Event::trigger(now ? EventType::MOTION_START_EVENT : EventType::MOTION_STOP_EVENT, this, now);
             Event::trigger(EventType::CHANGE_EVENT, this, now);
         }

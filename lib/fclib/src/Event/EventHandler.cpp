@@ -42,7 +42,11 @@ namespace FCLIB
         {
             return false;
         }
-        if (this->senderIsEventSource)
+        if (sender == NULL && type == this->type)
+        {
+            return true;
+        }
+        if (this->senderIsEventSource && sender != NULL)
         {
             return ((IEventSource *)sender)->match(sender);
         }

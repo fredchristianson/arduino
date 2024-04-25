@@ -24,13 +24,14 @@ namespace FCLIB
     void ConfigValue::setChanged(bool isChanged)
     {
         changed = isChanged;
-        if (changed && EventManager::hasListener(EventType::CHANGE_EVENT))
+        confLogger.debug("isChanged %d", changed);
+        if (changed) // && EventManager::hasListener(EventType::CHANGE_EVENT))
         {
-            confLogger.never(" change %lx", this->section);
+            confLogger.debug(" change %lx", this->section);
             Event::trigger(EventType::CHANGE_EVENT, this, this);
             if (this->section != NULL)
             {
-                confLogger.never("section change %x %x", this->section, this->section->getConfig());
+                confLogger.debug("section change %x %x", this->section, this->section->getConfig());
                 Event::trigger(EventType::CHANGE_EVENT, this->section, this);
                 if (this->section->getConfig() != NULL)
                 {
@@ -38,13 +39,10 @@ namespace FCLIB
                 }
             }
         }
-        else
-        {
-            confLogger.never("no change");
-        }
     }
     void ConfigValue::set(int value)
     {
+        confLogger.debug("set value %d (old %d)", value, intValue);
         setChanged(intValue != value);
         this->intValue = value;
         this->type = INT_TYPE;

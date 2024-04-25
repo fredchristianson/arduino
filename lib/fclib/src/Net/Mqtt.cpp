@@ -38,10 +38,6 @@ namespace FCLIB
         this->password = password;
         this->port = port;
 
-        Task::repeat([this]()
-                     { this->checkConnection(); })
-            ->delayMsecs(10);
-
         auto callback = [this](char *topic, uint8_t *msg, unsigned int len)
         {
             String messageTopic(topic);
@@ -63,7 +59,7 @@ namespace FCLIB
         while (!pubSubClient.connected())
         {
             pubSubClient.setServer(mqttServer.c_str(), port);
-            log.info("MQTT connect: %s %s %s %s", mqttServer.c_str(), deviceName.c_str(), user.c_str(), password);
+            log.never("MQTT connect: %s %s %s %s", mqttServer.c_str(), deviceName.c_str(), user.c_str(), password);
             if (!pubSubClient.connect(deviceName.c_str(), user.c_str(), password.c_str()))
             {
                 Event::trigger(EventType::DISCONNECTED, this);
@@ -83,7 +79,7 @@ namespace FCLIB
         int len = measureJson(doc);
         if (!noLog)
         {
-            log.always("send: %s", topic.c_str());
+            log.never("send: %s", topic.c_str());
         }
         pubSubClient.beginPublish(topic.c_str(), len, false);
         serializeJson(doc, pubSubClient);
@@ -94,26 +90,40 @@ namespace FCLIB
     {
         if (!noLog)
         {
-            log.always("sends: %s", topic.c_str());
+            log.never("sends: %s", topic.c_str());
         }
         pubSubClient.publish(topic.c_str(), payload);
     }
 
     void Mqtt::checkConnection()
     {
+        if (!pubSubClient.connected())
+        {
+            log.error("PubSubClient is disconnected.  Retry in 1 second");
+            delay(1000);
+            THE_BOARD->feedWatchdog();
+            if (pubSubClient.connect(deviceName.c_str(), user.c_str(), password.c_str()))
+            {
+                log.never("Resubscribing");
+                subscribers.forEach([this](Subscriber *sub)
+                                    { this->pubSubClient.subscribe(sub->topic.c_str()); });
+                Event::trigger(EventType::MQTT_RECONNECTED, this);
+            }
+        }
+
         pubSubClient.loop();
     }
 
     void Mqtt::handleMessage(String &topic, String &message)
     {
-        log.always("handle message: %s", topic.c_str());
+        // log.never("handle message: %s", topic.c_str());
         for (int i = 0; i < subscribers.size() && LoopTime::ok(); i++)
         {
             Subscriber *sub = subscribers[i];
-            log.always("\tcheck subscriber: %lx %s ", sub, sub->topic.c_str());
+            log.debug("\tcheck subscriber: %lx %s ", sub, sub->topic.c_str());
             if (topic.equals(subscribers[i]->topic))
             {
-                log.always("\t\tcallback");
+                log.debug("\t\tcallback");
                 subscribers[i]->callback(message.c_str());
             }
         }

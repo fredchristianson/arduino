@@ -38,7 +38,7 @@ namespace FCLIB::HA
         return id;
     }
 
-    HomeAssistant::HomeAssistant(Mqtt *mqtt) : log("HomeAssistant")
+    HomeAssistant::HomeAssistant(Mqtt *mqtt) : log("HomeAssistant", INFO_LEVEL)
     {
         log.debug("Create HomeAssistant");
         this->mqtt = mqtt;

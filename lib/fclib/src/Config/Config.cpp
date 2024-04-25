@@ -17,8 +17,10 @@ namespace FCLIB
 
     ConfigSection *Config::getSection(const char *name, bool createIfNeeded)
     {
-        for (int i = 0; i < sections.size() && LoopTime::ok(); i++)
+        log.debug("find section %s", name);
+        for (int i = 0; i < sections.size(); i++)
         {
+            log.debug("\ttry %s", sections[i]->getName());
             if (Util::equalIgnoreCase(sections[i]->getName(), name))
             {
                 return sections[i];
@@ -26,7 +28,7 @@ namespace FCLIB
         }
         LoopTime::check("Config::getSection");
         ConfigSection *section = createSection(name);
-        log.always("return section %x", section);
+        log.debug("return section %x", section);
         return section;
     }
 
@@ -35,7 +37,7 @@ namespace FCLIB
         log.info("Create new section: %s", name);
         ConfigSection *section = new ConfigSection(this, name);
         sections.add(section);
-        log.always("section created");
+        log.never("section created");
         return section;
     }
 

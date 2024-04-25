@@ -31,15 +31,15 @@ CupboardApp::~CupboardApp()
 
 void CupboardApp::setupComplete()
 {
-    Network::getMqtt()->startLogger("log/cupboard", DEBUG_LEVEL);
+    // Network::getMqtt()->startLogger("log/cupboard", DEBUG_LEVEL);
     log.info("==================================");
     log.info("Cupboard App Starting");
     log.info("==================================");
-    Task::onLoop([this]()
-                 { this->doTask(); });
+    // Task::onLoop([this]()
+    //              { this->doTask(); });
     Task::repeat([this]()
                  { this->log.showMemory(); })
-        ->delaySeconds(30);
+        ->delaySeconds(60);
 
     Config *config = getConfig();
     motion.addPin(config->get("motion1", "pin", -1));
@@ -66,6 +66,10 @@ void CupboardApp::setupComplete()
     ha->publishConfig();
 
     haRenderer.setStrip(&strips);
+
+    // listener.handle(EventType::MQTT_RECONNECTED, [this](Event *event)
+    //                 this->haLight->publishState(); });
+
     listener.handle(EventType::CHANGE_EVENT, &motion, [this](Event *event)
                     { this->onMotionChange(event); });
 
@@ -112,6 +116,6 @@ void CupboardApp::doTask()
 
 void CupboardApp::onMotionChange(Event *event)
 {
-    // log.always("handle event 0x%lx %d", event, event->getType());
-    log.always("Motion %s detected.", motion.isDetected() ? " is " : " is not ");
+    // log.never("handle event 0x%lx %d", event, event->getType());
+    log.never("Motion %s detected.", motion.isDetected() ? " is " : " is not ");
 }

@@ -111,7 +111,7 @@ namespace FCLIB::HA
         void onMotionStart();
         void onMotionStop();
         HW::IMotion *motionSensor;
-        bool paused;
+        Timer pause;
     };
 
     // Switch is a binary device that can send and receive state

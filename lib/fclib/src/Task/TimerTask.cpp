@@ -60,7 +60,10 @@ namespace FCLIB
     {
         if ((repeatCount > 0 || repeatCount == FCLIB_REPEAT_FOREVER) && timer.isComplete())
         {
-            log.debug("Timer triggered");
+            if (repeatCount != FCLIB_REPEAT_FOREVER)
+            {
+                repeatCount -= 1;
+            }
             if (this->action != NULL)
             {
                 this->action->doTask();
@@ -73,10 +76,7 @@ namespace FCLIB
             {
                 log.error("TimerTask doesn't have an action");
             }
-            if (repeatCount != FCLIB_REPEAT_FOREVER)
-            {
-                repeatCount -= 1;
-            }
+
             timer.reset();
         }
     }

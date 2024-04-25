@@ -28,6 +28,7 @@ namespace FCLIB
 
         CONNECTED = 200,
         DISCONNECTED = 201,
+        MQTT_RECONNECTED = 202,
 
         TASK_CREATED = 300,
         TASK_DONE = 301,

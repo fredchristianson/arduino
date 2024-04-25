@@ -37,6 +37,11 @@ namespace FCLIB
         return millis();
     }
 
+    void EspBoardClass::feedWatchdog()
+    {
+        EspClass::wdtFeed();
+    }
+
     Board::Board() {}
 
     Board *Board::get()

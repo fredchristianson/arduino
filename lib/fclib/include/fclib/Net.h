@@ -85,9 +85,9 @@ namespace FCLIB
         void subscribe(const String &topic, MqttCallback callback) { subscribe(topic.c_str(), callback); }
 
         void startLogger(const char *topic, LogLevel level);
+        void checkConnection();
 
     protected:
-        void checkConnection();
         void handleMessage(String &topic, String &message);
         WiFiClient wifiClient;
         PubSubClient pubSubClient;
@@ -144,6 +144,7 @@ namespace FCLIB
         bool connectWifi();
         bool connectMqtt();
         bool connectTimeClient();
+        bool checkConnection();
 
         String mqttUser;
         String mqttPassword;

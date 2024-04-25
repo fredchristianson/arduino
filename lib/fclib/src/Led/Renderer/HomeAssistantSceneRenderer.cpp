@@ -10,7 +10,6 @@ namespace FCLIB
     HomeAssistantSceneRenderer::HomeAssistantSceneRenderer(LedStrip *strip) : SceneRenderer(strip)
     {
         log.setModuleName("HomeAssistantSceneRenderer");
-        loadState(currentState);
         effects.add("None");
         effects.add("Grow");
         if (strip != 0)
@@ -33,21 +32,27 @@ namespace FCLIB
     {
         if (strip != NULL)
         {
-
-            for (int i = 0; i < currentState.ledCount && LoopTime::ok(); i++)
+            if (currentState.mode != SceneMode::MODE_OFF)
             {
-                strip->set(i, currentState.color);
+                strip->setBrightness(currentState.brightness);
+                for (int i = 0; i < currentState.ledCount && LoopTime::ok(); i++)
+                {
+                    strip->set(i, currentState.color);
+                }
+                if (LoopTime::over())
+                {
+                    log.error("HomeAssistantSceneRenderer took too long.  LED count=%d", currentState.ledCount);
+                }
             }
-            if (LoopTime::over())
+            else
             {
-                log.error("HomeAssistantSceneRenderer took too long.  LED count=%d", currentState.ledCount);
+                strip->clear();
             }
         }
     }
 
     void HomeAssistantSceneRenderer::saveState(SceneState &state)
     {
-        log.never("save state b=%d", state.brightness);
 
         Persist::set("hascene", "brightness", state.brightness);
         Color::RGB rgb = state.color.toRGB();
@@ -58,14 +63,15 @@ namespace FCLIB
     }
     void HomeAssistantSceneRenderer::loadState(SceneState &state)
     {
+        log.debug("load state");
         state.brightness = Persist::get("hascene", "brightness", 255);
         int r = Persist::get("hascene", "r", 255);
         int g = Persist::get("hascene", "g", 255);
         int b = Persist::get("hascene", "b", 255);
         state.color = Color::fromRGB(r, g, b);
-        bool on = Persist::get("hascene", "on", false);
-        log.never("Loaded state b=%d", state.brightness);
-        state.mode = on ? SceneMode::MODE_ON : SceneMode::MODE_OFF;
+        //  always set mode to OFF.  only turn on with a transition
+        state.mode = SceneMode::MODE_OFF; // on ? SceneMode::MODE_ON : SceneMode::MODE_OFF;
+        Color::RGB rgb = state.color.toRGB();
     }
 
     void HomeAssistantSceneRenderer::setSceneState(const SceneState &state, uint16 transitionMsecs)
@@ -73,6 +79,9 @@ namespace FCLIB
         transition.from = currentState;
         transition.to = state;
         transition.transistionMsecs = transitionMsecs;
+        Color::RGB rgb = state.color.toRGB();
+        log.always("transition to state b=%d, r=%d, g=%d, b=%d", state.brightness, rgb.red(), rgb.green(), rgb.blue());
+
         if (state.mode == SceneMode::MODE_OFF)
         {
             log.never("transistion to 0 brightness");
@@ -96,22 +105,26 @@ namespace FCLIB
     }
     void HomeAssistantSceneRenderer::turnOff(int transitionSeconds)
     {
-        log.never("turnOff()");
-        if (currentState.mode != SceneMode::MODE_OFF)
-        {
-            saveState(currentState);
-            transition.from = currentState;
-            transition.to = currentState;
-            transition.to.mode = SceneMode::MODE_OFF;
-            transition.to.brightness = 0;
-            transition.transistionMsecs = transitionSeconds * 1000;
-            startTransition();
-        }
+        log.debug("turnOff()");
+        saveState(currentState);
+        transition.from = currentState;
+        transition.to = currentState;
+        transition.to.mode = SceneMode::MODE_OFF;
+        transition.to.brightness = 0;
+        transition.transistionMsecs = transitionSeconds * 1000;
+        startTransition();
     }
     void HomeAssistantSceneRenderer::startTransition()
     {
+        log.debug("start transition %d", transition.transistionMsecs);
+        if (transition.transistionMsecs == 0)
+        {
+            currentState = transition.to;
+            currentState.ledCount = strip->length();
+            return;
+        }
         Event::trigger(EventType::SCENE_START_TRANSITION, this);
-        int msecs = transition.transistionMsecs == 0 ? 10 : transition.transistionMsecs;
+        int msecs = transition.transistionMsecs;
         start();
         String &effect = transition.to.effect;
         transition.to.ledCount = strip->length();
@@ -158,7 +171,7 @@ namespace FCLIB
 
         animateBrightness.onChange([this](int val)
                                    {
-            // this->log.never("brightness change %d", val);
+            this->log.debug("brightness change %d", val);
             this->currentState.brightness = val;
             Event::trigger(EventType::CHANGE_EVENT, this); })
             .start(transition.from.brightness)
@@ -169,7 +182,7 @@ namespace FCLIB
                         this->currentState.ledCount = strip->length();
                         
                         this->brightness = this->currentState.brightness;
-                        log.always("Trigger task done %x",this);
+                        log.debug("Trigger task done %x",this);
                          Event::trigger(EventType::TASK_DONE, this);
                         this->currentState.mode = this->transition.to.mode;
                         if (this->currentState.mode != SceneMode::MODE_OFF)
@@ -178,6 +191,9 @@ namespace FCLIB
                         }
                      Event::trigger(EventType::SCENE_END_TRANSITION, this); })
             .run();
+
+        log.debug("\t transition brightness %d --> %d", transition.from.brightness, transition.to.brightness);
+        log.debug("\t transition LEDs %d --> %d", transition.from.ledCount, transition.to.ledCount);
 
         currentState.mode = SceneMode::MODE_TRANSITION;
         lastEffect = effect;
@@ -191,6 +207,7 @@ namespace FCLIB
             currentState.brightness = 0;
 
             transition.from = currentState;
+            transition.to = currentState;
             loadState(transition.to);
             transition.to.mode = SceneMode::MODE_ON;
             if (transition.to.brightness == 0)
@@ -207,6 +224,7 @@ namespace FCLIB
         this->strip = strip;
         strip->clear();
         strip->show();
+        loadState(currentState);
         this->currentState.ledCount = strip->length();
     }
 }

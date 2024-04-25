@@ -5,13 +5,39 @@
 #include "fclib/Persistance.h"
 #include "fclib/Event.h"
 #include "fclib/Loop.h"
+#include "fclib/File.h"
 
 namespace FCLIB
 {
 
+    void writeLoopStart()
+    {
+        FileWriter writer("/status");
+        writer.writeLine("loop start");
+    }
+
+    void writeLoopEnd()
+    {
+        FileAppender writer("/status");
+        writer.writeLine("loop done");
+    }
+
+    void showLastLoopStatusOnReboot()
+    {
+        Logger log("LastLoopStatus");
+        log.always("LAST LOOP STATUS BEFORE REBOOT");
+        log.always("==============================");
+        FileReader reader("/status");
+        String l;
+        while (reader.readLine(l))
+        {
+            log.always("\t%s", l.c_str());
+        }
+        log.always("==============================");
+    }
+
     App::App() : log("App")
     {
-        wdt_enable(WDTO_4S); // enable watchdog timer
         THE_APP = this;
         this->THE_BOARD = Board::get();
         this->running = false;
@@ -29,6 +55,8 @@ namespace FCLIB
 
     void App::loop()
     {
+        writeLoopStart();
+        THE_BOARD->feedWatchdog();
         LoopTime::startLoop();
         if (running)
         {
@@ -38,6 +66,7 @@ namespace FCLIB
             this->afterLoop();
         }
         LoopTime::endLoop();
+        writeLoopEnd();
     }
 
     void App::beforeLoop() {}
@@ -49,6 +78,7 @@ namespace FCLIB
 
     bool App::setup(Config *config)
     {
+        wdt_enable(WDTO_4S); // enable watchdog timer
         bool startupFail = Persist::get("app", "startupFail", false);
         if (startupFail)
         {
@@ -171,7 +201,7 @@ namespace FCLIB
             loopTimeLog.warn("%s took too long to process %d ", msg, (THE_BOARD->currentMsecs() - startMSecs));
         }
     }
-    unsigned long LoopTime::maxMSecs = 100;
+    unsigned long LoopTime::maxMSecs = 250;
     unsigned long LoopTime::startMSecs = 0;
     bool LoopTime::loggedOver = false;
 

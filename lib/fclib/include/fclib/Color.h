@@ -47,7 +47,17 @@ namespace FCLIB
             void green(uint8 v) { g = v; }
 
             void blue(uint8 v) { b = v; }
-
+            String toString() const
+            {
+                String s = "RGB(";
+                s.concat(r);
+                s.concat(",");
+                s.concat(g);
+                s.concat(",");
+                s.concat(b);
+                s.concat(")");
+                return s;
+            }
             static RGB BLACK;
             static RGB WHITE;
             static RGB RED;
@@ -84,7 +94,17 @@ namespace FCLIB
             uint16 hue() const { return h; }       // 0-360: color wheel
             uint8 saturation() const { return s; } // 0-100%
             uint8 value() const { return v; }      // 0-100%
-
+            String toString() const
+            {
+                String s = "HSV(";
+                s.concat(h);
+                s.concat(",");
+                s.concat(s);
+                s.concat(",");
+                s.concat(v);
+                s.concat(")");
+                return s;
+            }
             void hue(uint16 v) { h = v; }
 
             void saturation(uint8 v) { s = v; }
@@ -128,6 +148,13 @@ namespace FCLIB
             }
             uint16 kelvin() const { return m == 0 ? 0 : 1000000 / m; };
             uint16 mireds() const { return m; }
+            String toString() const
+            {
+                String s = "Temp(";
+                s.concat(m);
+                s.concat(")");
+                return s;
+            }
 
         protected:
             uint16 m;
@@ -159,6 +186,7 @@ namespace FCLIB
         RGB toRGB() const;
         HSV toHSV() const;
         Temp toTemp() const;
+        String toString() const;
 
     protected:
         ColorType type;

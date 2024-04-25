@@ -31,8 +31,6 @@ void setup()
         return;
     }
 
-    wdt_enable(WDTO_1S);
-
     logger->debug("Load config");
     config.load("/config.ini");
     hallApp.setup(&config);

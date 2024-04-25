@@ -28,6 +28,7 @@ namespace FCLIB
         virtual ~Timer();
         virtual bool isComplete();
         virtual bool reset();
+        virtual bool reset(size_t duration, TimerUnit unit = TIME_MSECS);
         virtual void destroy() { delete this; }
         Timer &seconds(int addSeconds);
         Timer &msecs(int addMsecs);

@@ -83,6 +83,25 @@ namespace FCLIB
         return *this;
     }
 
+    String Color::toString() const
+    {
+        switch (this->type)
+        {
+        case ColorType::RGB:
+            return this->rgb.toString();
+            break;
+        case ColorType::HSV:
+            return this->hsv.toString();
+            break;
+        case ColorType::TEMP:
+            return this->temp.toString();
+            break;
+        }
+        String s = "Unknown color type ";
+        s.concat(this->type);
+        return s;
+    }
+
     // conversions between types are approximate (and maybe just a guess in some cases)
     Color::RGB Color::toRGB() const
     {

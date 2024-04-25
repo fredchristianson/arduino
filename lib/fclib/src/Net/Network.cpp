@@ -52,6 +52,8 @@ namespace FCLIB
             this->mqttDeviceName = mqtt->get("mqtt_device_name", deviceName.c_str());
             log.debug("use mqtt %s %s %s %s", mqttServer.c_str(), mqttDeviceName.c_str(), mqttUser.c_str(), mqttPassword.c_str());
         }
+        LoopTask::onLoop([this]()
+                         { this->checkConnection(); });
         return true;
     }
 
@@ -134,5 +136,28 @@ namespace FCLIB
         }
         singletonMqtt = new Mqtt();
         return singletonMqtt->configure(mqttServer.c_str(), mqttDeviceName.c_str(), mqttUser.c_str(), mqttPassword.c_str());
+    }
+
+    bool Network::checkConnection()
+    {
+        if (WiFi.status() != WL_CONNECTED)
+        {
+            Event::trigger(EventType::DISCONNECTED, this);
+        }
+        while (WiFi.status() != WL_CONNECTED)
+        {
+            log.error("WiFi is down");
+            delay(10);
+            THE_BOARD->feedWatchdog();
+            WiFiManager wfm;
+            if (!wfm.autoConnect())
+            {
+                delay(100);
+            }
+        }
+        Event::trigger(EventType::CONNECTED, this);
+
+        singletonMqtt->checkConnection();
+        return true;
     }
 }

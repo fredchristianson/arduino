@@ -48,7 +48,7 @@ namespace FCLIB
             strip->clear();
             strip->show();
             task = NULL;
-            log.always("renderer stopped");
+            log.never("renderer stopped");
         }
     }
 

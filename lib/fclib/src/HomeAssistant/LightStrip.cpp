@@ -17,7 +17,7 @@ namespace FCLIB::HA
                       { this->publishTransitionState(); });
         events.handle(EventType::TASK_DONE, render, [this](const Event *event)
                       { this->publishState(); });
-        log.always("listen for TASK_DONE %x", render);
+        log.never("listen for TASK_DONE %x", render);
         Task::repeat([this]()
                      { this->publishState(); })
             ->delayMinutes(1);
@@ -37,7 +37,7 @@ namespace FCLIB::HA
 
         SceneState scene = renderer->getSceneState();
         Color color = scene.color;
-        log.always("publish LightStrip state %d", scene.mode);
+        log.never("publish LightStrip state %d", scene.mode);
         JsonDocument doc;
         doc["state"] = scene.mode != SceneMode::MODE_OFF ? "ON" : "OFF";
         doc["brightness"] = scene.brightness;
@@ -104,7 +104,8 @@ namespace FCLIB::HA
     {
         log.debug("got command: %s", payload);
         SceneState scene = renderer->getSceneState();
-
+        String c = scene.color.toString();
+        log.debug("color %s", c.c_str());
         JsonDocument doc;
         deserializeJson(doc, payload);
         String state = doc["state"];
@@ -118,6 +119,7 @@ namespace FCLIB::HA
         {
             int b = doc["brightness"].as<int>();
             scene.brightness = b;
+            log.always("brightness %d", b);
         }
         if (doc.containsKey("color"))
         {
@@ -155,6 +157,8 @@ namespace FCLIB::HA
             scene.mode = SceneMode::MODE_OFF;
             this->lastBoolState = false;
         }
+        c = scene.color.toString();
+        log.debug("to color %s", c.c_str());
         renderer->setSceneState(scene, transitionMsecs);
         Event::trigger(EventType::CHANGE_EVENT, this);
         this->publishState();

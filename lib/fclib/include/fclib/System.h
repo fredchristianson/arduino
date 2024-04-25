@@ -25,6 +25,7 @@ namespace FCLIB
         virtual void delayMsecs(size_t msecs) = 0;
 
         virtual const char *getDeviceId() { return deviceId.c_str(); }
+        virtual void feedWatchdog() = 0;
 
     protected:
         String deviceId;
@@ -34,17 +35,18 @@ namespace FCLIB
     {
     public:
         EspBoardClass();
-        virtual unsigned long getFreeContStack();
+        virtual unsigned long getFreeContStack() override;
 
-        virtual unsigned long getFreeHeap();
+        virtual unsigned long getFreeHeap() override;
 
-        virtual unsigned long getMaxFreeBlockSize();
+        virtual unsigned long getMaxFreeBlockSize() override;
 
-        virtual unsigned long getHeapFragmentation();
+        virtual unsigned long getHeapFragmentation() override;
 
-        virtual unsigned long currentMsecs();
+        virtual unsigned long currentMsecs() override;
 
-        virtual void delayMsecs(size_t msecs);
+        virtual void delayMsecs(size_t msecs) override;
+        void feedWatchdog() override;
     };
 
     extern Board *THE_BOARD;

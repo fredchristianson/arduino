@@ -8,10 +8,13 @@ namespace FCLIB
 {
     Persist::Persist() : log("Persist", DEBUG_LEVEL)
     {
-        listener.handle(EventType::APP_INITIALIZATION_DONE, [this](Event *event)
-                        { load("/persist.ini"); });
+        // APP_INITIALIZATION_DONE can be too late.  load when needed
+        // listener.handle(EventType::APP_INITIALIZATION_DONE, [this](Event *event)
+        //                 { load("/persist.ini"); });
         listener.handle(EventType::CHANGE_EVENT, this, [this](Event *event)
-                        { this->persistChanges(); });
+                        { log.debug("Persist changed");
+                            this->persistChanges(); });
+        load("/persist.ini");
     }
     Persist::~Persist()
     {
@@ -29,7 +32,7 @@ namespace FCLIB
         if (singleton == NULL)
         {
             Logger log("Persist static");
-            log.never("Create Persist singleton");
+            log.always("Create Persist singleton");
             singleton = new Persist();
         }
         return singleton;

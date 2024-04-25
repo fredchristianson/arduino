@@ -10,7 +10,8 @@ String ipAddress;
 
 FCLIB::WiFiSetup::WiFiSetup() : log("WiFiSetup", DEBUG_LEVEL)
 {
-    wifiManager.setDebugOutput(false);
+    wifiManager.setDebugOutput(true);
+    wifiManager.setBreakAfterConfig(true);
 }
 
 FCLIB::WiFiSetup::~WiFiSetup()

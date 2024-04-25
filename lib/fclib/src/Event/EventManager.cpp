@@ -22,10 +22,15 @@ namespace FCLIB
     {
         if (singletonEventManager == NULL)
         {
+            Logger l("EventManager::hasListener");
+            l.warn("No EventManager");
             return NULL;
         }
         EventListener *found = singletonEventManager->listeners.first([type](EventListener *listener)
-                                                                      { return listener->hasHandler(type); });
+                                                                      { 
+            Logger l("EventManager::hasListener");
+                                                                        l.debug("check listener for event type %d",type);
+                                                                        return listener->hasHandler(type); });
         return found != NULL;
     }
 

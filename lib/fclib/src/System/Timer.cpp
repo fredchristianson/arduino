@@ -52,12 +52,20 @@ namespace FCLIB
 
     bool Timer::reset()
     {
-        bool expires = this->startTimeMsecs + this->durationMsecs > this->currentTimeMsecs();
+        bool expired = this->startTimeMsecs + this->durationMsecs > this->currentTimeMsecs();
 
         this->startTimeMsecs = this->currentTimeMsecs();
-        return expires;
+        return expired;
     }
 
+    bool Timer::reset(size_t duration, TimerUnit unit)
+    {
+        bool expired = this->startTimeMsecs + this->durationMsecs > this->currentTimeMsecs();
+
+        this->startTimeMsecs = this->currentTimeMsecs();
+        this->durationMsecs = Timer::toMsecs(duration, unit);
+        return expired;
+    }
     unsigned long Timer::currentTimeMsecs()
     {
         return millis();

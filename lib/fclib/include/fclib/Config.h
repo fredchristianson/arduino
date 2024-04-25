@@ -4,6 +4,7 @@
 #include "fclib/Logging.h"
 #include "fclib/Test.h"
 #include "fclib/List.h"
+#include "fclib/Event.h"
 
 namespace FCLIB
 {
@@ -85,7 +86,7 @@ namespace FCLIB
         ConfigSection *section;
     };
 
-    class ConfigSection
+    class ConfigSection : public IEventSource
     {
     public:
         ConfigSection(Config *config, const char *name);
@@ -120,7 +121,7 @@ namespace FCLIB
         Config *config;
     };
 
-    class Config
+    class Config : public IEventSource
     {
     public:
         Config();

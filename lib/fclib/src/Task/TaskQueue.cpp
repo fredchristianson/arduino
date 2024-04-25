@@ -79,7 +79,6 @@ namespace FCLIB
     void TaskQueue::runTasks()
     {
         int startTime = THE_BOARD->currentMsecs();
-        int cnt = tasks.size();
         for (int i = 0; i < tasks.size() && LoopTime::ok(); i++)
         {
             Task *task = tasks[i];
@@ -110,9 +109,5 @@ namespace FCLIB
             log.debug("max queue time: %d", diff);
             maxQueueTime = diff;
         }
-        // if (diff > 10)
-        // {
-        //     log.debug("%d tasks took msecs: %d", cnt, diff);
-        // }
     }
 }
