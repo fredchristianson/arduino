@@ -2,295 +2,174 @@
 --- Available filters and text transformations: colorize, debug, default, direct, esp8266_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
 --- More details at https://bit.ly/pio-monitor-filters
 --- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
-s']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSe���� added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: AppLoop=INFO
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'AppLoop'    Value: 'INFO'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: AppLoop=INFO  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: Timer=WARN 
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'Timer'    Value: 'WARN'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: Timer=WARN  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: WiFiSetup=WARN
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'WiFiSetup'    Value: 'WARN'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: WiFiSetup=WARN  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: Task=WARN
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'Task'    Value: 'WARN'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: Task=WARN  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: Event=INFO
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'Event'    Value: 'INFO'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: Event=INFO  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: NeoPixel=INFO
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'NeoPixel'    Value: 'INFO'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: NeoPixel=INFO  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: Render=INFO
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'Render'    Value: 'INFO'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: Render=INFO  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: Motion=DEBUG
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'Motion'    Value: 'DEBUG'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: Motion=DEBUG  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: Entity=INFO
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'Entity'    Value: 'INFO'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: Entity=INFO  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: Number=INFO
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'Number'    Value: 'INFO'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: Number=INFO  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: 	got line: Mqtt=INFO
-ALWAYS-00:00:01 -      ConfigFile: 		Name: 'Mqtt'    Value: 'INFO'  Section: 3fff4a44 ['levels']
-ALWAYS-00:00:01 -   ConfigSection: add value
-ALWAYS-00:00:01 -   ConfigSection: current 0
-ALWAYS-00:00:01 -   ConfigSection: Add config value: Mqtt=INFO  [levels]
-ALWAYS-00:00:01 -   ConfigSection: added
-ALWAYS-00:00:01 -      ConfigFile: clear changes
- DEBUG-00:00:01 -         Network: network setup
- DEBUG-00:00:01 -         Network: deviceName: Cupboard
- DEBUG-00:00:01 -         Network: use mqtt 192.168.1.22 Cupboard device fred123
- INFO -00:00:01 -         Network: Connect Network
- INFO -00:00:01 -         Network: Connecting wifi
- DEBUG-00:00:01 -         Network: params changed
- INFO -00:00:01 -         Network: start wifi connect
- DEBUG-00:00:01 -       WiFiSetup: Connect
- DEBUG-00:00:06 -       WiFiSetup: 	connected success
- INFO -00:00:06 -         Network: wifi connect done 1
- DEBUG-00:00:06 -         Network: Update mqtt params: device device 192.168.1.22
- DEBUG-00:00:06 -         Network: tz_offset: -300
- INFO -00:00:06 -      TimeClient: Start NTTPClient tzoffset: -300
- INFO -00:00:06 -      TimeClient: NTTPClient started
- INFO -17:41:18 -            Mqtt: MQTT connect: 192.168.1.22 Cupboard device fred123
- INFO -17:41:18 -     CupboardApp: ==================================
- INFO -17:41:18 -     CupboardApp: Cupboard App Starting
- INFO -17:41:18 -     CupboardApp: ==================================
- DEBUG-17:41:18 - InputPinCompone: ----- InputPinComponent 0x3fff5984
- DEBUG-17:41:18 -      HW::Motion: Motion 0x3fff5984
- DEBUG-17:41:18 -      HW::Motion: setup pin 14  0x3fff5984
- DEBUG-17:41:18 -      HW::Motion: 	input
- DEBUG-17:41:18 - InputPinCompone: ----- InputPinComponent 0x3fff5c0c
- DEBUG-17:41:18 -      HW::Motion: Motion 0x3fff5c0c
- DEBUG-17:41:18 -      HW::Motion: setup pin 12  0x3fff5c0c
- DEBUG-17:41:18 -      HW::Motion: 	input
- INFO -17:41:18 -   NeoPixelStrip: Pin change to 4
- INFO -17:41:18 -   NeoPixelStrip: 	Pin changed
- INFO -17:41:18 -   NeoPixelStrip: Pin change to 5
- INFO -17:41:18 -   NeoPixelStrip: 	Pin changed
- INFO -17:41:18 -     CupboardApp: setup listeners: stack=2512,  heap=24704, max block size=24312, fragmentation=2
- DEBUG-17:41:18 -   HomeAssistant: Create HomeAssistant
- DEBUG-17:41:18 -      HA::Device: name: kitchen_cupboard_lights
- DEBUG-17:41:18 -      HA::Device: board ID 98CDAC25FB00
- DEBUG-17:41:18 -  HA::LightStrip: created HA:LightStrip 3fff66ac
-ALWAYS-17:41:18 -  HA::LightStrip: listen for TASK_DONE 3fff02b4
- DEBUG-17:41:18 -      HA::Device: add entity: 3fff66ac 
- DEBUG-17:41:18 -      HA::Device: add entity: 3fff5d9c 
- DEBUG-17:41:18 -      HA::Device: add entity: 3fff6a5c 
- DEBUG-17:41:18 -      HA::Device: add entity: 3fff6ba4 
- DEBUG-17:41:18 -      HA::Device: add entity: 3fff6d14 
- DEBUG-17:41:18 -      HA::Device: add entity: 3fff6e5c 
- DEBUG-17:41:18 -      HA::Device: add entity: 3fff6fbc 
- DEBUG-17:41:18 -      HA::Device: add entity: 3fff711c 
- INFO -17:41:18 -   HomeAssistant: publish entities
- DEBUG-17:41:18 -   HomeAssistant: publish entity 0 3fff66ac Kitchen Cupboard Lights:0
- DEBUG-17:41:18 -   HomeAssistant: publish config
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/light/kitchencupboardlights98cdac25fb00/config
- DEBUG-17:41:18 -   HomeAssistant: config sent
- DEBUG-17:41:18 -  HA::LightStrip: LightStrip subscribe
-ALWAYS-17:41:18 -  HA::LightStrip: publish LightStrip state 0
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/light/kitchencupboardlights98cdac25fb00/set
- DEBUG-17:41:18 -   HomeAssistant: publish entity 1 3fff5d9c Motion Sensor:0
- DEBUG-17:41:18 -   HomeAssistant: publish config
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/config
- DEBUG-17:41:18 -   HomeAssistant: config sent
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
- DEBUG-17:41:18 -   HomeAssistant: publish entity 2 3fff6a5c Left Motion Pin:0
- DEBUG-17:41:18 -   HomeAssistant: publish config
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/left_motion_pin98cdac25fb00/config
- DEBUG-17:41:18 -   HomeAssistant: config sent
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/left_motion_pin98cdac25fb00/set
- DEBUG-17:41:18 -   HomeAssistant: publish entity 3 3fff6ba4 Right Motion Pin:1
- DEBUG-17:41:18 -   HomeAssistant: publish config
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/right_motion_pin98cdac25fb00/config
- DEBUG-17:41:18 -   HomeAssistant: config sent
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/right_motion_pin98cdac25fb00/set
- DEBUG-17:41:18 -   HomeAssistant: publish entity 4 3fff6d14 Left led Pin:2
- DEBUG-17:41:18 -   HomeAssistant: publish config
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/left_led_pin98cdac25fb00/config
- DEBUG-17:41:18 -   HomeAssistant: config sent
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/left_led_pin98cdac25fb00/set
- DEBUG-17:41:18 -   HomeAssistant: publish entity 5 3fff6e5c Right led Pin:3
- DEBUG-17:41:18 -   HomeAssistant: publish config
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/right_led_pin98cdac25fb00/config
- DEBUG-17:41:18 -   HomeAssistant: config sent
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/right_led_pin98cdac25fb00/set
- DEBUG-17:41:18 -   HomeAssistant: publish entity 6 3fff6fbc Left led Count:4
- DEBUG-17:41:18 -   HomeAssistant: publish config
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/left_led_count98cdac25fb00/config
- DEBUG-17:41:18 -   HomeAssistant: config sent
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/left_led_count98cdac25fb00/set
- DEBUG-17:41:18 -   HomeAssistant: publish entity 7 3fff711c Right led Count:5
- DEBUG-17:41:18 -   HomeAssistant: publish config
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/right_led_count98cdac25fb00/config
- DEBUG-17:41:18 -   HomeAssistant: config sent
-ALWAYS-17:41:18 -            Mqtt: send: homeassistant/number/right_led_count98cdac25fb00/set
- DEBUG-17:41:18 -   HomeAssistant: MQTT connected 1 200
-ALWAYS-17:41:18 -      ConfigFile: Load /persist.ini
-ALWAYS-17:41:18 -      ConfigFile: got section 3fff359c
-ALWAYS-17:41:18 -      ConfigFile: 	got line: [default]
-ALWAYS-17:41:18 -      ConfigFile: Config Section: default
-ALWAYS-17:41:18 -      ConfigFile: 	got line: [hascene]
-ALWAYS-17:41:18 -      ConfigFile: Config Section: hascene
-ALWAYS-17:41:18 -      ConfigFile: 	got line: brightness=255
-ALWAYS-17:41:18 -      ConfigFile: 		Name: 'brightness'    Value: '255'  Section: 3fff34f4 ['hascene']
-ALWAYS-17:41:18 -   ConfigSection: add value
-ALWAYS-17:41:18 -   ConfigSection: current 0
-ALWAYS-17:41:18 -   ConfigSection: Add config value: brightness=255  [hascene]
-ALWAYS-17:41:18 -   ConfigSection: added
-ALWAYS-17:41:18 -      ConfigFile: 	got line: r=255
-ALWAYS-17:41:18 -      ConfigFile: 		Name: 'r'    Value: '255'  Section: 3fff34f4 ['hascene']
-ALWAYS-17:41:19 -   ConfigSection: add value
- ERROR-17:41:19 -        LoopTime: Loop taking too much time: 101 msecs  (100 allowed)
-ALWAYS-17:41:19 -   ConfigSection: current 0
-ALWAYS-17:41:19 -   ConfigSection: Add config value: r=255  [hascene]
-ALWAYS-17:41:19 -   ConfigSection: added
-ALWAYS-17:41:19 -      ConfigFile: clear changes
-ALWAYS-17:41:19 -        LoopTime: Loop took to long: 130msecs  (100 allowed)
- DEBUG-17:41:28 -     CupboardApp: Assuming startup was ok after 10 seconds.
-ALWAYS-17:41:31 -      HW::Motion: got motion
-ALWAYS-17:41:31 -     MultiMotion: motion changed detected
-ALWAYS-17:41:31 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:41:31 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:41:32 -      HW::Motion: got motion
-ALWAYS-17:41:35 -      HW::Motion: no motion
-ALWAYS-17:41:35 -      HW::Motion: no motion
-ALWAYS-17:41:35 -     MultiMotion: motion changed  clear
-ALWAYS-17:41:35 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:41:35 -     CupboardApp: Motion  is not  detected.
-ALWAYS-17:41:45 -      HW::Motion: got motion
-ALWAYS-17:41:45 -     MultiMotion: motion changed detected
-ALWAYS-17:41:45 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:41:45 -     CupboardApp: Motion  is  detected.
- INFO -17:41:48 -     CupboardApp: Memory: stack=1736,  heap=18104, max block size=15016, fragmentation=17
-ALWAYS-17:41:48 -      HW::Motion: no motion
-ALWAYS-17:41:48 -     MultiMotion: motion changed  clear
-ALWAYS-17:41:48 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:41:48 -     CupboardApp: Motion  is not  detected.
-ALWAYS-17:41:57 -      HW::Motion: got motion
-ALWAYS-17:41:57 -     MultiMotion: motion changed detected
-ALWAYS-17:41:57 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:41:57 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:42:00 -      HW::Motion: no motion
-ALWAYS-17:42:00 -     MultiMotion: motion changed  clear
-ALWAYS-17:42:00 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:42:00 -     CupboardApp: Motion  is not  detected.
-ALWAYS-17:42:15 -      HW::Motion: got motion
-ALWAYS-17:42:15 -     MultiMotion: motion changed detected
-ALWAYS-17:42:15 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:42:15 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:42:17 -      HW::Motion: no motion
-ALWAYS-17:42:17 -     MultiMotion: motion changed  clear
-ALWAYS-17:42:17 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:42:17 -     CupboardApp: Motion  is not  detected.
- INFO -17:42:18 -     CupboardApp: Memory: stack=1736,  heap=18104, max block size=15016, fragmentation=17
-ALWAYS-17:42:18 -  HA::LightStrip: publish LightStrip state 0
-ALWAYS-17:42:18 -            Mqtt: send: homeassistant/light/kitchencupboardlights98cdac25fb00/set
-ALWAYS-17:42:31 -      HW::Motion: got motion
-ALWAYS-17:42:31 -     MultiMotion: motion changed detected
-ALWAYS-17:42:31 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:42:31 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:42:33 -      HW::Motion: no motion
-ALWAYS-17:42:33 -     MultiMotion: motion changed  clear
-ALWAYS-17:42:33 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:42:33 -     CupboardApp: Motion  is not  detected.
- INFO -17:42:48 -     CupboardApp: Memory: stack=1736,  heap=18104, max block size=15016, fragmentation=17
-ALWAYS-17:42:59 -      HW::Motion: got motion
-ALWAYS-17:42:59 -     MultiMotion: motion changed detected
-ALWAYS-17:42:59 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:42:59 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:42:59 -      HW::Motion: got motion
-ALWAYS-17:43:02 -      HW::Motion: no motion
-ALWAYS-17:43:03 -      HW::Motion: no motion
-ALWAYS-17:43:03 -     MultiMotion: motion changed  clear
-ALWAYS-17:43:03 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:43:03 -     CupboardApp: Motion  is not  detected.
- INFO -17:43:18 -     CupboardApp: Memory: stack=1736,  heap=18104, max block size=15016, fragmentation=17
-ALWAYS-17:43:18 -  HA::LightStrip: publish LightStrip state 0
-ALWAYS-17:43:18 -            Mqtt: send: homeassistant/light/kitchencupboardlights98cdac25fb00/set
-ALWAYS-17:43:31 -      HW::Motion: got motion
-ALWAYS-17:43:31 -     MultiMotion: motion changed detected
-ALWAYS-17:43:31 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:43:31 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:43:35 -      HW::Motion: no motion
-ALWAYS-17:43:35 -     MultiMotion: motion changed  clear
-ALWAYS-17:43:35 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:43:35 -     CupboardApp: Motion  is not  detected.
- INFO -17:43:48 -     CupboardApp: Memory: stack=1736,  heap=18104, max block size=15016, fragmentation=17
-ALWAYS-17:43:53 -      HW::Motion: got motion
-ALWAYS-17:43:53 -     MultiMotion: motion changed detected
-ALWAYS-17:43:53 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:43:53 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:43:56 -      HW::Motion: no motion
-ALWAYS-17:43:56 -     MultiMotion: motion changed  clear
-ALWAYS-17:43:56 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:43:56 -     CupboardApp: Motion  is not  detected.
-ALWAYS-17:44:07 -      HW::Motion: got motion
-ALWAYS-17:44:07 -     MultiMotion: motion changed detected
-ALWAYS-17:44:07 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:44:07 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:44:11 -      HW::Motion: no motion
-ALWAYS-17:44:11 -     MultiMotion: motion changed  clear
-ALWAYS-17:44:11 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:44:11 -     CupboardApp: Motion  is not  detected.
- INFO -17:44:18 -     CupboardApp: Memory: stack=1736,  heap=18104, max block size=15016, fragmentation=17
-ALWAYS-17:44:18 -  HA::LightStrip: publish LightStrip state 0
-ALWAYS-17:44:18 -            Mqtt: send: homeassistant/light/kitchencupboardlights98cdac25fb00/set
-ALWAYS-17:44:19 -      HW::Motion: got motion
-ALWAYS-17:44:19 -     MultiMotion: motion changed detected
-ALWAYS-17:44:19 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:44:19 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:44:21 -      HW::Motion: no motion
-ALWAYS-17:44:21 -     MultiMotion: motion changed  clear
-ALWAYS-17:44:21 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:44:21 -     CupboardApp: Motion  is not  detected.
- INFO -17:44:48 -     CupboardApp: Memory: stack=1736,  heap=18104, max block size=15016, fragmentation=17
-ALWAYS-17:44:57 -      HW::Motion: got motion
-ALWAYS-17:44:57 -     MultiMotion: motion changed detected
-ALWAYS-17:44:57 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:44:57 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:44:59 -      HW::Motion: no motion
-ALWAYS-17:44:59 -     MultiMotion: motion changed  clear
-ALWAYS-17:44:59 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:44:59 -     CupboardApp: Motion  is not  detected.
-ALWAYS-17:45:03 -      HW::Motion: got motion
-ALWAYS-17:45:03 -     MultiMotion: motion changed detected
-ALWAYS-17:45:03 -            Mqtt: send: homeassistant/binary_sensor/motion_sensor98cdac25fb00/set
-ALWAYS-17:45:03 -     CupboardApp: Motion  is  detected.
-ALWAYS-17:45:03 -      HW::Motion: got motion
-ALWAYS-17:45:05 -      HW::Motion: no motion
+ INFO -07:35:29 -     CupboardApp: ==================================
+ INFO -07:35:29 -     CupboardApp: Cupboard App Starting
+ INFO -07:35:29 -     CupboardApp: ==================================
+ DEBUG-07:35:29 - InputPinCompone: ----- InputPinComponent 0x3fff6a34
+ DEBUG-07:35:29 -      HW::Motion: Motion 0x3fff6a34
+ DEBUG-07:35:29 -      HW::Motion: setup pin 14  0x3fff6a34
+ DEBUG-07:35:29 -      HW::Motion: 	input
+ DEBUG-07:35:29 - InputPinCompone: ----- InputPinComponent 0x3fff6ba4
+ DEBUG-07:35:29 -      HW::Motion: Motion 0x3fff6ba4
+ DEBUG-07:35:29 -      HW::Motion: setup pin 12  0x3fff6ba4
+ DEBUG-07:35:29 -      HW::Motion: 	input
+ INFO -07:35:29 -   NeoPixelStrip: Pin change to 4
+ INFO -07:35:29 -   NeoPixelStrip: 	Pin changed
+ INFO -07:35:29 -   NeoPixelStrip: Pin change to 5
+ INFO -07:35:29 -   NeoPixelStrip: 	Pin changed
+ INFO -07:35:29 -     CupboardApp: setup listeners: stack=2160,  heap=21016, max block size=20504, fragmentation=3
+ DEBUG-07:35:29 -      HA::Device: name: kitchen_cupboard_lights
+ DEBUG-07:35:29 -      HA::Device: board ID 98CDAC25FB00
+ DEBUG-07:35:29 -  HA::LightStrip: created HA:LightStrip 3fff72e4
+ DEBUG-07:35:29 -      HA::Device: add entity: 3fff72e4 
+ DEBUG-07:35:29 -      HA::Device: add entity: 3fff75d4 
+ DEBUG-07:35:29 -      HA::Device: add entity: 3fff79ac 
+ DEBUG-07:35:29 -      HA::Device: add entity: 3fff7af4 
+ DEBUG-07:35:29 -      HA::Device: add entity: 3fff7c64 
+ DEBUG-07:35:29 -      HA::Device: add entity: 3fff7dac 
+ DEBUG-07:35:29 -      HA::Device: add entity: 3fff7f0c 
+ DEBUG-07:35:29 -      HA::Device: add entity: 3fff806c 
+ INFO -07:35:29 -   HomeAssistant: publish entities
+ DEBUG-07:35:29 -  HA::LightStrip: LightStrip subscribe
+ DEBUG-07:35:29 -         Persist: Persist changed
+ DEBUG-07:35:29 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
+ DEBUG-07:35:29 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:35:29 -  HA::LightStrip: turn off
+ DEBUG-07:35:29 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:35:29 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
+ WARN -07:35:29 - HomeAssistantSc: already rendering
+ DEBUG-07:35:39 -     CupboardApp: Assuming startup was ok after 10 seconds.
+ DEBUG-07:35:39 -         Persist: Persist changed
+ALWAYS-07:35:52 - HA::MotionSenso: motion start
+ DEBUG-07:35:52 -  HA::LightStrip: got command: {"state":"ON","color":{"r":255,"g":130,"b":53},"transition":2.0,"brightness":255,"effect":"Grow"}
+ DEBUG-07:35:52 -  HA::LightStrip: color RGB(255,130,53)
+ALWAYS-07:35:52 -  HA::LightStrip: brightness 255
+ DEBUG-07:35:52 -  HA::LightStrip: got rgb
+ DEBUG-07:35:52 -  HA::LightStrip: set RGB: 255,130,53
+ DEBUG-07:35:52 -  HA::LightStrip: turn on
+ DEBUG-07:35:52 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:35:52 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -07:35:52 - HomeAssistantSc: already rendering
+ALWAYS-07:35:54 - HA::MotionSenso: motion end
+ DEBUG-07:35:54 -         Persist: Persist changed
+ ERROR-07:35:55 -        LoopTime: Loop taking too much time: 433 msecs  (250 allowed)
+ALWAYS-07:35:55 -        LoopTime: Loop took to long: 443msecs  (250 allowed)
+ALWAYS-07:35:55 - HA::MotionSenso: motion end
+ALWAYS-07:36:12 - HA::MotionSenso: motion start
+ALWAYS-07:36:15 - HA::MotionSenso: motion end
+ALWAYS-07:36:17 - HA::MotionSenso: motion start
+ALWAYS-07:36:23 - HA::MotionSenso: motion end
+ INFO -07:36:29 -     CupboardApp: Memory: stack=1248,  heap=15040, max block size=12480, fragmentation=17
+ALWAYS-07:36:30 - HA::MotionSenso: motion start
+ALWAYS-07:36:32 - HA::MotionSenso: motion end
+ DEBUG-07:36:33 -  HA::LightStrip: got command: {"state":"OFF"}
+ DEBUG-07:36:33 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:36:33 -  HA::LightStrip: turn off
+ DEBUG-07:36:33 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:36:33 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -07:36:33 - HomeAssistantSc: already rendering
+ DEBUG-07:36:34 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
+ DEBUG-07:36:34 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:36:34 -  HA::LightStrip: turn off
+ DEBUG-07:36:34 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:36:34 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
+ WARN -07:36:34 - HomeAssistantSc: already rendering
+ DEBUG-07:36:38 -  HA::LightStrip: got command: {"state":"ON"}
+ DEBUG-07:36:38 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:36:38 -  HA::LightStrip: turn on
+ DEBUG-07:36:38 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:36:38 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
+ WARN -07:36:38 - HomeAssistantSc: already rendering
+ DEBUG-07:36:42 -  HA::LightStrip: got command: {"state":"OFF"}
+ DEBUG-07:36:42 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:36:42 -  HA::LightStrip: turn off
+ DEBUG-07:36:42 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:36:42 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -07:36:42 - HomeAssistantSc: already rendering
+ DEBUG-07:36:43 -  HA::LightStrip: got command: {"state":"ON"}
+ DEBUG-07:36:43 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:36:43 -  HA::LightStrip: turn on
+ DEBUG-07:36:43 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:36:43 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
+ WARN -07:36:43 - HomeAssistantSc: already rendering
+ALWAYS-07:36:47 - HA::MotionSenso: motion end
+ DEBUG-07:36:54 -  HA::LightStrip: got command: {"state":"ON","effect":"Grow"}
+ DEBUG-07:36:54 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:36:54 -  HA::LightStrip: turn on
+ DEBUG-07:36:54 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:36:54 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -07:36:54 - HomeAssistantSc: already rendering
+ DEBUG-07:36:58 -  HA::LightStrip: got command: {"state":"ON","color":{"r":33,"g":255,"b":36}}
+ DEBUG-07:36:58 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:36:58 -  HA::LightStrip: got rgb
+ DEBUG-07:36:58 -  HA::LightStrip: set RGB: 33,255,36
+ DEBUG-07:36:58 -  HA::LightStrip: turn on
+ DEBUG-07:36:58 -  HA::LightStrip: to color RGB(33,255,36)
+ALWAYS-07:36:58 - HomeAssistantSc: transition to state b=255, r=33, g=255, b=36
+ WARN -07:36:58 - HomeAssistantSc: already rendering
+ DEBUG-07:36:59 -         Persist: Persist changed
+ DEBUG-07:37:03 -  HA::LightStrip: got command: {"state":"OFF"}
+ DEBUG-07:37:03 -  HA::LightStrip: color RGB(33,255,36)
+ DEBUG-07:37:03 -  HA::LightStrip: turn off
+ DEBUG-07:37:03 -  HA::LightStrip: to color RGB(33,255,36)
+ALWAYS-07:37:03 - HomeAssistantSc: transition to state b=255, r=33, g=255, b=36
+ WARN -07:37:03 - HomeAssistantSc: already rendering
+ DEBUG-07:37:05 -  HA::LightStrip: got command: {"state":"ON"}
+ DEBUG-07:37:05 -  HA::LightStrip: color RGB(33,255,36)
+ DEBUG-07:37:05 -  HA::LightStrip: turn on
+ DEBUG-07:37:05 -  HA::LightStrip: to color RGB(33,255,36)
+ALWAYS-07:37:05 - HomeAssistantSc: transition to state b=0, r=33, g=255, b=36
+ WARN -07:37:05 - HomeAssistantSc: already rendering
+ DEBUG-07:37:10 -  HA::LightStrip: got command: {"state":"OFF"}
+ DEBUG-07:37:10 -  HA::LightStrip: color RGB(33,255,36)
+ DEBUG-07:37:10 -  HA::LightStrip: turn off
+ DEBUG-07:37:10 -  HA::LightStrip: to color RGB(33,255,36)
+ALWAYS-07:37:10 - HomeAssistantSc: transition to state b=255, r=33, g=255, b=36
+ WARN -07:37:10 - HomeAssistantSc: already rendering
+ALWAYS-07:37:24 - HA::MotionSenso: motion end
+ALWAYS-07:37:26 - HA::MotionSenso: motion start
+ DEBUG-07:37:26 -  HA::LightStrip: got command: {"state":"ON","color":{"r":255,"g":130,"b":53},"transition":2.0,"brightness":255,"effect":"Grow"}
+ DEBUG-07:37:26 -  HA::LightStrip: color RGB(33,255,36)
+ALWAYS-07:37:27 -  HA::LightStrip: brightness 255
+ DEBUG-07:37:27 -  HA::LightStrip: got rgb
+ DEBUG-07:37:27 -  HA::LightStrip: set RGB: 255,130,53
+ DEBUG-07:37:27 -  HA::LightStrip: turn on
+ DEBUG-07:37:27 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:37:27 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -07:37:27 - HomeAssistantSc: already rendering
+ DEBUG-07:37:29 -         Persist: Persist changed
+ INFO -07:37:29 -     CupboardApp: Memory: stack=1184,  heap=14592, max block size=10256, fragmentation=29
+ALWAYS-07:37:29 - HA::MotionSenso: motion end
+ALWAYS-07:37:37 - HA::MotionSenso: motion start
+ALWAYS-07:37:47 - HA::MotionSenso: motion end
+ALWAYS-07:37:56 - HA::MotionSenso: motion start
+ALWAYS-07:38:05 - HA::MotionSenso: motion end
+ALWAYS-07:38:06 - HA::MotionSenso: motion start
+ALWAYS-07:38:08 - HA::MotionSenso: motion end
+ALWAYS-07:38:08 - HA::MotionSenso: motion start
+ALWAYS-07:38:09 - HA::MotionSenso: motion end
+ALWAYS-07:38:10 - HA::MotionSenso: motion start
+ALWAYS-07:38:12 - HA::MotionSenso: motion end
+ALWAYS-07:38:18 - HA::MotionSenso: motion start
+ALWAYS-07:38:27 - HA::MotionSenso: motion end
+ INFO -07:38:29 -     CupboardApp: Memory: stack=1184,  heap=14784, max block size=12480, fragmentation=16
+ INFO -07:39:29 -     CupboardApp: Memory: stack=1184,  heap=14784, max block size=12480, fragmentation=16
+ DEBUG-07:40:28 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
+ DEBUG-07:40:28 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-07:40:28 -  HA::LightStrip: turn off
+ DEBUG-07:40:28 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:40:28 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -07:40:28 - HomeAssistantSc: already rendering
+ INFO -07:40:30 -     CupboardApp: Memory: stack=1184,  heap=14592, max block size=12480, fragmentation=15
+ALWAYS-07:41:12 - HA::MotionSenso: motion start
+ DEBUG-07:41:12 -  HA::LightStrip: got command: {"state":"ON","color":{"r":255,"g":130,"b":53},"transition":2.0,"brightness":255,"effect":"Grow"}
+ DEBUG-07:41:12 -  HA::LightStrip: color RGB(255,130,53)
+ALWAYS-07:41:12 -  HA::LightStrip: brightness 255
+ DEBUG-07:41:12 -  HA::LightStrip: got rgb
+ DEBUG-07:41:12 -  HA::LightStrip: set RGB: 255,130,53
+ DEBUG-07:41:12 -  HA::LightStrip: turn on
+ DEBUG-07:41:12 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-07:41:12 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -07:41:12 - HomeAssistantSc: already rendering
+ALWAYS-07:41:16 - HA::MotionSenso: motion end
+ INFO -07:41:30 -     CupboardApp: Memory: stack=1184,  heap=14784, max block size=12480, fragmentation=16

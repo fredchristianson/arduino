@@ -37,3 +37,4 @@ EasingLibrary/MCUIndependent/makefile
 EasingLibrary/MCUIndependent/objects.mk
 EasingLibrary/MCUIndependent/sources.mk
 EasingLibrary/MCUIndependent/subdir.mk
+projects/CupboardLights/cupboard.log

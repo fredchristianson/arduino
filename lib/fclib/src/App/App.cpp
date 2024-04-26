@@ -78,6 +78,13 @@ namespace FCLIB
 
     bool App::setup(Config *config)
     {
+        log.always("Initializing App.");
+        log.always("Build: " __DATE__ " " __TIME__);
+        String reset = "Last reset: " + ESP.getResetReason();
+        log.always(reset.c_str());
+        reset = "\t" + ESP.getResetInfo();
+        log.always(reset.c_str());
+
         wdt_enable(WDTO_4S); // enable watchdog timer
         bool startupFail = Persist::get("app", "startupFail", false);
         if (startupFail)

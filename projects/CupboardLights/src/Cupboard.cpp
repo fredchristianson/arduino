@@ -31,7 +31,7 @@ CupboardApp::~CupboardApp()
 
 void CupboardApp::setupComplete()
 {
-    // Network::getMqtt()->startLogger("log/cupboard", DEBUG_LEVEL);
+    Network::getMqtt()->startLogger("log/cupboard", DEBUG_LEVEL);
     log.info("==================================");
     log.info("Cupboard App Starting");
     log.info("==================================");
