@@ -8,6 +8,7 @@
 #include "fclib/Task.h"
 #include "fclib/List.h"
 #include "fclib/Config.h"
+#include "fclib/AppStat.h"
 
 namespace FCLIB
 {
@@ -126,8 +127,8 @@ namespace FCLIB
             Mqtt *mqtt;
         };
 
-        List<Subscriber>
-            subscribers;
+        List<Subscriber> subscribers;
+        AppCounterStat reconnectCount;
     };
 
     class Network
@@ -158,6 +159,7 @@ namespace FCLIB
         static Mqtt *singletonMqtt;
         static TimeClient *singletonTimeClient;
         static Network *singletonNetwork;
+        AppCounterStat reconnectCountStat;
         Logger log;
     };
 }

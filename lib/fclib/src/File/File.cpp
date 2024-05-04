@@ -136,6 +136,7 @@ FCLIB::FileSystem::FileSystem()
 }
 FCLIB::FileSystem::~FileSystem()
 {
+    unmount();
 }
 
 bool FCLIB::FileSystem::isMounted() const
@@ -150,8 +151,13 @@ bool FCLIB::FileSystem::remove(const char *path)
 
 void FCLIB::FileSystem::unmount()
 {
-
-    LittleFS.end();
-    delete singletonFileSysetem;
-    singletonFileSysetem = NULL;
+    if (mounted)
+    {
+        Logger fsLog("FileSystem");
+        fsLog.warn("File system unmounted");
+        LittleFS.end();
+        delete singletonFileSysetem;
+        singletonFileSysetem = NULL;
+        mounted = false;
+    }
 }

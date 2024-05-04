@@ -95,6 +95,19 @@ namespace FCLIB
             return false;
         }
 
+        bool all(BoolCallback<T *> match) const
+        {
+            for (uint16 i = 0; i < size() && LoopTime::ok(); i++)
+            {
+                if (!match((T *)getAt(i)))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         void removeIf(BoolCallback<T *> match, Callback<T *> onRemove = NULL)
         {
             for (uint16 i = 0; i < size() && LoopTime::ok(); i++)

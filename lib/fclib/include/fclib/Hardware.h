@@ -128,7 +128,11 @@ namespace FCLIB
             bool isOn() const override { return isDetected() != 0; }
             bool isOff() const override { return isDetected() == 0; }
 
+            void any();
+            void all();
+
         protected:
+            bool requireAll;
             void updateState();
             List<Motion> motion;
             Logger log;

@@ -8,6 +8,7 @@
 #include "fclib/Animation.h"
 #include "fclib/Persistance.h"
 #include "fclib/Animation.h"
+#include "fclib/AppStat.h"
 #include <stdint.h>
 
 using namespace FCLIB;
@@ -131,6 +132,7 @@ namespace FCLIB
         LedStrip *strip;
         virtual void render();
         uint8 brightness;
+        AppCounterStat renderCount;
 
     private:
         Task *task;
@@ -162,6 +164,7 @@ namespace FCLIB
         AnimateInt ledLength;
         List<const char> effects;
         String lastEffect;
+        AppCounterStat stateChangeCount;
     };
 
     class CompositeSceneRenderer : public SceneRenderer

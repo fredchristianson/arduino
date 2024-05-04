@@ -2,174 +2,233 @@
 --- Available filters and text transformations: colorize, debug, default, direct, esp8266_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
 --- More details at https://bit.ly/pio-monitor-filters
 --- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
- INFO -07:35:29 -     CupboardApp: ==================================
- INFO -07:35:29 -     CupboardApp: Cupboard App Starting
- INFO -07:35:29 -     CupboardApp: ==================================
- DEBUG-07:35:29 - InputPinCompone: ----- InputPinComponent 0x3fff6a34
- DEBUG-07:35:29 -      HW::Motion: Motion 0x3fff6a34
- DEBUG-07:35:29 -      HW::Motion: setup pin 14  0x3fff6a34
- DEBUG-07:35:29 -      HW::Motion: 	input
- DEBUG-07:35:29 - InputPinCompone: ----- InputPinComponent 0x3fff6ba4
- DEBUG-07:35:29 -      HW::Motion: Motion 0x3fff6ba4
- DEBUG-07:35:29 -      HW::Motion: setup pin 12  0x3fff6ba4
- DEBUG-07:35:29 -      HW::Motion: 	input
- INFO -07:35:29 -   NeoPixelStrip: Pin change to 4
- INFO -07:35:29 -   NeoPixelStrip: 	Pin changed
- INFO -07:35:29 -   NeoPixelStrip: Pin change to 5
- INFO -07:35:29 -   NeoPixelStrip: 	Pin changed
- INFO -07:35:29 -     CupboardApp: setup listeners: stack=2160,  heap=21016, max block size=20504, fragmentation=3
- DEBUG-07:35:29 -      HA::Device: name: kitchen_cupboard_lights
- DEBUG-07:35:29 -      HA::Device: board ID 98CDAC25FB00
- DEBUG-07:35:29 -  HA::LightStrip: created HA:LightStrip 3fff72e4
- DEBUG-07:35:29 -      HA::Device: add entity: 3fff72e4 
- DEBUG-07:35:29 -      HA::Device: add entity: 3fff75d4 
- DEBUG-07:35:29 -      HA::Device: add entity: 3fff79ac 
- DEBUG-07:35:29 -      HA::Device: add entity: 3fff7af4 
- DEBUG-07:35:29 -      HA::Device: add entity: 3fff7c64 
- DEBUG-07:35:29 -      HA::Device: add entity: 3fff7dac 
- DEBUG-07:35:29 -      HA::Device: add entity: 3fff7f0c 
- DEBUG-07:35:29 -      HA::Device: add entity: 3fff806c 
- INFO -07:35:29 -   HomeAssistant: publish entities
- DEBUG-07:35:29 -  HA::LightStrip: LightStrip subscribe
- DEBUG-07:35:29 -         Persist: Persist changed
- DEBUG-07:35:29 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
- DEBUG-07:35:29 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:35:29 -  HA::LightStrip: turn off
- DEBUG-07:35:29 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:35:29 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
- WARN -07:35:29 - HomeAssistantSc: already rendering
- DEBUG-07:35:39 -     CupboardApp: Assuming startup was ok after 10 seconds.
- DEBUG-07:35:39 -         Persist: Persist changed
-ALWAYS-07:35:52 - HA::MotionSenso: motion start
- DEBUG-07:35:52 -  HA::LightStrip: got command: {"state":"ON","color":{"r":255,"g":130,"b":53},"transition":2.0,"brightness":255,"effect":"Grow"}
- DEBUG-07:35:52 -  HA::LightStrip: color RGB(255,130,53)
-ALWAYS-07:35:52 -  HA::LightStrip: brightness 255
- DEBUG-07:35:52 -  HA::LightStrip: got rgb
- DEBUG-07:35:52 -  HA::LightStrip: set RGB: 255,130,53
- DEBUG-07:35:52 -  HA::LightStrip: turn on
- DEBUG-07:35:52 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:35:52 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
- WARN -07:35:52 - HomeAssistantSc: already rendering
-ALWAYS-07:35:54 - HA::MotionSenso: motion end
- DEBUG-07:35:54 -         Persist: Persist changed
- ERROR-07:35:55 -        LoopTime: Loop taking too much time: 433 msecs  (250 allowed)
-ALWAYS-07:35:55 -        LoopTime: Loop took to long: 443msecs  (250 allowed)
-ALWAYS-07:35:55 - HA::MotionSenso: motion end
-ALWAYS-07:36:12 - HA::MotionSenso: motion start
-ALWAYS-07:36:15 - HA::MotionSenso: motion end
-ALWAYS-07:36:17 - HA::MotionSenso: motion start
-ALWAYS-07:36:23 - HA::MotionSenso: motion end
- INFO -07:36:29 -     CupboardApp: Memory: stack=1248,  heap=15040, max block size=12480, fragmentation=17
-ALWAYS-07:36:30 - HA::MotionSenso: motion start
-ALWAYS-07:36:32 - HA::MotionSenso: motion end
- DEBUG-07:36:33 -  HA::LightStrip: got command: {"state":"OFF"}
- DEBUG-07:36:33 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:36:33 -  HA::LightStrip: turn off
- DEBUG-07:36:33 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:36:33 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
- WARN -07:36:33 - HomeAssistantSc: already rendering
- DEBUG-07:36:34 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
- DEBUG-07:36:34 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:36:34 -  HA::LightStrip: turn off
- DEBUG-07:36:34 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:36:34 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
- WARN -07:36:34 - HomeAssistantSc: already rendering
- DEBUG-07:36:38 -  HA::LightStrip: got command: {"state":"ON"}
- DEBUG-07:36:38 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:36:38 -  HA::LightStrip: turn on
- DEBUG-07:36:38 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:36:38 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
- WARN -07:36:38 - HomeAssistantSc: already rendering
- DEBUG-07:36:42 -  HA::LightStrip: got command: {"state":"OFF"}
- DEBUG-07:36:42 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:36:42 -  HA::LightStrip: turn off
- DEBUG-07:36:42 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:36:42 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
- WARN -07:36:42 - HomeAssistantSc: already rendering
- DEBUG-07:36:43 -  HA::LightStrip: got command: {"state":"ON"}
- DEBUG-07:36:43 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:36:43 -  HA::LightStrip: turn on
- DEBUG-07:36:43 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:36:43 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
- WARN -07:36:43 - HomeAssistantSc: already rendering
-ALWAYS-07:36:47 - HA::MotionSenso: motion end
- DEBUG-07:36:54 -  HA::LightStrip: got command: {"state":"ON","effect":"Grow"}
- DEBUG-07:36:54 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:36:54 -  HA::LightStrip: turn on
- DEBUG-07:36:54 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:36:54 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
- WARN -07:36:54 - HomeAssistantSc: already rendering
- DEBUG-07:36:58 -  HA::LightStrip: got command: {"state":"ON","color":{"r":33,"g":255,"b":36}}
- DEBUG-07:36:58 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:36:58 -  HA::LightStrip: got rgb
- DEBUG-07:36:58 -  HA::LightStrip: set RGB: 33,255,36
- DEBUG-07:36:58 -  HA::LightStrip: turn on
- DEBUG-07:36:58 -  HA::LightStrip: to color RGB(33,255,36)
-ALWAYS-07:36:58 - HomeAssistantSc: transition to state b=255, r=33, g=255, b=36
- WARN -07:36:58 - HomeAssistantSc: already rendering
- DEBUG-07:36:59 -         Persist: Persist changed
- DEBUG-07:37:03 -  HA::LightStrip: got command: {"state":"OFF"}
- DEBUG-07:37:03 -  HA::LightStrip: color RGB(33,255,36)
- DEBUG-07:37:03 -  HA::LightStrip: turn off
- DEBUG-07:37:03 -  HA::LightStrip: to color RGB(33,255,36)
-ALWAYS-07:37:03 - HomeAssistantSc: transition to state b=255, r=33, g=255, b=36
- WARN -07:37:03 - HomeAssistantSc: already rendering
- DEBUG-07:37:05 -  HA::LightStrip: got command: {"state":"ON"}
- DEBUG-07:37:05 -  HA::LightStrip: color RGB(33,255,36)
- DEBUG-07:37:05 -  HA::LightStrip: turn on
- DEBUG-07:37:05 -  HA::LightStrip: to color RGB(33,255,36)
-ALWAYS-07:37:05 - HomeAssistantSc: transition to state b=0, r=33, g=255, b=36
- WARN -07:37:05 - HomeAssistantSc: already rendering
- DEBUG-07:37:10 -  HA::LightStrip: got command: {"state":"OFF"}
- DEBUG-07:37:10 -  HA::LightStrip: color RGB(33,255,36)
- DEBUG-07:37:10 -  HA::LightStrip: turn off
- DEBUG-07:37:10 -  HA::LightStrip: to color RGB(33,255,36)
-ALWAYS-07:37:10 - HomeAssistantSc: transition to state b=255, r=33, g=255, b=36
- WARN -07:37:10 - HomeAssistantSc: already rendering
-ALWAYS-07:37:24 - HA::MotionSenso: motion end
-ALWAYS-07:37:26 - HA::MotionSenso: motion start
- DEBUG-07:37:26 -  HA::LightStrip: got command: {"state":"ON","color":{"r":255,"g":130,"b":53},"transition":2.0,"brightness":255,"effect":"Grow"}
- DEBUG-07:37:26 -  HA::LightStrip: color RGB(33,255,36)
-ALWAYS-07:37:27 -  HA::LightStrip: brightness 255
- DEBUG-07:37:27 -  HA::LightStrip: got rgb
- DEBUG-07:37:27 -  HA::LightStrip: set RGB: 255,130,53
- DEBUG-07:37:27 -  HA::LightStrip: turn on
- DEBUG-07:37:27 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:37:27 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
- WARN -07:37:27 - HomeAssistantSc: already rendering
- DEBUG-07:37:29 -         Persist: Persist changed
- INFO -07:37:29 -     CupboardApp: Memory: stack=1184,  heap=14592, max block size=10256, fragmentation=29
-ALWAYS-07:37:29 - HA::MotionSenso: motion end
-ALWAYS-07:37:37 - HA::MotionSenso: motion start
-ALWAYS-07:37:47 - HA::MotionSenso: motion end
-ALWAYS-07:37:56 - HA::MotionSenso: motion start
-ALWAYS-07:38:05 - HA::MotionSenso: motion end
-ALWAYS-07:38:06 - HA::MotionSenso: motion start
-ALWAYS-07:38:08 - HA::MotionSenso: motion end
-ALWAYS-07:38:08 - HA::MotionSenso: motion start
-ALWAYS-07:38:09 - HA::MotionSenso: motion end
-ALWAYS-07:38:10 - HA::MotionSenso: motion start
-ALWAYS-07:38:12 - HA::MotionSenso: motion end
-ALWAYS-07:38:18 - HA::MotionSenso: motion start
-ALWAYS-07:38:27 - HA::MotionSenso: motion end
- INFO -07:38:29 -     CupboardApp: Memory: stack=1184,  heap=14784, max block size=12480, fragmentation=16
- INFO -07:39:29 -     CupboardApp: Memory: stack=1184,  heap=14784, max block size=12480, fragmentation=16
- DEBUG-07:40:28 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
- DEBUG-07:40:28 -  HA::LightStrip: color RGB(255,130,53)
- DEBUG-07:40:28 -  HA::LightStrip: turn off
- DEBUG-07:40:28 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:40:28 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
- WARN -07:40:28 - HomeAssistantSc: already rendering
- INFO -07:40:30 -     CupboardApp: Memory: stack=1184,  heap=14592, max block size=12480, fragmentation=15
-ALWAYS-07:41:12 - HA::MotionSenso: motion start
- DEBUG-07:41:12 -  HA::LightStrip: got command: {"state":"ON","color":{"r":255,"g":130,"b":53},"transition":2.0,"brightness":255,"effect":"Grow"}
- DEBUG-07:41:12 -  HA::LightStrip: color RGB(255,130,53)
-ALWAYS-07:41:12 -  HA::LightStrip: brightness 255
- DEBUG-07:41:12 -  HA::LightStrip: got rgb
- DEBUG-07:41:12 -  HA::LightStrip: set RGB: 255,130,53
- DEBUG-07:41:12 -  HA::LightStrip: turn on
- DEBUG-07:41:12 -  HA::LightStrip: to color RGB(255,130,53)
-ALWAYS-07:41:12 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
- WARN -07:41:12 - HomeAssistantSc: already rendering
-ALWAYS-07:41:16 - HA::MotionSenso: motion end
- INFO -07:41:30 -     CupboardApp: Memory: stack=1184,  heap=14784, max block size=12480, fragmentation=16
+*WM: Connection result: 
+*WM: 3
+*WM: IP Address:
+*WM: 192.168.1.68
+ DEBUG-00:00:04 -       WiFiSetup: 	connected success
+ INFO -00:00:04 -         Network: wifi connect done 1
+ DEBUG-00:00:04 -         Network: Update mqtt params: device device 192.168.1.22
+ DEBUG-00:00:04 -         Network: tz_offset: -300
+ INFO -00:00:04 -      TimeClient: Start NTTPClient tzoffset: -300
+ INFO -00:00:04 -      TimeClient: NTTPClient started
+ INFO -10:23:35 -     CupboardApp: ==================================
+ INFO -10:23:35 -     CupboardApp: Cupboard App Starting
+ INFO -10:23:35 -     CupboardApp: ==================================
+ DEBUG-10:23:35 - InputPinCompone: ----- InputPinComponent 0x3fff6a14
+ DEBUG-10:23:35 -      HW::Motion: Motion 0x3fff6a14
+ DEBUG-10:23:35 -      HW::Motion: setup pin 14  0x3fff6a14
+ DEBUG-10:23:35 -      HW::Motion: 	input
+ DEBUG-10:23:35 - InputPinCompone: ----- InputPinComponent 0x3fff6b84
+ DEBUG-10:23:35 -      HW::Motion: Motion 0x3fff6b84
+ DEBUG-10:23:35 -      HW::Motion: setup pin 12  0x3fff6b84
+ DEBUG-10:23:35 -      HW::Motion: 	input
+ INFO -10:23:35 -   NeoPixelStrip: Pin change to 4
+ INFO -10:23:35 -   NeoPixelStrip: 	Pin changed
+ INFO -10:23:35 -   NeoPixelStrip: Pin change to 5
+ INFO -10:23:35 -   NeoPixelStrip: 	Pin changed
+ INFO -10:23:35 -     CupboardApp: setup listeners: stack=2144,  heap=21048, max block size=20584, fragmentation=3
+ DEBUG-10:23:35 -      HA::Device: name: kitchen_cupboard_lights
+ DEBUG-10:23:35 -      HA::Device: board ID 98CDAC25FB00
+ DEBUG-10:23:35 -  HA::LightStrip: created HA:LightStrip 3fff72cc
+ DEBUG-10:23:35 -      HA::Device: add entity: 3fff72cc 
+ DEBUG-10:23:35 -      HA::Device: add entity: 3fff75bc 
+ DEBUG-10:23:35 -      HA::Device: add entity: 3fff7994 
+ DEBUG-10:23:35 -      HA::Device: add entity: 3fff7adc 
+ DEBUG-10:23:35 -      HA::Device: add entity: 3fff7c4c 
+ DEBUG-10:23:35 -      HA::Device: add entity: 3fff7d94 
+ DEBUG-10:23:35 -      HA::Device: add entity: 3fff7ef4 
+ DEBUG-10:23:35 -      HA::Device: add entity: 3fff8054 
+ INFO -10:23:35 -   HomeAssistant: publish entities
+ DEBUG-10:23:35 -  HA::LightStrip: LightStrip subscribe
+ DEBUG-10:23:35 -         Persist: Persist changed
+ DEBUG-10:23:35 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
+ DEBUG-10:23:35 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-10:23:35 -  HA::LightStrip: turn off
+ DEBUG-10:23:35 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-10:23:35 - HomeAssistantSc: transition to state b=0, r=255, g=130, b=53
+ WARN -10:23:35 - HomeAssistantSc: already rendering
+ DEBUG-10:23:45 -     CupboardApp: Assuming startup was ok after 10 seconds.
+ DEBUG-10:23:45 -         Persist: Persist changed
+ALWAYS-10:23:58 - HA::MotionSenso: motion start
+ DEBUG-10:23:58 -  HA::LightStrip: got command: {"state":"ON","color":{"r":255,"g":130,"b":53},"transition":2.0,"brightness":255,"effect":"Grow"}
+ DEBUG-10:23:58 -  HA::LightStrip: color RGB(255,130,53)
+ALWAYS-10:23:58 -  HA::LightStrip: brightness 255
+ DEBUG-10:23:58 -  HA::LightStrip: got rgb
+ DEBUG-10:23:58 -  HA::LightStrip: set RGB: 255,130,53
+ DEBUG-10:23:58 -  HA::LightStrip: turn on
+ DEBUG-10:23:58 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-10:23:58 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -10:23:58 - HomeAssistantSc: already rendering
+ DEBUG-10:24:00 -         Persist: Persist changed
+ALWAYS-10:24:03 - HA::MotionSenso: motion end
+ INFO -10:24:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=10840, fragmentation=29
+ INFO -10:25:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=10840, fragmentation=29
+ DEBUG-10:26:03 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
+ DEBUG-10:26:03 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-10:26:03 -  HA::LightStrip: turn off
+ DEBUG-10:26:03 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-10:26:03 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -10:26:03 - HomeAssistantSc: already rendering
+ INFO -10:26:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:27:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:28:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:29:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:30:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:31:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:32:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:33:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:34:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:35:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:36:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:37:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:38:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:39:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:40:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:41:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ALWAYS-10:42:28 - HA::MotionSenso: motion start
+ DEBUG-10:42:28 -  HA::LightStrip: got command: {"state":"ON","color":{"r":255,"g":130,"b":53},"transition":2.0,"brightness":255,"effect":"Grow"}
+ DEBUG-10:42:28 -  HA::LightStrip: color RGB(255,130,53)
+ALWAYS-10:42:28 -  HA::LightStrip: brightness 255
+ DEBUG-10:42:28 -  HA::LightStrip: got rgb
+ DEBUG-10:42:28 -  HA::LightStrip: set RGB: 255,130,53
+ DEBUG-10:42:28 -  HA::LightStrip: turn on
+ DEBUG-10:42:28 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-10:42:28 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -10:42:28 - HomeAssistantSc: already rendering
+ALWAYS-10:42:32 - HA::MotionSenso: motion end
+ INFO -10:42:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:43:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ DEBUG-10:44:32 -  HA::LightStrip: got command: {"state":"OFF","transition":2.0}
+ DEBUG-10:44:32 -  HA::LightStrip: color RGB(255,130,53)
+ DEBUG-10:44:32 -  HA::LightStrip: turn off
+ DEBUG-10:44:32 -  HA::LightStrip: to color RGB(255,130,53)
+ALWAYS-10:44:32 - HomeAssistantSc: transition to state b=255, r=255, g=130, b=53
+ WARN -10:44:32 - HomeAssistantSc: already rendering
+ INFO -10:44:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:45:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:46:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:47:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:48:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:49:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:50:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:51:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:52:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:53:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:54:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:55:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:56:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:57:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:58:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -10:59:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -11:00:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -11:01:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -11:02:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -11:03:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+ INFO -11:04:35 -     CupboardApp: Memory: stack=1104,  heap=15296, max block size=11768, fragmentation=23
+
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 3424, room 16 
+tail 0
+chksum 0x2e
+load 0x3fff20b8, len 40, room 8 
+tail 0
+chksum 0x2b
+csum 0x2b
+v0007a6e0
+~ld
+��␃�2�N�r��n|�␌l␌�␄$ ␂␜b�␓␃␌��2r��$�N�␌�n�␀␌l`␂��r�$�␜�␛�␟␀␌␌�
+Serial Logger Running
+--------------
+ INFO -00:00:00 -     CupboardApp: CupboardApp Created: stack=4100,  heap=35720, max block size=35712, fragmentation=1
+ INFO -00:00:00 -            main: stack 3fff22d0
+ INFO -00:00:00 -            main: setup: stack=3232,  heap=35632, max block size=35624, fragmentation=1
+ INFO -00:00:00 -      ConfigFile: Create new section: default
+ INFO -00:00:00 -      ConfigFile: Create new section: wifi
+ INFO -00:00:00 -      ConfigFile: Create new section: mqtt
+ INFO -00:00:00 -      ConfigFile: Create new section: ntp
+ INFO -00:00:00 -      ConfigFile: Create new section: motion1
+ INFO -00:00:00 -      ConfigFile: Create new section: motion2
+ INFO -00:00:00 -      ConfigFile: Create new section: led1
+ INFO -00:00:00 -      ConfigFile: Create new section: led2
+ INFO -00:00:00 -      ConfigFile: Create new section: logging
+ALWAYS-00:00:00 -     CupboardApp: Initializing App.
+ALWAYS-00:00:00 -     CupboardApp: Build: Apr 26 2024 07:51:21
+ALWAYS-00:00:00 -     CupboardApp: Last reset: Hardware Watchdog
+ALWAYS-00:00:00 -     CupboardApp: 	Fatal exception:4 flag:1 (Hardware Watchdog) epc1:0x401036a9 epc2:0x00000000 epc3:0x00000000 excvaddr:0x00000000 depc:0x00000000
+ALWAYS-00:00:00 -  Persist static: Create Persist singleton
+ INFO -00:00:00 -      ConfigFile: Create new section: default
+ INFO -00:00:00 -      ConfigFile: Create new section: app
+ INFO -00:00:00 -      ConfigFile: Create new section: hascene
+ DEBUG-00:00:00 -     CupboardApp: setupLogging
+ INFO -00:00:00 -      ConfigFile: Create new section: default
+ INFO -00:00:00 -      ConfigFile: Create new section: levels
+ DEBUG-00:00:00 -         Network: network setup
+ DEBUG-00:00:00 -         Network: deviceName: Cupboard
+ DEBUG-00:00:00 -         Network: use mqtt 192.168.1.22 Cupboard device fred123
+ INFO -00:00:00 -         Network: Connect Network
+ INFO -00:00:00 -         Network: Connecting wifi
+*WM: Adding parameter
+*WM: mqttserver
+*WM: Adding parameter
+*WM: mqttuser
+*WM: Adding parameter
+*WM: mqttpassword
+ DEBUG-00:00:00 -         Network: params changed
+ INFO -00:00:00 -         Network: start wifi connect
+ DEBUG-00:00:00 -       WiFiSetup: Connect
+*WM: 
+*WM: AutoConnect
+*WM: Connecting as wifi client...
+*WM: Status:
+*WM: 0
+*WM: Using last saved values, should be faster
+*WM: Connection result: 
+*WM: 3
+*WM: IP Address:
+*WM: 192.168.1.68
+ DEBUG-00:00:04 -       WiFiSetup: 	connected success
+ INFO -00:00:04 -         Network: wifi connect done 1
+ DEBUG-00:00:04 -         Network: Update mqtt params: device device 192.168.1.22
+ DEBUG-00:00:04 -         Network: tz_offset: -300
+ INFO -00:00:04 -      TimeClient: Start NTTPClient tzoffset: -300
+ INFO -00:00:04 -      TimeClient: NTTPClient started
+ INFO -11:05:06 -     CupboardApp: ==================================
+ INFO -11:05:06 -     CupboardApp: Cupboard App Starting
+ INFO -11:05:06 -     CupboardApp: ==================================
+ DEBUG-11:05:06 - InputPinCompone: ----- InputPinComponent 0x3fff6b0c
+ DEBUG-11:05:06 -      HW::Motion: Motion 0x3fff6b0c
+ DEBUG-11:05:06 -      HW::Motion: setup pin 14  0x3fff6b0c
+ DEBUG-11:05:06 -      HW::Motion: 	input
+ DEBUG-11:05:06 - InputPinCompone: ----- InputPinComponent 0x3fff6c2c
+ DEBUG-11:05:06 -      HW::Motion: Motion 0x3fff6c2c
+ DEBUG-11:05:06 -      HW::Motion: setup pin 12  0x3fff6c2c
+ DEBUG-11:05:06 -      HW::Motion: 	input
+ INFO -11:05:06 -   NeoPixelStrip: Pin change to 4
+ INFO -11:05:06 -   NeoPixelStrip: 	Pin changed
+ INFO -11:05:06 -   NeoPixelStrip: Pin change to 5
+ INFO -11:05:06 -   NeoPixelStrip: 	Pin changed
+ INFO -11:05:06 -     CupboardApp: setup listeners: stack=2192,  heap=20936, max block size=20416, fragmentation=3
+ DEBUG-11:05:06 -      HA::Device: name: kitchen_cupboard_lights
+ DEBUG-11:05:06 -      HA::Device: board ID 98CDAC25FB00
+ DEBUG-11:05:06 -  HA::LightStrip: created HA:LightStrip 3fff7374
+ DEBUG-11:05:06 -      HA::Device: add entity: 3fff7374 
+ DEBUG-11:05:06 -      HA::Device: add entity: 3fff7664 
+ DEBUG-11:05:06 -      HA::Device: add entity: 3fff7a3c 
+ DEBUG-11:05:06 -      HA::Device: add entity: 3fff7b84 
+ DEBUG-11:05:06 -      HA::Device: add entity: 3fff7cf4 
+ DEBUG-11:05:06 -      HA::Device: add entity: 3fff7e3c 
+ DEBUG-11:05:06 -      HA::Device: add entity: 3fff7f9c 
+ DEBUG-11:05:06 -      HA::Device: add entity: 3fff80fc 
+ INFO -11:05:06 -   HomeAssistant: publish entities
+ DEBUG-11:05:06 -  HA::LightStrip: LightStrip subscribe
+ DEBUG-11:05:06 -         Persist: Persist changed
+ DEBUG-11:05:16 -     CupboardApp: Assuming startup was ok after 10 seconds.
+ DEBUG-11:05:16 -         Persist: Persist changed
+ ERROR-11:05:16 -        LoopTime: Loop taking too much time: 296 msecs  (250 allowed)
+ALWAYS-11:05:16 -        LoopTime: Loop took to long: 309msecs  (250 allowed)
+ INFO -11:06:06 -     CupboardApp: Memory: stack=1264,  heap=15552, max block size=12968, fragmentation=17
+ INFO -11:07:06 -     CupboardApp: Memory: stack=1264,  heap=15552, max block size=12968, fragmentation=17
+ INFO -11:08:06 -     CupboardApp: Memory: stack=1264,  heap=15552, max block size=12968, fragmentation=17

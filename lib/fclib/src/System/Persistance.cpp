@@ -6,7 +6,7 @@ using namespace FCLIB;
 
 namespace FCLIB
 {
-    Persist::Persist() : log("Persist", DEBUG_LEVEL)
+    Persist::Persist() : log("Persist", DEBUG_LEVEL), persistCount("PersistChanges")
     {
         // APP_INITIALIZATION_DONE can be too late.  load when needed
         // listener.handle(EventType::APP_INITIALIZATION_DONE, [this](Event *event)
@@ -23,6 +23,7 @@ namespace FCLIB
 
     void Persist::persistChanges()
     {
+        persistCount.increment();
         save("/persist.ini");
     }
 

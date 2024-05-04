@@ -20,7 +20,7 @@ namespace FCLIB
         savePortalParameters = true; // params changed so need to save;
     }
 
-    Network::Network() : log("Network")
+    Network::Network() : log("Network"), reconnectCountStat("WiFiReconnect")
     {
         this->ntpOffsetMinutes = 0;
         resetWifi = false;
@@ -102,6 +102,7 @@ namespace FCLIB
             log.info("start wifi connect");
             connected = wifi.connect(deviceName.c_str());
             log.info("wifi connect done %d", connected);
+            log.info("wifi: %s", wifi.getIP());
         }
         if (savePortalParameters)
         {
@@ -142,6 +143,7 @@ namespace FCLIB
     {
         if (WiFi.status() != WL_CONNECTED)
         {
+            reconnectCountStat.increment();
             Event::trigger(EventType::DISCONNECTED, this);
         }
         while (WiFi.status() != WL_CONNECTED)

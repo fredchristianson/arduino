@@ -5,6 +5,7 @@
 #include "fclib/Test.h"
 #include "fclib/List.h"
 #include "fclib/Event.h"
+#include "fclib/AppStat.h"
 
 namespace FCLIB
 {

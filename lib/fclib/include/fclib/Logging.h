@@ -24,6 +24,12 @@ namespace FCLIB
     void setDefaultLoggerLevel(LogLevel level);
     void configureLogging(ConfigSection *config);
 
+    class LogIndent
+    {
+    public:
+        LogIndent();
+        ~LogIndent();
+    };
     class ILogDestination
     {
     public:

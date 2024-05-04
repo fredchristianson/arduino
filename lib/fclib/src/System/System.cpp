@@ -22,6 +22,10 @@ namespace FCLIB
         deviceId.replace(":", "");
     }
 
+    void EspBoardClass::reboot()
+    {
+        return EspClass::restart();
+    }
     unsigned long EspBoardClass::getFreeContStack() { return EspClass::getFreeContStack(); }
 
     unsigned long EspBoardClass::getFreeHeap() { return EspClass::getFreeHeap(); }

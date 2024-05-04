@@ -38,7 +38,10 @@ protected:
     HA::Number *led2Pin;
     HA::Number *led1Count;
     HA::Number *led2Count;
+    HA::Select *motionOption;
     HomeAssistantSceneRenderer haRenderer;
+
+    void setMotionType(const char *option);
 };
 
 #endif

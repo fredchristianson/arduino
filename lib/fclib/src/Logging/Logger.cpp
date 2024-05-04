@@ -28,6 +28,15 @@ void Logger::setDefaultLevel(LogLevel level)
     FCLIB::setDefaultLoggerLevel(level);
 }
 
+LogIndent::LogIndent()
+{
+    formatter->indent();
+}
+LogIndent ::~LogIndent()
+{
+    formatter->outdent();
+}
+
 Logger::Logger(const char *moduleName, LogLevel level)
 {
     this->setModuleName(moduleName);

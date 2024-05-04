@@ -36,13 +36,15 @@ void FCLIB::NeoPixelStrip::show()
 void FCLIB::NeoPixelStrip::setBrightness(uint8 b)
 {
     this->brightness = b;
+    b = b / 2; // map to 0-128 since not much difference over that
     this->controller->setBrightness(b);
 }
 
 void FCLIB::NeoPixelStrip::clear()
 {
     this->controller->clear();
-    this->controller->setBrightness(this->brightness);
+    int b = this->brightness / 2; // map to 0-128 since not much difference over that
+    this->controller->setBrightness(b);
 }
 
 void FCLIB::NeoPixelStrip::fill(const Color &color, LedOp_t op)

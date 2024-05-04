@@ -24,7 +24,8 @@ namespace FCLIB::HA
         LIGHT,
         SWITCH,
         MOTION_SENSOR,
-        NUMBER
+        NUMBER,
+        SELECT
 
     };
 
@@ -177,6 +178,23 @@ namespace FCLIB::HA
         float value;
     };
 
+    class Select : public CommandEntity
+    {
+    public:
+        Select(const char *name, const char *options[], int selectedIndex, Callback<const char *> onChange);
+        virtual ~Select();
+        void select(int index);
+        void add(const char *option);
+        virtual void publishState() override;
+        virtual void setupCapabilities(JsonDocument &doc);
+
+    protected:
+        Callback<const char *> changeHandler;
+        int selectedIndex;
+        void onCommand(const char *payload);
+        List<String> options;
+    };
+
     class Device
     {
     public:
@@ -213,6 +231,7 @@ namespace FCLIB::HA
 
         void addDevice(Device *device);
         void publishConfig();
+        void subscribeToTopics();
         void publishState(const char *topic, JsonDocument &payload);
         void publishState(const char *topic, const char *payload);
         void publishState(const String &topic, JsonDocument &payload) { publishState(topic.c_str(), payload); }

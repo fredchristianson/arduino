@@ -38,6 +38,7 @@ namespace FCLIB
         static Persist *singleton;
         EventListener listener;
         Logger log;
+        AppCounterStat persistCount;
     };
 
     namespace TEST

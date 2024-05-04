@@ -1,9 +1,15 @@
 #pragma once
 #ifndef __FCLIB_LOOPTIME_H_
 #define __FCLIB_LOOPTIME_H_
+#include "fclib/AppStat.h"
+
+using namespace FCLIB;
 
 namespace FCLIB
 {
+    class AppMemoryStat;
+    class AppRangeStat;
+
     class LoopTime
     {
     public:
@@ -18,6 +24,8 @@ namespace FCLIB
         static unsigned long startMSecs;
         static unsigned long maxMSecs;
         static bool loggedOver;
+        static AppMemoryStat *memoryStat;
+        static AppTimerStat *loopTimeStat;
     };
 }
 #endif

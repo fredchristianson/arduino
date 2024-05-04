@@ -60,6 +60,19 @@ namespace FCLIB::HA
         return dev;
     }
 
+    void HomeAssistant::subscribeToTopics()
+    {
+        log.info("subscribe to topics");
+        for (int didx = 0; didx < devices.size() && LoopTime::ok(); didx++)
+        {
+            Device *device = devices[didx];
+            for (int eidx = 0; eidx < device->entities.size() && LoopTime::ok(); eidx++)
+            {
+                Entity *entity = device->entities[eidx];
+                entity->subscribe(mqtt);
+            }
+        }
+    }
     void HomeAssistant::publishConfig()
     {
         log.info("publish entities");
@@ -77,7 +90,6 @@ namespace FCLIB::HA
             Entity *entity = device->entities[eidx];
             log.debug("publish entity %d %x %s", eidx, entity, entity->getUniqueName());
             publishEntityConfig(entity);
-            entity->subscribe(mqtt);
             entity->publishState();
         }
     }

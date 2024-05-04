@@ -14,7 +14,7 @@ using namespace FCLIB;
 namespace FCLIB
 {
 
-    Mqtt::Mqtt() : pubSubClient(wifiClient), log("Mqtt")
+    Mqtt::Mqtt() : pubSubClient(wifiClient), log("Mqtt"), reconnectCount("MqttReconnect")
     {
     }
 
@@ -105,6 +105,7 @@ namespace FCLIB
             if (pubSubClient.connect(deviceName.c_str(), user.c_str(), password.c_str()))
             {
                 log.never("Resubscribing");
+                reconnectCount.increment();
                 subscribers.forEach([this](Subscriber *sub)
                                     { this->pubSubClient.subscribe(sub->topic.c_str()); });
                 Event::trigger(EventType::MQTT_RECONNECTED, this);
@@ -133,6 +134,7 @@ namespace FCLIB
     void Mqtt::subscribe(const char *topic, MqttCallback callback)
     {
         log.debug("subscribe to: %s", topic);
+
         Subscriber *sub = new Subscriber(topic, callback);
         subscribers.add(sub);
         pubSubClient.subscribe(topic);

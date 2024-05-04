@@ -7,7 +7,7 @@ using namespace FCLIB;
 namespace FCLIB
 {
 
-    SceneRenderer::SceneRenderer(LedStrip *strip) : log("SceneRenderer")
+    SceneRenderer::SceneRenderer(LedStrip *strip) : log("SceneRenderer"), renderCount("SceneRenderCount")
     {
         this->strip = strip;
         this->brightness = 50;
@@ -34,7 +34,7 @@ namespace FCLIB
         //                         { this->onLoop(); });
         task = Task::repeat([this]()
                             { this->render(); })
-                   ->delayMsecs(5);
+                   ->delayMsecs(50);
         log.never("created task %lx", task);
     }
 
@@ -66,6 +66,8 @@ namespace FCLIB
 
     void SceneRenderer::render()
     {
+        renderCount.increment();
+
         log.never("render %lx %d", this, this->brightness);
         strip->clear();
         strip->setBrightness(this->brightness);

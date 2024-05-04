@@ -16,7 +16,9 @@ namespace FCLIB::HA
                       { pause.reset(1, TimerUnit::TIME_MINUTES); });
         events.handle(EventType::SCENE_END_TRANSITION, [this](Event *)
                       { pause.reset(5, TimerUnit::TIME_SECONDS); });
-        pause.reset(10, TimerUnit::TIME_SECONDS); // wait for things to start and motion clear before sending to HA
+        int wait = 20;
+        log.never("Waiting for motion to settle %d seconds", wait);
+        pause.reset(wait, TimerUnit::TIME_SECONDS); // wait for things to start and motion clear before sending to HA
     }
 
     MotionSensor::~MotionSensor()
@@ -27,15 +29,16 @@ namespace FCLIB::HA
     {
         if (!pause.isComplete())
         {
+            log.never("waiting for motion to settle");
             return;
         }
-        log.always("motion start");
+        log.never("motion start");
         setStateOn();
     }
     void MotionSensor::onMotionStop()
     {
 
-        log.always("motion end");
+        log.never("motion end");
 
         setStateOff();
     }

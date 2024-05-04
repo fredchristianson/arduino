@@ -10,32 +10,6 @@
 namespace FCLIB
 {
 
-    void writeLoopStart()
-    {
-        FileWriter writer("/status");
-        writer.writeLine("loop start");
-    }
-
-    void writeLoopEnd()
-    {
-        FileAppender writer("/status");
-        writer.writeLine("loop done");
-    }
-
-    void showLastLoopStatusOnReboot()
-    {
-        Logger log("LastLoopStatus");
-        log.always("LAST LOOP STATUS BEFORE REBOOT");
-        log.always("==============================");
-        FileReader reader("/status");
-        String l;
-        while (reader.readLine(l))
-        {
-            log.always("\t%s", l.c_str());
-        }
-        log.always("==============================");
-    }
-
     App::App() : log("App")
     {
         THE_APP = this;
@@ -55,7 +29,7 @@ namespace FCLIB
 
     void App::loop()
     {
-        writeLoopStart();
+
         THE_BOARD->feedWatchdog();
         LoopTime::startLoop();
         if (running)
@@ -66,7 +40,6 @@ namespace FCLIB
             this->afterLoop();
         }
         LoopTime::endLoop();
-        writeLoopEnd();
     }
 
     void App::beforeLoop() {}
@@ -142,7 +115,8 @@ namespace FCLIB
     }
     bool App::setupNetwork()
     {
-        return network.setup(config) && network.connect();
+        network = new Network();
+        return network->setup(config) && network->connect();
     }
 
     bool App::setupDevices()
@@ -168,12 +142,20 @@ namespace FCLIB
     Logger loopTimeLog("LoopTime", DEBUG_LEVEL);
     void LoopTime::startLoop()
     {
+        if (memoryStat == NULL)
+        {
+            memoryStat = new AppMemoryStat("LoopMemory");
+            loopTimeStat = new AppTimerStat("LoopTime");
+        }
+        loopTimeStat->start();
         LoopTime::startMSecs = THE_BOARD->currentMsecs();
         LoopTime::loggedOver = false; // not logged for this loop
     }
 
     void LoopTime::endLoop()
     {
+        memoryStat->update();
+        loopTimeStat->end();
         if (LoopTime::over())
         {
             // Serial.println("endloop over time");
@@ -208,6 +190,28 @@ namespace FCLIB
             loopTimeLog.warn("%s took too long to process %d ", msg, (THE_BOARD->currentMsecs() - startMSecs));
         }
     }
+
+    void App::writeStats()
+    {
+        stats.forEach([](AppStat *stat)
+                      { stat->write(); });
+    }
+    void App::resetStats()
+    {
+        stats.forEach([](AppStat *stat)
+                      { stat->reset(); });
+    }
+    void App::addStat(AppStat *stat)
+    {
+        stats.add(stat);
+    }
+    void App::removeStat(AppStat *stat)
+    {
+        stats.remove(stat);
+    }
+
+    AppMemoryStat *LoopTime::memoryStat = NULL;
+    AppTimerStat *LoopTime::loopTimeStat = NULL;
     unsigned long LoopTime::maxMSecs = 250;
     unsigned long LoopTime::startMSecs = 0;
     bool LoopTime::loggedOver = false;

@@ -37,7 +37,7 @@ namespace FCLIB::HA
 
         SceneState scene = renderer->getSceneState();
         Color color = scene.color;
-        log.never("publish LightStrip state %d", scene.mode);
+        log.always("publish LightStrip state %d", scene.mode);
         JsonDocument doc;
         doc["state"] = scene.mode != SceneMode::MODE_OFF ? "ON" : "OFF";
         doc["brightness"] = scene.brightness;

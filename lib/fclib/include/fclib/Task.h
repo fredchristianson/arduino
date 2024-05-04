@@ -9,6 +9,7 @@
 #include "fclib/List.h"
 #include "fclib/Event.h"
 #include "fclib/Config.h"
+#include "fclib/AppStat.h"
 
 using namespace FCLIB;
 
@@ -158,6 +159,8 @@ namespace FCLIB
         List<Task> tasks;
         Logger log;
         EventListener listener;
+        AppRangeStat taskCount;
+        AppTimerStat processTimer;
     };
 
     namespace TEST

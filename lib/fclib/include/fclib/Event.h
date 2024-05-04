@@ -3,6 +3,7 @@
 #include <functional>
 #include "fclib/Logging.h"
 #include "fclib/List.h"
+#include "fclib/AppStat.h"
 
 namespace FCLIB
 {
@@ -160,6 +161,9 @@ namespace FCLIB
         List<Event> *eventQueue; // points to one of the events[2] lists.  new events added here
         List<EventListener> listeners;
         void process();
+        AppRangeStat eventRange;
+        AppRangeStat listenerRange;
+        AppTimerStat processTimer;
         Logger log;
     };
 }

@@ -5,11 +5,9 @@
 #include "./System.h"
 #include "./Timer.h"
 #include "./Config.h"
-#include "./Event.h"
 #include "./Net.h"
 #include "./Logging.h"
-#include "./Task.h"
-#include "./Loop.h"
+#include "./AppStat.h"
 
 namespace FCLIB
 {
@@ -27,6 +25,11 @@ namespace FCLIB
         void loop();
         Config *getConfig();
 
+        void writeStats();
+        void resetStats();
+        void addStat(AppStat *stat);
+        void removeStat(AppStat *stat);
+
     protected:
         virtual void beforeLoop();
         virtual void runTasks();
@@ -43,7 +46,8 @@ namespace FCLIB
         Logger log;
 
     private:
-        Network network;
+        List<AppStat> stats;
+        Network *network;
         bool running;
         Config *config;
     };

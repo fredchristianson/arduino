@@ -31,7 +31,7 @@ namespace FCLIB
         singleton->runTasks();
     }
 
-    TaskQueue::TaskQueue() : log("TaskQueue")
+    TaskQueue::TaskQueue() : log("TaskQueue"), taskCount("TaskCount"), processTimer("TaskProcessTimer")
     {
         singleton = this;
     }
@@ -78,7 +78,8 @@ namespace FCLIB
     int maxQueueTime = 0;
     void TaskQueue::runTasks()
     {
-        int startTime = THE_BOARD->currentMsecs();
+        taskCount.value(tasks.size());
+        processTimer.start();
         for (int i = 0; i < tasks.size() && LoopTime::ok(); i++)
         {
             Task *task = tasks[i];
@@ -100,14 +101,7 @@ namespace FCLIB
                 i--;
             }
         }
+        processTimer.end();
         LoopTime::check("TaskQueue::runTasks()");
-
-        int endTime = THE_BOARD->currentMsecs();
-        int diff = endTime - startTime;
-        if (diff > maxQueueTime)
-        {
-            log.debug("max queue time: %d", diff);
-            maxQueueTime = diff;
-        }
     }
 }

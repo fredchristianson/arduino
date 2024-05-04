@@ -34,11 +34,15 @@ namespace FCLIB::HW
     MultiMotion::MultiMotion() : log("MultiMotion")
     {
         hasMotion = false;
+        requireAll = false;
     }
 
     MultiMotion::~MultiMotion()
     {
     }
+
+    void MultiMotion::any() { requireAll = false; }
+    void MultiMotion::all() { requireAll = true; }
 
     void MultiMotion::addPin(int8 pin)
     {
@@ -58,6 +62,12 @@ namespace FCLIB::HW
     void MultiMotion::updateState()
     {
         bool now = isDetected();
+        log.always("Motion: %s (%s)", now ? "detected" : "clear", requireAll ? "all" : "any");
+        LogIndent indent;
+        for (int i = 0; i < motion.size(); i++)
+        {
+            log.always("%d: %s", motion[i]->getPin(), motion[i]->isDetected() ? "detected" : "clear");
+        }
         if (now != hasMotion)
         {
             hasMotion = now;
@@ -86,7 +96,15 @@ namespace FCLIB::HW
 
     bool MultiMotion::isDetected() const
     {
-        return motion.any([this](const Motion *motion)
-                          { return motion->isDetected(); });
+        if (requireAll)
+        {
+            return motion.all([this](const Motion *motion)
+                              { return motion->isDetected(); });
+        }
+        else
+        {
+            return motion.any([this](const Motion *motion)
+                              { return motion->isDetected(); });
+        }
     }
 }

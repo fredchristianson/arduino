@@ -55,7 +55,7 @@ namespace FCLIB
     /**************************/
     /* EventManager end Static*/
 
-    EventManager::EventManager() : log("EventManager")
+    EventManager::EventManager() : log("EventManager"), eventRange("EventQueueLen"), listenerRange("EventListenerCount"), processTimer("EventQueueTimer")
     {
         eventQueue = &events[0];
     }
@@ -130,6 +130,9 @@ namespace FCLIB
 
             eventQueue = &events[0];
         }
+        eventRange.value(cur->size());
+        listenerRange.value(this->listeners.size());
+        processTimer.start();
         cur->forEach([this](Event *event)
                      { 
                         log.never("pocess event type %d",event->getType());
@@ -142,6 +145,7 @@ namespace FCLIB
         cur->forEach([](Event *event)
                      { delete event; });
         LoopTime::check("EventManager delete events");
+        processTimer.end();
 
         cur->clear();
     }

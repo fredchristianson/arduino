@@ -26,6 +26,7 @@ namespace FCLIB
 
         virtual const char *getDeviceId() { return deviceId.c_str(); }
         virtual void feedWatchdog() = 0;
+        virtual void reboot() = 0;
 
     protected:
         String deviceId;
@@ -35,6 +36,7 @@ namespace FCLIB
     {
     public:
         EspBoardClass();
+        void reboot() override;
         virtual unsigned long getFreeContStack() override;
 
         virtual unsigned long getFreeHeap() override;

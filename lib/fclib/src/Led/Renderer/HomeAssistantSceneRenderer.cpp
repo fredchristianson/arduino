@@ -7,7 +7,7 @@ using namespace FCLIB;
 namespace FCLIB
 {
 
-    HomeAssistantSceneRenderer::HomeAssistantSceneRenderer(LedStrip *strip) : SceneRenderer(strip)
+    HomeAssistantSceneRenderer::HomeAssistantSceneRenderer(LedStrip *strip) : SceneRenderer(strip), stateChangeCount("HASceneChangeCount")
     {
         log.setModuleName("HomeAssistantSceneRenderer");
         effects.add("None");
@@ -116,6 +116,7 @@ namespace FCLIB
     }
     void HomeAssistantSceneRenderer::startTransition()
     {
+        stateChangeCount.increment();
         log.debug("start transition %d", transition.transistionMsecs);
         if (transition.transistionMsecs == 0)
         {
